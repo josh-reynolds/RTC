@@ -1,4 +1,4 @@
-const EPSILON: f64 = 0.001;
+const EPSILON: f64 = 0.00001;
 
 pub struct Tuple {
     pub x: f64,
@@ -31,7 +31,7 @@ impl Tuple {
 }
 
 pub fn equals(a: f64, b: f64) -> bool {
-    (a - b).abs() <= EPSILON 
+    (a - b).abs() < EPSILON 
 }
 #[cfg(test)]
 mod tests {
