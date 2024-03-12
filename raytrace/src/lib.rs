@@ -16,11 +16,11 @@ impl Tuple {
         equals( self.w, 0.0 )
     }
 
-    pub fn point(x: f64, y: f64, z: f64) -> Tuple {
+    pub fn point(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z, w: 1.0 }
     }
 
-    pub fn vector(x: f64, y: f64, z: f64) -> Tuple {
+    pub fn vector(x: f64, y: f64, z: f64) -> Self {
         Self { x, y, z, w: 0.0 }
     }
 
@@ -35,6 +35,7 @@ impl Tuple {
 pub fn equals(a: f64, b: f64) -> bool {
     (a - b).abs() < EPSILON 
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
