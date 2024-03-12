@@ -33,4 +33,17 @@ mod tests {
             !a.is_vector()
         );
     }
+
+    #[test]
+    fn tuple_with_w_0_is_vector(){
+        let a = Tuple { x: 4.3, y: -4.2, z: 3.1, w: 0.0 };
+        assert!(
+            a.x == 4.3 &&
+            a.y == -4.2 &&
+            a.z == 3.1 &&
+            a.w == 0.0 &&
+            !a.is_point() &&
+            a.is_vector()
+        );
+    }
 }
