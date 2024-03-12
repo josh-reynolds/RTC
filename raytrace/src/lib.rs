@@ -75,4 +75,14 @@ mod tests {
         // should allow integers as well
         let a = Tuple::vector(4.0, -4.0, 3.0);
     }
+
+    #[test]
+    fn float_equals(){
+        assert!( equals(1.0, 1.0) );
+    }
+
+    #[test]
+    fn float_not_equals(){
+        assert!( !equals(1.0, 1.001) );
+    }
 }
