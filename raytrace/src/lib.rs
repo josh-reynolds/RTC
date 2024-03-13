@@ -40,6 +40,8 @@ impl Tuple {
                w: self.w - t.w }
     }
 
+    // investigate operator overloading, appears to be in std::ops
+    // the trait needed is Neg
     pub fn negate(&self) -> Self {
         Self { x: -self.x,
                y: -self.y,
@@ -47,6 +49,14 @@ impl Tuple {
                w: -self.w }
     }
 
+    // overloading possible here too (trait == Mul)
+    // also, how about multiplying by an int? Number again?
+    pub fn mult(&self, n: f64) -> Self {
+        Self { x: self.x * n,
+               y: self.y * n,
+               z: self.z * n,
+               w: self.w * n }
+    }
 
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
@@ -230,5 +240,17 @@ mod tests {
     fn negating_a_tuple(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
         assert!( a.negate().equals(Tuple { x: -1.0, y: 2.0, z: -3.0, w: 4.0 } ));
+    }
+
+    #[test]
+    fn multipy_tuple_by_scalar(){
+        let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
+        assert!( a.mult(3.5).equals( Tuple { x: 3.5, y: -7.0, z: 10.5, w: -14.0 } ));
+    }
+
+    #[test]
+    fn multipy_tuple_by_fraction(){
+        let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
+        assert!( a.mult(0.5).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
     }
 }
