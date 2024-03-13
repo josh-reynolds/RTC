@@ -22,8 +22,8 @@ impl Tuple {
         Self { x: x.value, y: y.value, z: z.value, w: 1.0 }
     }
 
-    pub fn vector(x: f64, y: f64, z: f64) -> Self {
-        Self { x, y, z, w: 0.0 }
+    pub fn vector(x: Number, y: Number, z: Number) -> Self {
+        Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
     }
 
     pub fn equals(&self, t: Tuple) -> bool {
@@ -96,7 +96,9 @@ mod tests {
     #[test]
     fn vector_creates_vectors(){
         // should allow integers as well
-        let a = Tuple::vector(4.0, -4.0, 3.0);
+        let a = Tuple::vector(Number::from(4.0),
+                              Number::from(-4.0),
+                              Number::from(3.0));
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
 
     }
@@ -129,5 +131,13 @@ mod tests {
                              Number::from(-4),
                              Number::from(3));
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
+    }
+
+    #[test]
+    fn can_create_vectors_from_ints(){
+        let a = Tuple::vector(Number::from(4),
+                              Number::from(-4),
+                              Number::from(3));
+        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
     }
 }
