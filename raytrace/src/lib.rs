@@ -26,6 +26,13 @@ impl Tuple {
         Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
     }
 
+    pub fn plus(&self, t: Tuple) -> Self {
+        Self { x: self.x + t.x,
+               y: self.y + t.y,
+               z: self.z + t.z,
+               w: self.w + t.w }
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -86,7 +93,6 @@ mod tests {
 
     #[test]
     fn point_creates_points(){
-        // should allow integers as well
         let a = Tuple::point(Number::from(4.0), 
                              Number::from(-4.0),
                              Number::from(3.0));
@@ -95,7 +101,6 @@ mod tests {
 
     #[test]
     fn vector_creates_vectors(){
-        // should allow integers as well
         let a = Tuple::vector(Number::from(4.0),
                               Number::from(-4.0),
                               Number::from(3.0));
@@ -139,5 +144,16 @@ mod tests {
                               Number::from(-4),
                               Number::from(3));
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
+    }
+
+    #[test]
+    fn add_two_tuples(){
+        let a = Tuple::point(Number::from(3),
+                             Number::from(-2),
+                             Number::from(5));
+        let b = Tuple::vector(Number::from(-2),
+                              Number::from(3),
+                              Number::from(1));
+        assert!( a.plus(b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
     }
 }
