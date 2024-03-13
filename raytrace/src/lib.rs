@@ -153,6 +153,8 @@ mod tests {
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
     }
 
+    // OK: vector + vector, vector + point
+    // Not OK: point + point
     #[test]
     fn add_two_tuples(){
         let a = Tuple::point(Number::from(3),
@@ -172,6 +174,32 @@ mod tests {
         let b = Tuple::point(Number::from(5),
                              Number::from(6),
                              Number::from(7));
+        assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
+                                               Number::from(-4.0), 
+                                               Number::from(-6.0))));
+    }
+
+    #[test]
+    fn sub_vector_from_point(){
+        let a = Tuple::point(Number::from(3),
+                             Number::from(2),
+                             Number::from(1));
+        let b = Tuple::vector(Number::from(5),
+                              Number::from(6),
+                              Number::from(7));
+        assert!( a.sub(b).equals(Tuple::point(Number::from(-2.0), 
+                                              Number::from(-4.0), 
+                                              Number::from(-6.0))));
+    }
+    
+    #[test]
+    fn sub_two_vectors(){
+        let a = Tuple::vector(Number::from(3),
+                              Number::from(2),
+                              Number::from(1));
+        let b = Tuple::vector(Number::from(5),
+                              Number::from(6),
+                              Number::from(7));
         assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
                                                Number::from(-4.0), 
                                                Number::from(-6.0))));
