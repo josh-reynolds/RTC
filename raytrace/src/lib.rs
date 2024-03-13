@@ -58,6 +58,16 @@ impl Tuple {
                w: self.w * n }
     }
 
+    // overloading possible here too (trait == Div)
+    // book divides by an integer, I will implement as float
+    // but same question as above applies - worth overload?
+    pub fn div(&self, n: f64) -> Self {
+        Self { x: self.x / n,
+               y: self.y / n,
+               z: self.z / n,
+               w: self.w / n }
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -252,5 +262,11 @@ mod tests {
     fn multipy_tuple_by_fraction(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
         assert!( a.mult(0.5).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
+    }
+
+    #[test]
+    fn divide_tuple_by_scalar(){
+        let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
+        assert!( a.div(2.0).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
     }
 }
