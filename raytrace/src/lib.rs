@@ -40,6 +40,14 @@ impl Tuple {
                w: self.w - t.w }
     }
 
+    pub fn negate(&self) -> Self {
+        Self { x: -self.x,
+               y: -self.y,
+               z: -self.z,
+               w: -self.w }
+    }
+
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -203,5 +211,24 @@ mod tests {
         assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
                                                Number::from(-4.0), 
                                                Number::from(-6.0))));
+    }
+
+    #[test]
+    fn sub_vector_from_zero_vector(){
+        let zero = Tuple::vector(Number::from(0),
+                                 Number::from(0),
+                                 Number::from(0));
+        let v = Tuple::vector(Number::from(1),
+                              Number::from(-2),
+                              Number::from(3));
+        assert!( zero.sub(v).equals(Tuple::vector(Number::from(-1.0), 
+                                                  Number::from(2.0), 
+                                                  Number::from(-3.0))));
+    }
+
+    #[test]
+    fn negating_a_tuple(){
+        let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
+        assert!( a.negate().equals(Tuple { x: -1.0, y: 2.0, z: -3.0, w: 4.0 } ));
     }
 }
