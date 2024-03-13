@@ -33,6 +33,13 @@ impl Tuple {
                w: self.w + t.w }
     }
 
+    pub fn sub(&self, t: Tuple) -> Self {
+        Self { x: self.x - t.x,
+               y: self.y - t.y,
+               z: self.z - t.z,
+               w: self.w - t.w }
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -155,5 +162,18 @@ mod tests {
                               Number::from(3),
                               Number::from(1));
         assert!( a.plus(b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
+    }
+
+    #[test]
+    fn sub_two_points(){
+        let a = Tuple::point(Number::from(3),
+                             Number::from(2),
+                             Number::from(1));
+        let b = Tuple::point(Number::from(5),
+                             Number::from(6),
+                             Number::from(7));
+        assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
+                                               Number::from(-4.0), 
+                                               Number::from(-6.0))));
     }
 }
