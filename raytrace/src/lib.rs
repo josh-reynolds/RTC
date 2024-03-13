@@ -18,8 +18,8 @@ impl Tuple {
         equals( self.w, 0.0 )
     }
 
-    pub fn point(x: f64, y: f64, z: f64) -> Self {
-        Self { x, y, z, w: 1.0 }
+    pub fn point(x: Number, y: Number, z: Number) -> Self {
+        Self { x: x.value, y: y.value, z: z.value, w: 1.0 }
     }
 
     pub fn vector(x: f64, y: f64, z: f64) -> Self {
@@ -87,7 +87,9 @@ mod tests {
     #[test]
     fn point_creates_points(){
         // should allow integers as well
-        let a = Tuple::point(4.0, -4.0, 3.0);
+        let a = Tuple::point(Number::from(4.0), 
+                             Number::from(-4.0),
+                             Number::from(3.0));
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
     }
 
@@ -119,5 +121,13 @@ mod tests {
     fn number_from_int(){
         let n = Number::from( 1 );
         assert!( equals(n.value, 1.0) );
+    }
+
+    #[test]
+    fn can_create_points_from_ints(){
+        let a = Tuple::point(Number::from(4),
+                             Number::from(-4),
+                             Number::from(3));
+        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
     }
 }
