@@ -1,3 +1,5 @@
+use std::convert::From;
+
 const EPSILON: f64 = 0.00001;
 
 pub struct Tuple {
@@ -29,6 +31,22 @@ impl Tuple {
         equals( self.y, t.y ) &&
         equals( self.z, t.z ) && 
         equals( self.w, t.w )
+    }
+}
+
+pub struct Number {
+    pub value: f64,
+}
+
+impl From<i32> for Number {
+    fn from(item: i32) -> Self {
+        Number{ value: item as f64 }
+    }
+}
+
+impl From<f64> for Number {
+    fn from(item: f64) -> Self {
+        Number{ value: item }
     }
 }
 
@@ -89,5 +107,17 @@ mod tests {
     #[test]
     fn float_not_equals(){
         assert!( !equals(1.0, 1.001) );
+    }
+
+    #[test]
+    fn number_from_float(){
+        let n = Number::from( 1.0 );
+        assert!( equals(n.value, 1.0) );
+    }
+
+    #[test]
+    fn number_from_int(){
+        let n = Number::from( 1 );
+        assert!( equals(n.value, 1.0) );
     }
 }
