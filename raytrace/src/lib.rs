@@ -73,6 +73,12 @@ impl Tuple {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
     }
 
+    pub fn normal(&self) -> Self {
+        Self { x: 1.0,
+               y: 0.0,
+               z: 0.0,
+               w: 0.0}
+    }
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -313,5 +319,13 @@ mod tests {
                               Number::from(-2),
                               Number::from(-3));
         assert_eq!( 14_f64.sqrt(), v.mag() );
+    }
+
+    #[test]
+    fn normalize_vector_4_0_0_equals_vector_1_0_0(){
+        let v = Tuple::vector(Number::from(4),
+                              Number::from(0),
+                              Number::from(0));
+        assert!( v.normal().equals( Tuple { x: 1.0, y: 0.0, z: 0.0, w: 0.0 } ));
     }
 }
