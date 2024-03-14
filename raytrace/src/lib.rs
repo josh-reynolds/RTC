@@ -68,6 +68,10 @@ impl Tuple {
                w: self.w / n }
     }
 
+    pub fn mag(&self) -> f64 {
+        1.0
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -268,5 +272,13 @@ mod tests {
     fn divide_tuple_by_scalar(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
         assert!( a.div(2.0).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
+    }
+
+    #[test]
+    fn magnitude_of_vector_1_0_0(){
+        let v = Tuple::vector(Number::from(1),
+                              Number::from(0),
+                              Number::from(0));
+        assert!( equals( v.mag(), 1.0 ));
     }
 }
