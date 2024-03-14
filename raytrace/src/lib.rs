@@ -68,8 +68,9 @@ impl Tuple {
                w: self.w / n }
     }
 
+    // only applies to vectors - should we restrict usage?
     pub fn mag(&self) -> f64 {
-        1.0
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
     }
 
     pub fn equals(&self, t: Tuple) -> bool {
@@ -280,5 +281,37 @@ mod tests {
                               Number::from(0),
                               Number::from(0));
         assert!( equals( v.mag(), 1.0 ));
+    }
+
+    #[test]
+    fn magnitude_of_vector_0_1_0(){
+        let v = Tuple::vector(Number::from(0),
+                              Number::from(1),
+                              Number::from(0));
+        assert!( equals( v.mag(), 1.0 ));
+    }
+
+    #[test]
+    fn magnitude_of_vector_0_0_1(){
+        let v = Tuple::vector(Number::from(0),
+                              Number::from(0),
+                              Number::from(1));
+        assert!( equals( v.mag(), 1.0 ));
+    }
+
+    #[test]
+    fn magnitude_of_vector_1_2_3(){
+        let v = Tuple::vector(Number::from(1),
+                              Number::from(2),
+                              Number::from(3));
+        assert_eq!( 14_f64.sqrt(), v.mag() );
+    }
+
+    #[test]
+    fn magnitude_of_neg_vector_1_2_3(){
+        let v = Tuple::vector(Number::from(-1),
+                              Number::from(-2),
+                              Number::from(-3));
+        assert_eq!( 14_f64.sqrt(), v.mag() );
     }
 }
