@@ -86,6 +86,14 @@ impl Tuple {
         self.x * v.x + self.y * v.y + self.z * v.z + self.w + v.w
     }
 
+    // also only applies to vectors
+    pub fn cross(&self, v: &Tuple) -> Self {
+        Self { x: self.y * v.z + self.z * v.y,
+               y: self.z * v.x + self.x * v.z,
+               z: self.x * v.y + self.y * v.x,
+               w: 0.0 }
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -363,4 +371,20 @@ mod tests {
                               Number::from(4));
         assert_eq!( a.dot(b), 20.0 );
     }
+
+    #[test]
+    fn cross_product_1_2_3_w_2_3_4_equals_neg1_2_neg1(){
+        let a = Tuple::vector(Number::from(1),
+                              Number::from(2),
+                              Number::from(3));
+        let b = Tuple::vector(Number::from(2),
+                              Number::from(3),
+                              Number::from(4));
+        assert!( a.cross(&b).equals( Tuple::vector(Number::from(-1),
+                                                  Number::from(2),
+                                                  Number::from(-1))));
+        assert!( b.cross(&a).equals( Tuple::vector(Number::from(1),
+                                                  Number::from(-2),
+                                                  Number::from(1))));
+    }    
 }
