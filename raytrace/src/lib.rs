@@ -82,6 +82,10 @@ impl Tuple {
                w: 0.0}
     }
 
+    pub fn dot(&self, v: Tuple) -> f64 {
+        self.x * v.x + self.y * v.y + self.z * v.z + self.w + v.w
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -347,5 +351,16 @@ mod tests {
                               Number::from(2),
                               Number::from(3));
         assert_eq!( v.normal().mag(), 1.0 );
+    }
+
+    #[test]
+    fn dot_product_1_2_3_w_2_3_4_equals_20(){
+        let a = Tuple::vector(Number::from(1),
+                              Number::from(2),
+                              Number::from(3));
+        let b = Tuple::vector(Number::from(2),
+                              Number::from(3),
+                              Number::from(4));
+        assert_eq!( a.dot(b), 20.0 );
     }
 }
