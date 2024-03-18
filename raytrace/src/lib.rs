@@ -2,6 +2,7 @@ use std::convert::From;
 
 const EPSILON: f64 = 0.00001;
 
+#[derive(Debug)]
 pub struct Tuple {
     pub x: f64,
     pub y: f64,
@@ -380,6 +381,9 @@ mod tests {
         let b = Tuple::vector(Number::from(2),
                               Number::from(3),
                               Number::from(4));
+
+        println!( "{:?}", a.cross(&b) );
+
         assert!( a.cross(&b).equals( Tuple::vector(Number::from(-1),
                                                   Number::from(2),
                                                   Number::from(-1))));
