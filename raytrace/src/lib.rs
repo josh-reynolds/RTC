@@ -89,9 +89,9 @@ impl Tuple {
 
     // also only applies to vectors
     pub fn cross(&self, v: &Tuple) -> Self {
-        Self { x: self.y * v.z + self.z * v.y,
-               y: self.z * v.x + self.x * v.z,
-               z: self.x * v.y + self.y * v.x,
+        Self { x: self.y * v.z - self.z * v.y,
+               y: self.z * v.x - self.x * v.z,
+               z: self.x * v.y - self.y * v.x,
                w: 0.0 }
     }
 
@@ -381,9 +381,6 @@ mod tests {
         let b = Tuple::vector(Number::from(2),
                               Number::from(3),
                               Number::from(4));
-
-        println!( "{:?}", a.cross(&b) );
-
         assert!( a.cross(&b).equals( Tuple::vector(Number::from(-1),
                                                   Number::from(2),
                                                   Number::from(-1))));
