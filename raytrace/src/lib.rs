@@ -27,7 +27,7 @@ impl Tuple {
         Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
     }
 
-    pub fn plus(&self, t: Tuple) -> Self {
+    pub fn plus(&self, t: &Tuple) -> Self {
         Self { x: self.x + t.x,
                y: self.y + t.y,
                z: self.z + t.z,
@@ -218,7 +218,7 @@ mod tests {
         let b = Tuple::vector(Number::from(-2),
                               Number::from(3),
                               Number::from(1));
-        assert!( a.plus(b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
+        assert!( a.plus(&b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
     }
 
     #[test]
