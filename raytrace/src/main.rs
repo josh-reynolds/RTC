@@ -1,7 +1,11 @@
 use raytrace::Tuple;
+use raytrace::Number;
 
 fn main() {
     println!("Hello, world!");
+
+    let p = Projectile{ posn: Tuple::point(Number::from(0), Number::from(1), Number::from(0)),
+                        vel: Tuple::point(Number::from(1), Number::from(1), Number::from(0)).normal() };
 }
 
 #[derive(Debug)]
