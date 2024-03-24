@@ -1,6 +1,9 @@
 use std::convert::From;
+use crate::color::Color;
+use crate::equals::equals;
 
-const EPSILON: f64 = 0.00001;
+
+pub mod color;
 
 #[derive(Debug)]
 pub struct Tuple {
@@ -103,12 +106,7 @@ impl Tuple {
     }
 }
 
-#[derive(Debug)]
-pub struct Color {
-    pub r: f64,
-    pub g: f64,
-    pub b: f64,
-}
+
 
 pub struct Number {
     pub value: f64,
@@ -126,8 +124,12 @@ impl From<f64> for Number {
     }
 }
 
-pub fn equals(a: f64, b: f64) -> bool {
-    (a - b).abs() < EPSILON 
+mod equals {
+    const EPSILON: f64 = 0.00001;
+    
+    pub fn equals(a: f64, b: f64) -> bool {
+        (a - b).abs() < EPSILON 
+    }
 }
 
 #[cfg(test)]
@@ -396,11 +398,4 @@ mod tests {
                                                   Number::from(1))));
     }    
 
-    #[test]
-    fn colors_are_r_g_b_tuples(){
-        let c = Color { r: -0.5, g: 0.4, b: 1.7 };
-        assert!( equals(c.r, -0.5) &&
-                 equals(c.g, 0.4) &&
-                 equals(c.b, 1.7));
-    }
 }
