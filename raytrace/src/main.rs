@@ -1,5 +1,5 @@
 use raytrace::Tuple;
-use raytrace::Number;
+use raytrace::number::Number;
 use raytrace::color::Color;
 
 fn main() {

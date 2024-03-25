@@ -1,9 +1,10 @@
 use std::convert::From;
 use crate::color::Color;
 use crate::equals::equals;
-
+use crate::number::Number;
 
 pub mod color;
+pub mod number;
 
 #[derive(Debug)]
 pub struct Tuple {
@@ -106,24 +107,6 @@ impl Tuple {
     }
 }
 
-
-
-pub struct Number {
-    pub value: f64,
-}
-
-impl From<i32> for Number {
-    fn from(item: i32) -> Self {
-        Number{ value: item as f64 }
-    }
-}
-
-impl From<f64> for Number {
-    fn from(item: f64) -> Self {
-        Number{ value: item }
-    }
-}
-
 mod equals {
     const EPSILON: f64 = 0.00001;
     
@@ -187,18 +170,6 @@ mod tests {
     #[test]
     fn float_not_equals(){
         assert!( !equals(1.0, 1.001) );
-    }
-
-    #[test]
-    fn number_from_float(){
-        let n = Number::from( 1.0 );
-        assert!( equals(n.value, 1.0) );
-    }
-
-    #[test]
-    fn number_from_int(){
-        let n = Number::from( 1 );
-        assert!( equals(n.value, 1.0) );
     }
 
     #[test]

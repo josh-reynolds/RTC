@@ -8,8 +8,9 @@ pub struct Color {
 
 #[cfg(test)]
 mod tests {
-  use crate::equals;
-  use crate::Color;
+    use crate::equals;
+    use crate::Color;
+
     #[test]
     fn colors_are_r_g_b_tuples(){
         let c = Color { r: -0.5, g: 0.4, b: 1.7 };
