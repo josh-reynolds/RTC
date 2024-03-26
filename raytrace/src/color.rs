@@ -9,7 +9,7 @@ pub struct Color {
 #[cfg(test)]
 mod tests {
     use crate::equals;
-    use crate::Color;
+    use crate::color::Color;
 
     #[test]
     fn colors_are_r_g_b_tuples(){

@@ -1,3 +1,4 @@
+use std::convert::From;
 
 pub struct Number {
     pub value: f64,
@@ -19,7 +20,7 @@ impl From<f64> for Number {
 #[cfg(test)]
 mod tests {
     use crate::equals;
-    use crate::Number;
+    use crate::number::Number;
 
     #[test]
     fn number_from_float(){

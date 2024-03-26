@@ -1,6 +1,6 @@
-use raytrace::Tuple;
 use raytrace::number::Number;
 use raytrace::color::Color;
+use raytrace::tuple::Tuple;
 
 fn main() {
     let mut p = Projectile{ posn: Tuple::point(Number::from(0), 
