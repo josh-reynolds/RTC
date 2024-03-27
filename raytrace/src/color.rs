@@ -18,4 +18,12 @@ mod tests {
                  equals(c.g, 0.4) &&
                  equals(c.b, 1.7));
     }
+
+    #[test]
+    fn adding_colors(){
+        let c1 = Color { r: 0.9, g: 0.6, b: 0.75 };
+        let c2 = Color { r: 0.7, g: 0.1, b: 0.25 };
+        assert!( c1.plus(&c2).equals(Color { r: 0.7, g: 0.1, b: 0.25 }));
+
+    }
 }
