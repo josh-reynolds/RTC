@@ -8,6 +8,8 @@ pub struct Color {
 }
 
 impl Color {
+    // see comments in tuple.rs regarding overloading operators
+
     pub fn plus(&self, c: &Color) -> Self {
         Self { r: self.r + c.r,
                g: self.g + c.g,
@@ -24,6 +26,12 @@ impl Color {
         equals( self.r, c.r ) && 
         equals( self.g, c.g ) &&
         equals( self.b, c.b ) 
+    }
+    
+    pub fn mult(&self, n: f64) -> Self {
+        Self { r: self.r * n,
+               g: self.g * n,
+               b: self.b * n }
     }
 }
 
@@ -52,5 +60,12 @@ mod tests {
         let c1 = Color { r: 0.9, g: 0.6, b: 0.75 };
         let c2 = Color { r: 0.7, g: 0.1, b: 0.25 };
         assert!( c1.sub(&c2).equals(Color { r: 0.2, g: 0.5, b: 0.5 }));
+    }
+
+    // in the text, this is multiplied by an integer, but I think float will be needed
+    #[test]
+    fn multipy_color_by_scalar(){
+        let c = Color { r: 0.2, g: 0.3, b: 0.4 };
+        assert!( c.mult(2.0).equals( Color { r: 0.4, g: 0.6, b: 0.8 } ));
     }
 }
