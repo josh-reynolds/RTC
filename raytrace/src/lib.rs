@@ -1,5 +1,6 @@
 use crate::equals::equals;
 
+pub mod canvas;
 pub mod color;
 pub mod number;
 pub mod tuple;
