@@ -15,13 +15,14 @@ mod tests {
 
     #[test]
     fn canvas_has_width_and_height(){
-        let c = Canvas { width: 10, height: 20, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]]};
+        let c = Canvas { width: 10, height: 20, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
         assert!( (c.width == 10) && (c.height == 20) );
     }
 
     #[test]
     fn canvas_1_1_has_1_pixel(){
         let c = Canvas { width: 1, height: 1, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
+        assert!( (c.pixels.len() == 1) && (c.pixels[0].len() == 1) );
 
     }
 }

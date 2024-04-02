@@ -34,7 +34,7 @@ impl Color {
                b: self.b * n }
     }
 
-    pub fn multC(&self, c: Color) -> Self {
+    pub fn mult_c(&self, c: Color) -> Self {
         Self { r: self.r * c.r,
                g: self.g * c.g,
                b: self.b * c.b }
@@ -79,6 +79,6 @@ mod tests {
     fn multiply_color_by_color(){
         let c1 = Color { r: 1.0, g: 0.2, b: 0.4 };
         let c2 = Color { r: 0.9, g: 1.0, b: 0.1 };
-        assert!( c1.multC(c2).equals( Color { r: 0.9, g: 0.2, b: 0.04 } ));
+        assert!( c1.mult_c(c2).equals( Color { r: 0.9, g: 0.2, b: 0.04 } ));
     }
 }
