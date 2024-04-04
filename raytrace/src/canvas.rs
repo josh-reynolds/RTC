@@ -23,6 +23,11 @@ mod tests {
     fn canvas_1_1_has_1_pixel(){
         let c = Canvas { width: 1, height: 1, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
         assert!( (c.pixels.len() == 1) && (c.pixels[0].len() == 1) );
+    }
 
+    #[test]
+    fn canvas_default_color_eq_0_0_0(){
+        let c = Canvas { width: 1, height: 1, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
+        assert!( c.pixels[0][0].equals( Color{r:0.0,g:0.0,b:0.0} ));
     }
 }
