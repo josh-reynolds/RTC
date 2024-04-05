@@ -17,9 +17,26 @@ impl Canvas {
     pub fn equals(&self, c: Canvas) -> bool {
         ( self.width == c.width ) &&
         ( self.height == c.height ) &&
-        false
-        //( self.pixels.equals(c.pixels) ) // need to implement pixel array comparison
+        equals(&self.pixels, &c.pixels)
     }
+}
+
+// uncertain whether this should go into the equals module in
+// lib.rs, but for now keeping it here - only Canvas uses it right now
+pub fn equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
+    if (a.len() != b.len()) || (a[0].len() != b[0].len()){
+        return false
+    }
+    
+    for n in 0..(a.len()) {
+        for m in 0..(a[n].len()){
+            if !a[n][m].equals(b[n][m]){
+                return false
+            }
+        }
+    }
+
+    true
 }
 
 #[cfg(test)]

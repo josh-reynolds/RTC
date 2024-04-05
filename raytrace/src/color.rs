@@ -1,6 +1,6 @@
 use crate::equals;
 
-#[derive(Debug)]
+#[derive(Debug,Copy,Clone)]
 pub struct Color {
     pub r: f64,
     pub g: f64,
