@@ -22,7 +22,8 @@ impl Canvas {
         equals(&self.pixels, &c.pixels)
     }
 
-    pub fn write_pixel(&self, x: usize, y: usize, c: Color) -> () {
+    pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) -> () {
+        self.pixels[x][y] = c;
     }
 
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
@@ -87,7 +88,7 @@ mod tests {
 
     #[test]
     fn writing_pixels_to_canvas(){
-        let c = Canvas::new(10,20);
+        let mut c = Canvas::new(10,20);
         let red = Color{r:1.0,g:0.0,b:0.0};
         c.write_pixel(2, 3, red);
 
