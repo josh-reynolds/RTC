@@ -80,6 +80,12 @@ mod tests {
     }
 
     #[test]
+    fn canvas_created_with_new_has_pixel_array(){
+        let c = Canvas::new(10,20);
+        assert!( c.pixels.len() == 20 && c.pixels[0].len() == 10 );
+    }
+
+    #[test]
     fn writing_pixels_to_canvas(){
         let c = Canvas::new(10,20);
         let red = Color{r:1.0,g:0.0,b:0.0};
