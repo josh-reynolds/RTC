@@ -19,6 +19,15 @@ impl Canvas {
         ( self.height == c.height ) &&
         equals(&self.pixels, &c.pixels)
     }
+
+    pub fn write_pixel(&self, x: usize, y: usize, c: Color) -> () {
+    }
+
+    pub fn pixel_at(&self, x: usize, y: usize) -> Color {
+        println!("{} {}", self.width, self.height);
+        println!("{:?}", self.pixels);
+        self.pixels[x][y]
+    }
 }
 
 // uncertain whether this should go into the equals module in
@@ -68,5 +77,13 @@ mod tests {
         assert!( c.equals( Canvas { width: 1, 
                                     height: 1, 
                                     pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] }));
+    }
+
+    #[test]
+    fn writing_pixels_to_canvas(){
+        let c = Canvas::new(10,20);
+        let red = Color{r:1.0,g:0.0,b:0.0};
+        c.write_pixel(2, 3, red);
+        assert!( c.pixel_at(2, 3).equals( red ));
     }
 }
