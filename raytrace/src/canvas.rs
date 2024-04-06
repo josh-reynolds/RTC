@@ -2,16 +2,18 @@ use crate::color::Color;
 
 #[derive(Debug)]
 pub struct Canvas {
-    pub height: i32,
-    pub width: i32,
+    pub height: usize,
+    pub width: usize,
     pub pixels: Vec<Vec<Color>>,
 }
 
 impl Canvas {
-    pub fn new(width: i32, height:i32) -> Self {
+    pub fn new(width: usize, height:usize) -> Self {
+        let v = vec![vec![Color{r:0.0,g:0.0,b:0.0};width];height];
+
         Self { width: width,
                height: height,
-               pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] }
+               pixels: v }
     }
 
     pub fn equals(&self, c: Canvas) -> bool {
@@ -24,8 +26,6 @@ impl Canvas {
     }
 
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
-        println!("{} {}", self.width, self.height);
-        println!("{:?}", self.pixels);
         self.pixels[x][y]
     }
 }
@@ -90,6 +90,9 @@ mod tests {
         let c = Canvas::new(10,20);
         let red = Color{r:1.0,g:0.0,b:0.0};
         c.write_pixel(2, 3, red);
+
+        println!( "{:?}", c.pixel_at(2, 3) );
+
         assert!( c.pixel_at(2, 3).equals( red ));
     }
 }
