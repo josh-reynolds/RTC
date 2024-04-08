@@ -1,3 +1,5 @@
+use std::fs::File;
+use std::io::Result;
 use crate::color::Color;
 
 #[derive(Debug)]
@@ -28,6 +30,11 @@ impl Canvas {
 
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
         self.pixels[x][y]
+    }
+
+    pub fn to_ppm(&self) -> Result<File> {
+        let mut f = File::create("image.ppm");
+        f
     }
 }
 
@@ -91,9 +98,13 @@ mod tests {
         let mut c = Canvas::new(10,20);
         let red = Color{r:1.0,g:0.0,b:0.0};
         c.write_pixel(2, 3, red);
-
-        println!( "{:?}", c.pixel_at(2, 3) );
-
         assert!( c.pixel_at(2, 3).equals( red ));
+    }
+
+    #[test]
+    fn constructing_ppm_header(){
+        let c = Canvas::new(5,3);
+        let p = c.to_ppm();
+        assert!( 0 == 1);   // forcing failure until we finish scaffolding
     }
 }
