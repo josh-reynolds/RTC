@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::{Write};
 use std::io::Result;
 use crate::color::Color;
 
@@ -33,8 +34,11 @@ impl Canvas {
     }
 
     pub fn to_ppm(&self) -> Result<File> {
-        let mut f = File::create("image.ppm");
-        f
+        let mut f = File::create("image.ppm")?;
+        write!(f, "P3\n");
+        write!(f, "{} {}\n", self.width, self.height);
+        write!(f, "255\n");
+        Ok(f)
     }
 }
 
