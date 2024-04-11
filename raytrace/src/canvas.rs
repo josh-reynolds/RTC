@@ -64,6 +64,8 @@ pub fn equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
 mod tests {
     use crate::canvas::Canvas;
     use crate::color::Color;
+    use std::fs::File;
+    use std::io::{BufReader, BufRead};
 
     #[test]
     fn canvas_has_width_and_height(){
@@ -108,7 +110,16 @@ mod tests {
     #[test]
     fn constructing_ppm_header(){
         let c = Canvas::new(5,3);
-        let p = c.to_ppm();
+        let p = c.to_ppm().unwrap();
+        let buffer = BufReader::new( p );
+        //print_type_of(buffer);
+        for line in buffer.lines(){
+            //println!("{:?}", line);
+        }
         assert!( 0 == 1);   // forcing failure until we finish scaffolding
+    }
+
+    fn print_type_of<T>(_: T){
+        println!("{}", std::any::type_name::<T>())
     }
 }
