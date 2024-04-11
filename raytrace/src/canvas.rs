@@ -38,6 +38,7 @@ impl Canvas {
         write!(f, "P3\n");
         write!(f, "{} {}\n", self.width, self.height);
         write!(f, "255\n");
+        write!(f, "\n");
         Ok(f)
     }
 }
@@ -110,16 +111,13 @@ mod tests {
     #[test]
     fn constructing_ppm_header(){
         let c = Canvas::new(5,3);
-        let p = c.to_ppm().unwrap();
-        let buffer = BufReader::new( p );
-        //print_type_of(buffer);
+        let _ = c.to_ppm();
+
+        let file = File::open("image.ppm");
+        let buffer = BufReader::new( file.expect("REASON") );
         for line in buffer.lines(){
-            //println!("{:?}", line);
+            println!("{:?}", line.unwrap());
         }
         assert!( 0 == 1);   // forcing failure until we finish scaffolding
-    }
-
-    fn print_type_of<T>(_: T){
-        println!("{}", std::any::type_name::<T>())
     }
 }
