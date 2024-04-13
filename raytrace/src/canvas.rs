@@ -115,15 +115,10 @@ mod tests {
 
         let file = File::open("image.ppm");
         let buffer = BufReader::new( file.expect("REASON") );
+        let result = ["P3", "5 3", "255", ""];
         let mut index = 0;
         for line in buffer.lines(){
-            if index == 0 {
-                assert!(line.unwrap() == "P3");
-            } else if index == 1 {
-                assert!(line.unwrap() == "5 3");
-            } else if index == 2 {
-                assert!(line.unwrap() == "255");
-            }
+            assert!(line.unwrap() == result[index]);
             index += 1;
         }
     }
