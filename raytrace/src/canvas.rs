@@ -115,9 +115,16 @@ mod tests {
 
         let file = File::open("image.ppm");
         let buffer = BufReader::new( file.expect("REASON") );
+        let mut index = 0;
         for line in buffer.lines(){
-            println!("{:?}", line.unwrap());
+            if index == 0 {
+                assert!(line.unwrap() == "P3");
+            } else if index == 1 {
+                assert!(line.unwrap() == "5 3");
+            } else if index == 2 {
+                assert!(line.unwrap() == "255");
+            }
+            index += 1;
         }
-        assert!( 0 == 1);   // forcing failure until we finish scaffolding
     }
 }
