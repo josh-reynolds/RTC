@@ -35,10 +35,10 @@ impl Canvas {
 
     pub fn to_ppm(&self) -> Result<File> {
         let mut f = File::create("image.ppm")?;
-        write!(f, "P3\n");
-        write!(f, "{} {}\n", self.width, self.height);
-        write!(f, "255\n");
-        write!(f, "\n");
+        let _ = write!(f, "P3\n");
+        let _ = write!(f, "{} {}\n", self.width, self.height);
+        let _ = write!(f, "255\n");
+        let _ = write!(f, "\n");
         Ok(f)
     }
 }
@@ -65,8 +65,7 @@ pub fn equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
 mod tests {
     use crate::canvas::Canvas;
     use crate::color::Color;
-    use std::fs::File;
-    use std::io::{BufReader, BufRead};
+    use std::fs::read_to_string;
 
     #[test]
     fn canvas_has_width_and_height(){
@@ -113,13 +112,23 @@ mod tests {
         let c = Canvas::new(5,3);
         let _ = c.to_ppm();
 
-        let file = File::open("image.ppm");
-        let buffer = BufReader::new( file.expect("REASON") );
         let result = ["P3", "5 3", "255", ""];
-        let mut index = 0;
-        for line in buffer.lines(){
-            assert!(line.unwrap() == result[index]);
-            index += 1;
+        let lines = read_lines("image.ppm");
+
+        for i in 0..lines.len(){
+            assert!(result[i] == lines[i]);
         }
+    }
+
+    // leaving this as test helper function for now
+    // will probably have utility elsewhere and be moved later
+    fn read_lines(filename: &str) -> Vec<String> {
+        let mut result = Vec::new();
+
+        for line in read_to_string(filename).unwrap().lines() {
+            result.push(line.to_string())
+        }
+
+        result
     }
 }
