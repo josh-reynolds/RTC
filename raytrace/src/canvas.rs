@@ -42,8 +42,13 @@ impl Canvas {
         Ok(f)
     }
 
-    fn pix_255(value: f64) -> i32 {
-        return 255;
+    // test generates a cargo warning unless this is marked
+    // public - probably should be an internal-only fn though
+    pub fn pix_255(value: f64) -> i32 {
+        let mut result = (value * 256.0).floor() as i32;
+        result = if result > 255 { 255 } else { result };
+        result = if result <   0 {   0 } else { result };
+        result
     }
 }
 
@@ -128,6 +133,18 @@ mod tests {
     fn pixel_value_to_255_scale(){
         let a = 1.0;
         assert!( Canvas::pix_255(a) == 255 );
+
+        let b = 0.5;
+        assert!( Canvas::pix_255(b) == 128 );
+
+        let c = 0.0;
+        assert!( Canvas::pix_255(c) == 0 );
+
+        let d = 1.5;
+        assert!( Canvas::pix_255(d) == 255 );
+
+        let e = -0.5;
+        assert!( Canvas::pix_255(e) == 0 );
     }
 
     // leaving this as test helper function for now
