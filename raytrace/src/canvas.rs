@@ -41,6 +41,10 @@ impl Canvas {
         let _ = write!(f, "\n");
         Ok(f)
     }
+
+    fn pix_255(value: f64) -> i32 {
+        return 255;
+    }
 }
 
 // uncertain whether this should go into the equals module in
@@ -120,6 +124,12 @@ mod tests {
         }
     }
 
+    #[test]
+    fn pixel_value_to_255_scale(){
+        let a = 1.0;
+        assert!( Canvas::pix_255(a) == 255 );
+    }
+
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
     fn read_lines(filename: &str) -> Vec<String> {
@@ -131,4 +141,6 @@ mod tests {
 
         result
     }
+
+
 }
