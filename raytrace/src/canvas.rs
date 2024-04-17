@@ -33,8 +33,8 @@ impl Canvas {
         self.pixels[x][y]
     }
 
-    pub fn to_ppm(&self) -> Result<File> {
-        let mut f = File::create("image.ppm")?;
+    pub fn to_ppm(&self, name: &str) -> Result<File> {
+        let mut f = File::create(name)?;
         let _ = write!(f, "P3\n");
         let _ = write!(f, "{} {}\n", self.width, self.height);
         let _ = write!(f, "255\n");
@@ -119,10 +119,10 @@ mod tests {
     #[test]
     fn constructing_ppm_header(){
         let c = Canvas::new(5,3);
-        let _ = c.to_ppm();
+        let _ = c.to_ppm("header.ppm");
 
         let result = ["P3", "5 3", "255", ""];
-        let lines = read_lines("image.ppm");
+        let lines = read_lines("header.ppm");
 
         for i in 0..lines.len(){
             assert_eq!(result[i], lines[i]);
@@ -150,8 +150,8 @@ mod tests {
     #[test]
     fn ppm_for_one_pixel(){
         let c = Canvas::new(1,1);
-        let _ = c.to_ppm();
-        let lines = read_lines("image.ppm");
+        let _ = c.to_ppm("one_pixel.ppm");
+        let lines = read_lines("one_pixel.ppm");
         assert_eq!("0 0 0", lines[3]);
     }
 
