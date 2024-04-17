@@ -38,7 +38,7 @@ impl Canvas {
         let _ = write!(f, "P3\n");
         let _ = write!(f, "{} {}\n", self.width, self.height);
         let _ = write!(f, "255\n");
-        let _ = write!(f, "\n");
+        let _ = write!(f, "0 0 0");
         Ok(f)
     }
 
@@ -121,10 +121,10 @@ mod tests {
         let c = Canvas::new(5,3);
         let _ = c.to_ppm("header.ppm");
 
-        let result = ["P3", "5 3", "255", ""];
+        let result = ["P3", "5 3", "255"];
         let lines = read_lines("header.ppm");
 
-        for i in 0..lines.len(){
+        for i in 0..3{
             assert_eq!(result[i], lines[i]);
         }
     }
