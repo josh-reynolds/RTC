@@ -125,7 +125,7 @@ mod tests {
         let lines = read_lines("image.ppm");
 
         for i in 0..lines.len(){
-            assert!(result[i] == lines[i]);
+            assert_eq!(result[i], lines[i]);
         }
     }
 
@@ -152,7 +152,7 @@ mod tests {
         let c = Canvas::new(1,1);
         let _ = c.to_ppm();
         let lines = read_lines("image.ppm");
-        assert!("0 0 0" == lines[3]);
+        assert_eq!("0 0 0", lines[3]);
     }
 
     // leaving this as test helper function for now
