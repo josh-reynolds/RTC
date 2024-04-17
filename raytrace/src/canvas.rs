@@ -147,6 +147,14 @@ mod tests {
         assert!( Canvas::pix_255(e) == 0 );
     }
 
+    #[test]
+    fn ppm_for_one_pixel(){
+        let c = Canvas::new(1,1);
+        let _ = c.to_ppm();
+        let lines = read_lines("image.ppm");
+        assert!("0 0 0" == lines[3]);
+    }
+
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
     fn read_lines(filename: &str) -> Vec<String> {
