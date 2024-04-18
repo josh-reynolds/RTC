@@ -50,6 +50,14 @@ impl Canvas {
         result = if result <   0 {   0 } else { result };
         result
     }
+
+    pub fn pixel_to_string(p: Color) -> String {
+        let s = format!("{} {} {}",
+                        Self::pix_255(p.r),
+                        Self::pix_255(p.g),
+                        Self::pix_255(p.b));
+        s
+    }
 }
 
 // uncertain whether this should go into the equals module in
@@ -155,6 +163,22 @@ mod tests {
         assert_eq!("0 0 0", lines[3]);
     }
 
+    #[test]
+    fn ppm_for_color(){
+        let mut c = Canvas::new(1,1);
+        let red = Color{r:1.0,g:0.0,b:0.0};
+        c.write_pixel(0, 0, red);
+        let _ = c.to_ppm("red_pixel.ppm");
+        let lines = read_lines("red_pixel.ppm");
+        assert_eq!("255 0 0", lines[3]);
+    }
+
+    #[test]
+    fn pixel_to_string(){
+        let black = Color{r:0.0,g:0.0,b:0.0};
+        assert_eq!("0 0 0", Canvas::pixel_to_string(black));
+    }
+    
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
     fn read_lines(filename: &str) -> Vec<String> {
