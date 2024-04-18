@@ -177,6 +177,14 @@ mod tests {
     fn pixel_to_string(){
         let black = Color{r:0.0,g:0.0,b:0.0};
         assert_eq!("0 0 0", Canvas::pixel_to_string(black));
+        let red = Color{r:1.0,g:0.0,b:0.0};
+        assert_eq!("255 0 0", Canvas::pixel_to_string(red));
+        let green = Color{r:0.0,g:1.0,b:0.0};
+        assert_eq!("0 255 0", Canvas::pixel_to_string(green));
+        let blue = Color{r:0.0,g:0.0,b:1.0};
+        assert_eq!("0 0 255", Canvas::pixel_to_string(blue));
+        let grey = Color{r:0.5,g:0.5,b:0.5};
+        assert_eq!("128 128 128", Canvas::pixel_to_string(grey));
     }
     
     // leaving this as test helper function for now
