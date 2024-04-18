@@ -38,7 +38,7 @@ impl Canvas {
         let _ = write!(f, "P3\n");
         let _ = write!(f, "{} {}\n", self.width, self.height);
         let _ = write!(f, "255\n");
-        let _ = write!(f, "0 0 0");
+        let _ = write!(f, "{}", Self::pixel_to_string(self.pixel_at(0,0)));
         Ok(f)
     }
 
