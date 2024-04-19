@@ -38,7 +38,7 @@ impl Canvas {
         let _ = write!(f, "P3\n");
         let _ = write!(f, "{} {}\n", self.width, self.height);
         let _ = write!(f, "255\n");
-        let _ = write!(f, "{}", Self::pixel_to_string(self.pixel_at(0,0)));
+        let _ = write!(f, "{}", Self::pixel_row_to_string(&self.pixels[0]));
         Ok(f)
     }
 
@@ -57,6 +57,15 @@ impl Canvas {
                         Self::pix_255(p.g),
                         Self::pix_255(p.b));
         s
+    }
+
+    pub fn pixel_row_to_string(row: &Vec<Color>) -> String {
+        let mut s = String::new();
+        for pixel in row{
+            s += &Self::pixel_to_string(*pixel);
+            s += " ";
+        }
+        s.to_string()
     }
 }
 
@@ -160,7 +169,7 @@ mod tests {
         let c = Canvas::new(1,1);
         let _ = c.to_ppm("one_pixel.ppm");
         let lines = read_lines("one_pixel.ppm");
-        assert_eq!("0 0 0", lines[3]);
+        assert_eq!("0 0 0 ", lines[3]);
     }
 
     #[test]
@@ -170,7 +179,7 @@ mod tests {
         c.write_pixel(0, 0, red);
         let _ = c.to_ppm("red_pixel.ppm");
         let lines = read_lines("red_pixel.ppm");
-        assert_eq!("255 0 0", lines[3]);
+        assert_eq!("255 0 0 ", lines[3]);
     }
 
     #[test]
@@ -187,6 +196,14 @@ mod tests {
         assert_eq!("128 128 128", Canvas::pixel_to_string(grey));
     }
     
+    #[test]
+    fn ppm_for_larger_array(){
+        let c = Canvas::new(10,10);
+        let _ = c.to_ppm("hundred_pixels.ppm");
+        let lines = read_lines("hundred_pixels.ppm");
+        assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
+    }
+
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
     fn read_lines(filename: &str) -> Vec<String> {
