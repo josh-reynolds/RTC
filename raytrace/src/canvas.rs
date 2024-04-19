@@ -197,7 +197,7 @@ mod tests {
     }
     
     #[test]
-    fn ppm_for_larger_array(){
+    fn ppm_one_row_of_array(){
         let c = Canvas::new(10,10);
         let _ = c.to_ppm("hundred_pixels.ppm");
         let lines = read_lines("hundred_pixels.ppm");
@@ -215,6 +215,4 @@ mod tests {
 
         result
     }
-
-
 }
