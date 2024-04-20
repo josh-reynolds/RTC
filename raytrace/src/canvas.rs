@@ -61,9 +61,24 @@ impl Canvas {
 
     pub fn pixel_row_to_string(row: &Vec<Color>) -> String {
         let mut s = String::new();
-        for pixel in row{
-            s += &Self::pixel_to_string(*pixel);
+        let mut index = 0;
+        let mut line_length = 0;
+
+        for pixel in row {
+            let new_pix = &Self::pixel_to_string(*pixel);
+            line_length += new_pix.len() + 1;
+
+            s += new_pix;
             s += " ";
+
+            // PPM line length should not exceed 70 chars
+            // maximum pixel string is 12 chars, so 70-12=58
+            if index < row.len()-1 && line_length > 58 {
+                s += "\n";
+                line_length = 0;
+            }
+            
+            index += 1;
         }
         s.to_string()
     }
@@ -201,6 +216,14 @@ mod tests {
         let c = Canvas::new(10,10);
         let _ = c.to_ppm("hundred_pixels.ppm");
         let lines = read_lines("hundred_pixels.ppm");
+        assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
+    }
+
+    #[test]
+    fn ppm_long_row(){
+        let c = Canvas::new(25,10);
+        let _ = c.to_ppm("long_row.ppm");
+        let lines = read_lines("long_row.ppm");
         assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
     }
 
