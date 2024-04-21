@@ -38,7 +38,10 @@ impl Canvas {
         let _ = write!(f, "P3\n");
         let _ = write!(f, "{} {}\n", self.width, self.height);
         let _ = write!(f, "255\n");
-        let _ = write!(f, "{}", Self::pixel_row_to_string(&self.pixels[0]));
+        for i in 0..self.pixels.len(){
+            let _ = write!(f, "{}", Self::pixel_row_to_string(&self.pixels[i]));
+            let _ = write!(f, "\n");
+        }
         Ok(f)
     }
 
@@ -225,6 +228,14 @@ mod tests {
         let _ = c.to_ppm("long_row.ppm");
         let lines = read_lines("long_row.ppm");
         assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
+    }
+
+    #[test]
+    fn ppm_all_pixel_rows(){
+        let c = Canvas::new(5,5);
+        let _ = c.to_ppm("all_rows.ppm");
+        let lines = read_lines("all_rows.ppm");
+        assert_eq!(lines.len(),8);
     }
 
     // leaving this as test helper function for now
