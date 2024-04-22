@@ -236,6 +236,9 @@ mod tests {
         let _ = c.to_ppm("all_rows.ppm");
         let lines = read_lines("all_rows.ppm");
         assert_eq!(lines.len(),8);
+        for n in 3..lines.len() {
+            assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[n]);
+        }
     }
 
     // leaving this as test helper function for now
