@@ -26,11 +26,11 @@ impl Canvas {
     }
 
     pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) -> () {
-        self.pixels[x][y] = c;
+        self.pixels[y][x] = c;
     }
 
     pub fn pixel_at(&self, x: usize, y: usize) -> Color {
-        self.pixels[x][y]
+        self.pixels[y][x]
     }
 
     pub fn to_ppm(&self, name: &str) -> Result<File> {
@@ -238,6 +238,25 @@ mod tests {
         assert_eq!(lines.len(),8);
         for n in 3..lines.len() {
             assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[n]);
+        }
+    }
+
+    #[test]
+    fn ppm_coloring_pixels(){
+        let mut c = Canvas::new(5, 3);
+        let c1 = Color{r:1.5,g:0.0,b:0.0};
+        let c2 = Color{r:0.0,g:0.5,b:0.0};
+        let c3 = Color{r:-0.5,g:0.0,b:1.0};
+        c.write_pixel(0, 0, c1);
+        c.write_pixel(2, 1, c2);
+        c.write_pixel(4, 2, c3);
+        let _ = c.to_ppm("coloring_pixels.ppm");
+        let lines = read_lines("coloring_pixels.ppm");
+        let expected = ["255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ",
+                        "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0 ",
+                        "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 "];
+        for n in 3..lines.len() {
+            assert_eq!(expected[n-3], lines[n]);
         }
     }
 
