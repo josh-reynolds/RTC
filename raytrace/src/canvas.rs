@@ -286,6 +286,16 @@ mod tests {
             assert_eq!(expected[n-3], lines[n]);
         }
     }
+    
+    #[test]
+    fn ppm_terminated_by_newline(){
+        let c = Canvas::new(2,2);
+        let _ = c.to_ppm("terminator.ppm");
+        let lines = read_lines("terminator.ppm");
+        let last_line = &lines[lines.len()-1];
+        let last_char = last_line.as_bytes().last().unwrap();
+        assert_eq!('\n', *last_char as char);  
+    }
 
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
