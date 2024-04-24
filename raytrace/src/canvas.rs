@@ -260,6 +260,33 @@ mod tests {
         }
     }
 
+    // I'm taking a slightly different approach than the text.
+    // I am splitting lines at pixel boundaries, while he
+    // seems to be taking the whitespace closest to the 
+    // 70-char boundary - my approach is still valid PPM
+    // so all good. Test below altered slightly to reflect this.
+    #[test]
+    fn ppm_split_lines(){
+        let w = 9;
+        let h = 2;
+        let mut c = Canvas::new(w,h);
+        let c1 = Color{r:1.0,g:0.8,b:0.6};
+        for i in 0..w {
+            for j in 0..h {
+                c.write_pixel(i,j,c1);   // should implement Canvas.fill()
+            }
+        }
+        let _ = c.to_ppm("split_lines.ppm");
+        let lines = read_lines("split_lines.ppm");
+        let expected = ["255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 ",
+                        "255 204 153 255 204 153 255 204 153 255 204 153 ", 
+                        "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 ",
+                        "255 204 153 255 204 153 255 204 153 255 204 153 "];
+        for n in 3..lines.len() {
+            assert_eq!(expected[n-3], lines[n]);
+        }
+    }
+
     // leaving this as test helper function for now
     // will probably have utility elsewhere and be moved later
     fn read_lines(filename: &str) -> Vec<String> {
