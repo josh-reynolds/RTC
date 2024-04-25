@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{Write};
+use std::io::Write;
 use std::io::Result;
 use crate::color::Color;
 
@@ -291,10 +291,9 @@ mod tests {
     fn ppm_terminated_by_newline(){
         let c = Canvas::new(2,2);
         let _ = c.to_ppm("terminator.ppm");
-        let lines = read_lines("terminator.ppm");
-        let last_line = &lines[lines.len()-1];
-        let last_char = last_line.as_bytes().last().unwrap();
-        assert_eq!('\n', *last_char as char);  
+        let bytes = std::fs::read("terminator.ppm").unwrap();
+        let last_byte = bytes[bytes.len()-1];
+        assert_eq!('\n', last_byte as char);  
     }
 
     // leaving this as test helper function for now
