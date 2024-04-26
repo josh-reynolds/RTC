@@ -26,8 +26,10 @@ fn main() {
     while p.posn.y > 0.0 {
        p = tick(&e, &p);
        let x = p.posn.x as i32;
-       let y = (c.height as f64 - p.posn.y) as i32;
-       println!("{},{}", x, y);
+       let mut y = (c.height as f64 - p.posn.y) as i32;
+       if y > c.height as i32 {
+           y = c.height as i32 - 1;
+       }
        c.write_pixel(x.try_into().unwrap(),
                      y.try_into().unwrap(),
                      red);
