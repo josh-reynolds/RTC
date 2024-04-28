@@ -4,6 +4,7 @@ pub mod canvas;
 pub mod color;
 pub mod number;
 pub mod tuple;
+pub mod matrix;
 
 mod equals {
     const EPSILON: f64 = 0.00001;
