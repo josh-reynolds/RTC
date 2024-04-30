@@ -70,5 +70,29 @@ mod tests {
                  m.m[3][0] == 13.5 &&
                  m.m[3][2] == 15.5 );
     }
+
+    #[test]
+    fn two_by_two_matrix(){
+        let m = Matrix { cols: 2, rows: 2,
+                         m: vec![vec![-3.0,5.0],
+                                 vec![1.0,-2.0]] };
+        assert!( m.m[0][0] == -3.0 &&
+                 m.m[0][1] == 5.0 &&
+                 m.m[1][0] == 1.0 &&
+                 m.m[1][1] == -2.0 );
+
+    }
+
+    #[test]
+    fn three_by_three_matrix(){
+        let m = Matrix { cols: 3, rows: 3,
+                         m: vec![vec![-3.0,5.0,0.0],
+                                 vec![1.0,-2.0,-7.0],
+                                 vec![0.0,1.0,1.0]] };
+        assert!( m.m[0][0] == -3.0 &&
+                 m.m[1][1] == -2.0 &&
+                 m.m[2][2] == 1.0 );
+
+    }
 }
 
