@@ -17,6 +17,10 @@ impl Matrix {
         ( self.cols == m.cols ) &&
         equals(&self.m, &m.m )
     }
+
+    pub fn get(&self, row: usize, col: usize) -> f64 {
+        self.m[row][col]
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -126,6 +130,17 @@ mod tests {
                                  vec![4.0,3.0,2.0,1.0]] };
         assert!( !a.equals(b) );
 
+    }
+
+    #[test]
+    fn matrix_getter(){
+        let m = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![1.0,2.0,3.0,4.0],
+                                 vec![5.0,6.0,7.0,8.0],
+                                 vec![9.0,8.0,7.0,6.0],
+                                 vec![5.0,4.0,3.0,2.0]] };
+        assert!( m.get(1,1) == 6.0 );
+        assert!( m.get(0,2) == 3.0 );
     }
 }
 
