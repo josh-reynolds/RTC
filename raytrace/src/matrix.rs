@@ -22,6 +22,10 @@ impl Matrix {
         self.m[row][col]
     }
 
+    pub fn set(&mut self, row: usize, col: usize, val: f64) {
+        self.m[row][col] = val;
+    }
+
     pub fn mult(&self, other: Matrix) -> Self {
         other
     }
@@ -165,6 +169,17 @@ mod tests {
                                  vec![16.0, 26.0,  46.0,  42.0]] };
 
         assert!( a.mult(b).equals(result) );
+    }
+
+    #[test]
+    fn matrix_setter(){
+        let mut m = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![1.0,2.0,3.0,4.0],
+                                 vec![5.0,6.0,7.0,8.0],
+                                 vec![9.0,8.0,7.0,6.0],
+                                 vec![5.0,4.0,3.0,2.0]] };
+        m.set(1,1,12.0);
+        assert!( m.get(1,1) == 12.0 );
     }
 }
 
