@@ -27,7 +27,17 @@ impl Matrix {
     }
 
     pub fn mult(&self, other: Matrix) -> Self {
-        other
+        let mut m = Matrix::new(4,4);
+        for row in 0..4 {
+            for col in 0..4 {
+                let val = self.get(row,0) * other.get(0,col) +
+                          self.get(row,1) * other.get(1,col) +
+                          self.get(row,2) * other.get(2,col) +
+                          self.get(row,3) * other.get(3,col);
+                m.set(row,col,val);
+            }
+        }
+        m
     }
 }
 
