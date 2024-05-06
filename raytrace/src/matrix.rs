@@ -14,6 +14,15 @@ impl Matrix {
                m: vec![vec![0.0;cols];rows] }
     }
 
+    pub fn identity() -> Self {
+        Self { cols: 4,
+               rows: 4,
+               m: vec![vec![1.0, 0.0, 0.0, 0.0],
+                       vec![0.0, 1.0, 0.0, 0.0],
+                       vec![0.0, 0.0, 1.0, 0.0],
+                       vec![0.0, 0.0, 0.0, 1.0]] }
+    }
+
     pub fn equals(&self, m: Matrix) -> bool {
         ( self.rows == m.rows ) &&
         ( self.cols == m.cols ) &&
@@ -227,6 +236,17 @@ mod tests {
         assert!( a.multup(b).equals( Tuple::point(Number::from(18.0), 
                                                   Number::from(24.0),
                                                   Number::from(33.0)) ));
+    }
+
+    #[test]
+    fn matrix_identity(){
+        let identity = Matrix { cols: 4, rows: 4,
+                                m: vec![vec![1.0, 0.0, 0.0, 0.0],
+                                        vec![0.0, 1.0, 0.0, 0.0],
+                                        vec![0.0, 0.0, 1.0, 0.0],
+                                        vec![0.0, 0.0, 0.0, 1.0]] };
+        
+        assert!( Matrix::identity().equals(identity) );
     }
 
     #[test]
