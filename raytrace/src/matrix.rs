@@ -1,3 +1,5 @@
+use crate::tuple::Tuple;
+
 #[derive(Debug)]
 pub struct Matrix {
     pub rows: usize,
@@ -26,6 +28,7 @@ impl Matrix {
         self.m[row][col] = val;
     }
 
+    // only valid for 4x4 matrices - should add assert
     pub fn mult(&self, other: Matrix) -> Self {
         let mut m = Matrix::new(4,4);
         for row in 0..4 {
@@ -38,6 +41,32 @@ impl Matrix {
             }
         }
         m
+    }
+
+    pub fn multup(&self, other: Tuple) -> Tuple {
+        let mut t = Tuple { x: 0.0, y: 0.0, z: 0.0, w: 0.0 };
+
+        t.x = self.get(0,0) * other.x +
+              self.get(0,1) * other.y +
+              self.get(0,2) * other.z +
+              self.get(0,3) * other.w;
+            
+        t.y = self.get(1,0) * other.x +
+              self.get(1,1) * other.y +
+              self.get(1,2) * other.z +
+              self.get(1,3) * other.w;
+        
+        t.z = self.get(2,0) * other.x +
+              self.get(2,1) * other.y +
+              self.get(2,2) * other.z +
+              self.get(2,3) * other.w;
+
+        t.w = self.get(3,0) * other.x +
+              self.get(3,1) * other.y +
+              self.get(3,2) * other.z +
+              self.get(3,3) * other.w;
+
+        t
     }
 }
 
@@ -62,6 +91,8 @@ pub fn equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
+    use crate::number::Number;
+    use crate::tuple::Tuple;
 
     #[test]
     fn matrix_has_cols_and_rows(){
@@ -179,6 +210,23 @@ mod tests {
                                  vec![16.0, 26.0,  46.0,  42.0]] };
 
         assert!( a.mult(b).equals(result) );
+    }
+
+    #[test]
+    fn matrix_multiply_4_by_tuple(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![1.0, 2.0, 3.0, 4.0],
+                                 vec![2.0, 4.0, 4.0, 2.0],
+                                 vec![8.0, 6.0, 4.0, 1.0],
+                                 vec![0.0, 0.0, 0.0, 1.0]] };
+
+        let b = Tuple::point(Number::from(1.0), 
+                             Number::from(2.0),
+                             Number::from(3.0));
+
+        assert!( a.multup(b).equals( Tuple::point(Number::from(18.0), 
+                                                  Number::from(24.0),
+                                                  Number::from(33.0)) ));
     }
 
     #[test]
