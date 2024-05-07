@@ -52,7 +52,7 @@ impl Matrix {
         m
     }
 
-    pub fn multup(&self, other: Tuple) -> Tuple {
+    pub fn multup(&self, other: &Tuple) -> Tuple {
         let mut t = Tuple { x: 0.0, y: 0.0, z: 0.0, w: 0.0 };
 
         t.x = self.get(0,0) * other.x +
@@ -233,7 +233,7 @@ mod tests {
                              Number::from(2.0),
                              Number::from(3.0));
 
-        assert!( a.multup(b).equals( Tuple::point(Number::from(18.0), 
+        assert!( a.multup(&b).equals( Tuple::point(Number::from(18.0), 
                                                   Number::from(24.0),
                                                   Number::from(33.0)) ));
     }
@@ -258,6 +258,22 @@ mod tests {
                                  vec![5.0,4.0,3.0,2.0]] };
         m.set(1,1,12.0);
         assert!( m.get(1,1) == 12.0 );
+    }
+
+    #[test]
+    fn matrix_multiply_by_identity(){
+        let m = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![0.0,1.0, 2.0, 4.0],
+                                 vec![1.0,2.0, 4.0, 8.0],
+                                 vec![2.0,4.0, 8.0,16.0],
+                                 vec![4.0,8.0,16.0,32.0]] };
+        assert!( m.mult(Matrix::identity()).equals(m));
+    }
+
+    #[test]
+    fn tuple_multiply_by_identity(){
+        let t = Tuple{ x: 1.0, y: 2.0, z: 3.0, w: 4.0 };
+        assert!( Matrix::identity().multup(&t).equals(t) );
     }
 }
 
