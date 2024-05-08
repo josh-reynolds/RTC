@@ -77,6 +77,17 @@ impl Matrix {
 
         t
     }
+
+    pub fn transpose(&self) -> Self {
+        let mut m = Matrix::new(4,4);
+        for row in 0..4 {
+            for col in 0..4 {
+                let val = self.get(col,row);
+                m.set(row,col,val);
+            }
+        }
+        m
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -274,6 +285,28 @@ mod tests {
     fn tuple_multiply_by_identity(){
         let t = Tuple{ x: 1.0, y: 2.0, z: 3.0, w: 4.0 };
         assert!( Matrix::identity().multup(&t).equals(t) );
+    }
+
+    #[test]
+    fn matrix_transpose(){
+        let m = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![0.0,9.0,3.0,0.0],
+                                 vec![9.0,8.0,0.0,8.0],
+                                 vec![1.0,8.0,5.0,3.0],
+                                 vec![0.0,0.0,5.0,8.0]] };
+
+        let result = Matrix { cols: 4, rows: 4,
+                              m: vec![vec![0.0,9.0,1.0,0.0],
+                                      vec![9.0,8.0,8.0,0.0],
+                                      vec![3.0,0.0,5.0,5.0],
+                                      vec![0.0,8.0,3.0,8.0]] };
+
+        assert!( m.transpose().equals(result) );
+    }
+
+    #[test]
+    fn matrix_transpose_identity(){
+        assert!( Matrix::identity().transpose().equals(Matrix::identity()) );
     }
 }
 
