@@ -88,6 +88,12 @@ impl Matrix {
         }
         m
     }
+
+    // only valid for 2x2 matrices - should add assert
+    pub fn determinant(&self) -> f64 {
+        (self.get(0,0) * self.get(1,1)) - 
+            (self.get(1,0) * self.get(0,1))
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -307,6 +313,14 @@ mod tests {
     #[test]
     fn matrix_transpose_identity(){
         assert!( Matrix::identity().transpose().equals(Matrix::identity()) );
+    }
+
+    #[test]
+    fn matrix_determinant_2_by_2(){
+        let m = Matrix { cols: 2, rows: 2,
+                         m: vec![vec![ 1.0,5.0],
+                                 vec![-3.0,2.0]] };
+        assert!( m.determinant() == 17.0 );
     }
 }
 
