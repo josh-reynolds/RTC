@@ -94,6 +94,25 @@ impl Matrix {
         (self.get(0,0) * self.get(1,1)) - 
             (self.get(1,0) * self.get(0,1))
     }
+
+    pub fn submatrix(&self, row: usize, col: usize) -> Self {
+        let mut m = Matrix::new(self.rows-1, self.cols-1);
+
+        let mut current_row = 0;
+        for r in 0..self.rows {
+            if r == row { continue };
+
+            let mut current_col = 0;
+            for c in 0..self.cols {
+                if c == col { continue };
+
+                m.set(current_row,current_col,self.get(r,c));
+                current_col += 1;
+            }
+            current_row += 1;
+        }
+        m
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -320,7 +339,39 @@ mod tests {
         let m = Matrix { cols: 2, rows: 2,
                          m: vec![vec![ 1.0,5.0],
                                  vec![-3.0,2.0]] };
+
         assert!( m.determinant() == 17.0 );
+    }
+
+    #[test]
+    fn submatrix_of_3_by_3(){
+        let m = Matrix { cols: 3, rows: 3,
+                         m: vec![vec![ 1.0,5.0, 0.0],
+                                 vec![-3.0,2.0, 7.0],
+                                 vec![ 0.0,6.0,-3.0]] };
+
+        let sub = Matrix { cols: 2, rows: 2,
+                           m: vec![vec![-3.0,2.0],
+                                   vec![ 0.0,6.0]] };
+
+        assert!( m.submatrix(0,2).equals(sub) );
+    }
+
+    #[test]
+    fn submatrix_of_4_by_4(){
+        let m = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![-6.0,1.0, 1.0,6.0],
+                                 vec![-8.0,5.0, 8.0,6.0],
+                                 vec![-1.0,0.0, 8.0,2.0],
+                                 vec![-7.0,1.0,-1.0,1.0]] };
+
+        let sub = Matrix { cols: 3, rows: 3,
+                           m: vec![vec![-6.0, 1.0,6.0],
+                                   vec![-8.0, 8.0,6.0],
+                                   vec![-7.0,-1.0,1.0]] };
+
+        assert!( m.submatrix(2,1).equals(sub) );
+
     }
 }
 
