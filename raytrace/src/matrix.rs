@@ -118,6 +118,17 @@ impl Matrix {
     pub fn minor(&self, row: usize, col: usize) -> f64 {
         self.submatrix(row,col).determinant()
     }
+
+    // only valid for 3x3 matrices - should add assert
+    pub fn cofactor(&self, row: usize, col: usize) -> f64 {
+        let mut result = self.minor(row,col);
+
+        if (row + col) % 2 != 0 {
+            result = -result;
+        }
+
+        result
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -390,6 +401,19 @@ mod tests {
 
         assert!( b.determinant() == 25.0 );
         assert!( a.minor(1,0) == 25.0 );
+    }
+
+    #[test]
+    fn cofactor_of_3_by_3(){
+        let a = Matrix { cols: 3, rows: 3,
+                         m: vec![vec![3.0, 5.0, 0.0],
+                                 vec![2.0,-1.0,-7.0],
+                                 vec![6.0,-1.0, 5.0]] };
+
+        assert!( a.minor(0,0)    == -12.0 );
+        assert!( a.cofactor(0,0) == -12.0 );
+        assert!( a.minor(1,0)    ==  25.0 );
+        assert!( a.cofactor(1,0) == -25.0 );
     }
 }
 
