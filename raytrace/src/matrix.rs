@@ -415,5 +415,33 @@ mod tests {
         assert!( a.minor(1,0)    ==  25.0 );
         assert!( a.cofactor(1,0) == -25.0 );
     }
+
+    #[test]
+    fn matrix_determinant_3_by_3(){
+        let a = Matrix { cols: 3, rows: 3,
+                         m: vec![vec![ 1.0, 2.0, 6.0],
+                                 vec![-5.0, 8.0,-4.0],
+                                 vec![ 2.0, 6.0, 4.0]] };
+
+        assert!( a.cofactor(0,0) ==   56.0 );
+        assert!( a.cofactor(0,1) ==   12.0 );
+        assert!( a.cofactor(0,2) ==  -46.0 );
+        assert!( a.determinant() == -196.0 );
+    }
+
+    #[test]
+    fn matrix_determinant_4_by_4(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![-2.0,-8.0, 3.0, 5.0],
+                                 vec![-3.0, 1.0, 7.0, 3.0],
+                                 vec![ 1.0, 2.0,-9.0, 6.0],
+                                 vec![-6.0, 7.0, 7.0,-9.0]] };
+
+        assert!( a.cofactor(0,0) ==   690.0 );
+        assert!( a.cofactor(0,1) ==   447.0 );
+        assert!( a.cofactor(0,2) ==   210.0 );
+        assert!( a.cofactor(0,3) ==    51.0 );
+        assert!( a.determinant() == -4071.0 );
+    }
 }
 
