@@ -141,6 +141,10 @@ impl Matrix {
 
         result
     }
+
+    pub fn is_invertible(&self) -> bool {
+        self.determinant() != 0.0
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -454,6 +458,30 @@ mod tests {
         assert!( a.cofactor(0,2) ==   210.0 );
         assert!( a.cofactor(0,3) ==    51.0 );
         assert_eq!( a.determinant(), -4071.0 );
+    }
+
+    #[test]
+    fn matrix_test_inversion_true(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![ 6.0, 4.0, 4.0, 4.0],
+                                 vec![ 5.0, 5.0, 7.0, 6.0],
+                                 vec![ 4.0,-9.0, 3.0,-7.0],
+                                 vec![ 9.0, 1.0, 7.0,-6.0]] };
+
+        assert_eq!( a.determinant(), -2120.0 );
+        assert!( a.is_invertible() );
+    }
+
+    #[test]
+    fn matrix_test_inversion_false(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![-4.0, 2.0,-2.0, 3.0],
+                                 vec![ 9.0, 6.0, 2.0, 6.0],
+                                 vec![ 0.0,-5.0, 1.0,-5.0],
+                                 vec![ 0.0, 0.0, 0.0, 0.0]] };
+
+        assert_eq!( a.determinant(), 0.0 );
+        assert!( !a.is_invertible() );
     }
 }
 
