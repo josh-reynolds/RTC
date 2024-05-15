@@ -89,10 +89,22 @@ impl Matrix {
         m
     }
 
-    // only valid for 2x2 matrices - should add assert
+    // adding logic for larger sizes...
+    // assumes square matrices...
     pub fn determinant(&self) -> f64 {
-        (self.get(0,0) * self.get(1,1)) - 
-            (self.get(1,0) * self.get(0,1))
+        let mut det = 0.0;
+        let size = self.cols;
+
+        if size == 2 {
+            det = (self.get(0,0) * self.get(1,1)) - 
+                  (self.get(1,0) * self.get(0,1));
+        } else {
+            for col in 0..size {
+                det = det + self.get(0,col) * self.cofactor(0,col);
+            }
+        }
+
+        det
     }
 
     pub fn submatrix(&self, row: usize, col: usize) -> Self {
@@ -426,7 +438,7 @@ mod tests {
         assert!( a.cofactor(0,0) ==   56.0 );
         assert!( a.cofactor(0,1) ==   12.0 );
         assert!( a.cofactor(0,2) ==  -46.0 );
-        assert!( a.determinant() == -196.0 );
+        assert_eq!( a.determinant(), -196.0 );
     }
 
     #[test]
@@ -441,7 +453,7 @@ mod tests {
         assert!( a.cofactor(0,1) ==   447.0 );
         assert!( a.cofactor(0,2) ==   210.0 );
         assert!( a.cofactor(0,3) ==    51.0 );
-        assert!( a.determinant() == -4071.0 );
+        assert_eq!( a.determinant(), -4071.0 );
     }
 }
 
