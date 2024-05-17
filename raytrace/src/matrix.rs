@@ -145,6 +145,12 @@ impl Matrix {
     pub fn is_invertible(&self) -> bool {
         self.determinant() != 0.0
     }
+
+    pub fn inverse(&self) -> Self {
+        Self { cols: 4,
+               rows: 4,
+               m: vec![vec![0.0;4];4] }
+    }
 }
 
 // very similar function in Canvas, may want to refactor all
@@ -482,6 +488,21 @@ mod tests {
 
         assert_eq!( a.determinant(), 0.0 );
         assert!( !a.is_invertible() );
+    }
+
+    #[test]
+    fn matrix_inversion(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![-5.0, 2.0, 6.0,-8.0],
+                                 vec![ 1.0,-5.0, 1.0, 8.0],
+                                 vec![ 7.0, 7.0,-6.0,-7.0],
+                                 vec![ 1.0,-3.0, 7.0, 4.0]] };
+        let b = a.inverse();
+
+        assert_eq!( a.determinant(), 532.0 );
+        assert_eq!( a.cofactor(2,3), -160.0 );
+        assert_eq!( b.get(3,2), -160.0/532.0 );
+
     }
 }
 
