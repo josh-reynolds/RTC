@@ -147,9 +147,23 @@ impl Matrix {
     }
 
     pub fn inverse(&self) -> Self {
-        Self { cols: 4,
-               rows: 4,
-               m: vec![vec![0.0;4];4] }
+        if !self.is_invertible(){
+            panic!();
+        }
+
+        let size = self.cols;
+        let det = self.determinant();
+        let mut result = Matrix::new(size, size);
+
+        for row in 0..size {
+            for col in 0..size {
+                let c = self.cofactor(row, col);
+                // swapping row & col below because we
+                // want a transposed matrix
+                result.set(col, row, c / det);
+            }
+        }
+        result
     }
 }
 
@@ -500,8 +514,20 @@ mod tests {
         let b = a.inverse();
 
         assert_eq!( a.determinant(), 532.0 );
+
         assert_eq!( a.cofactor(2,3), -160.0 );
         assert_eq!( b.get(3,2), -160.0/532.0 );
+
+        assert_eq!( a.cofactor(3,2), 105.0 );
+        assert_eq!( b.get(2,3), 105.0/532.0 );
+
+        let expected = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![ 0.21805, 0.45113, 0.24060,-0.04511],
+                                 vec![-0.80827,-1.45677,-0.44361, 0.52068],
+                                 vec![-0.07895,-0.22368,-0.05263, 0.19737],
+                                 vec![-0.52256,-0.81391,-0.30075, 0.30639]] };
+
+        assert!( b.equals(expected) );
 
     }
 }
