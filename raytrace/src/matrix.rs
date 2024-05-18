@@ -1,3 +1,4 @@
+use crate::equals;
 use crate::tuple::Tuple;
 
 #[derive(Debug)]
@@ -26,7 +27,7 @@ impl Matrix {
     pub fn equals(&self, m: Matrix) -> bool {
         ( self.rows == m.rows ) &&
         ( self.cols == m.cols ) &&
-        equals(&self.m, &m.m )
+        v_equals(&self.m, &m.m )
     }
 
     pub fn get(&self, row: usize, col: usize) -> f64 {
@@ -169,14 +170,14 @@ impl Matrix {
 
 // very similar function in Canvas, may want to refactor all
 // this later
-pub fn equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
+pub fn v_equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
     if (a.len() != b.len()) || (a[0].len() != b[0].len()){
         return false
     }
 
     for n in 0..(a.len()) {
         for m in 0..(a[n].len()){
-            if a[n][m] != b[n][m]{
+            if !equals(a[n][m], b[n][m]){
                 return false
             }
         }
