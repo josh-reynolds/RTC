@@ -39,7 +39,7 @@ impl Matrix {
     }
 
     // only valid for 4x4 matrices - should add assert
-    pub fn mult(&self, other: Matrix) -> Self {
+    pub fn mult(&self, other: &Matrix) -> Self {
         let mut m = Matrix::new(4,4);
         for row in 0..4 {
             for col in 0..4 {
@@ -307,7 +307,7 @@ mod tests {
                                  vec![40.0, 58.0, 110.0, 102.0],
                                  vec![16.0, 26.0,  46.0,  42.0]] };
 
-        assert!( a.mult(b).equals(result) );
+        assert!( a.mult(&b).equals(result) );
     }
 
     #[test]
@@ -356,7 +356,7 @@ mod tests {
                                  vec![1.0,2.0, 4.0, 8.0],
                                  vec![2.0,4.0, 8.0,16.0],
                                  vec![4.0,8.0,16.0,32.0]] };
-        assert!( m.mult(Matrix::identity()).equals(m));
+        assert!( m.mult(&Matrix::identity()).equals(m));
     }
 
     #[test]
@@ -564,6 +564,22 @@ mod tests {
                                  vec![ 0.17778, 0.06667,-0.26667, 0.33333]] };
 
         assert!( a.inverse().equals(expected) );
+    }
+
+    #[test]
+    fn matrix_product_multiplied_by_inverse(){
+        let a = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![ 3.0,-9.0, 7.0, 3.0],
+                                 vec![ 3.0,-8.0, 2.0,-9.0],
+                                 vec![-4.0, 4.0, 4.0, 1.0],
+                                 vec![-6.0, 5.0,-1.0, 1.0]] };
+        let b = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![ 8.0, 2.0, 2.0, 2.0],
+                                 vec![ 3.0,-1.0, 7.0, 0.0],
+                                 vec![ 7.0, 0.0, 5.0, 4.0],
+                                 vec![ 6.0,-2.0, 0.0, 5.0]] };
+        let c = a.mult(&b);      
+        assert!( c.mult( &b.inverse() ).equals(a) );
     }
 }
 
