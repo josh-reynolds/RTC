@@ -22,7 +22,7 @@ impl Canvas {
     pub fn equals(&self, c: Canvas) -> bool {
         ( self.width == c.width ) &&
         ( self.height == c.height ) &&
-        equals(&self.pixels, &c.pixels)
+        c_equals(&self.pixels, &c.pixels)
     }
 
     pub fn write_pixel(&mut self, x: usize, y: usize, c: Color) -> () {
@@ -89,7 +89,7 @@ impl Canvas {
 
 // uncertain whether this should go into the equals module in
 // lib.rs, but for now keeping it here - only Canvas uses it right now
-pub fn equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
+pub fn c_equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
     if (a.len() != b.len()) || (a[0].len() != b[0].len()){
         return false
     }
