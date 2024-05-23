@@ -26,4 +26,27 @@ mod tests {
                                                    Number::from(1), 
                                                    Number::from(7))))
     }
+
+    #[test]
+    fn multiply_by_inverse_translation_matrix(){
+        let t = translation(5.0, -3.0, 2.0);
+        let inv = t.inverse();
+        let p = Tuple::point(Number::from(-3), 
+                             Number::from(4), 
+                             Number::from(5));
+
+        assert!( inv.multup(&p).equals( Tuple::point(Number::from(-8), 
+                                                     Number::from(7), 
+                                                     Number::from(3))))
+    }
+
+    #[test]
+    fn translation_does_not_affect_vectors(){
+        let t = translation(5.0, -3.0, 2.0);
+        let v = Tuple::vector(Number::from(-3), 
+                              Number::from(4), 
+                              Number::from(5));
+
+        assert!( t.multup(&v).equals( v ));
+    }
 }
