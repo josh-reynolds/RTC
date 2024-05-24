@@ -69,6 +69,30 @@ mod tests {
         assert!( t.multup(&p).equals( Tuple::point(Number::from(-8), 
                                                    Number::from(18), 
                                                    Number::from(32))))
-        
+    }
+
+    #[test]
+    fn multiply_vector_by_scaling_matrix(){
+        let t = scaling(2.0, 3.0, 4.0);
+        let v = Tuple::vector(Number::from(-4), 
+                              Number::from(6), 
+                              Number::from(8));
+
+        assert!( t.multup(&v).equals( Tuple::vector(Number::from(-8), 
+                                                    Number::from(18), 
+                                                    Number::from(32))))
+    }
+
+    #[test]
+    fn multiply_vector_by_inverse_scaling_matrix(){
+        let t = scaling(2.0, 3.0, 4.0);
+        let inv = t.inverse();
+        let v = Tuple::vector(Number::from(-4), 
+                              Number::from(6), 
+                              Number::from(8));
+
+        assert!( inv.multup(&v).equals( Tuple::vector(Number::from(-2), 
+                                                      Number::from(2), 
+                                                      Number::from(2))))
     }
 }
