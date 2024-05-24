@@ -8,12 +8,21 @@ pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
     t
 }
 
+pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
+    let mut t = Matrix::identity();
+    t.set(0,0,x);
+    t.set(1,1,y);
+    t.set(2,2,z);
+    t
+}
+
 #[cfg(test)]
 mod tests {
     //use crate::matrix::Matrix;
     use crate::tuple::Tuple;
     use crate::number::Number;
     use crate::transform::translation;
+    use crate::transform::scaling;
 
     #[test]
     fn multiply_by_translation_matrix(){
@@ -48,5 +57,18 @@ mod tests {
                               Number::from(5));
 
         assert!( t.multup(&v).equals( v ));
+    }
+
+    #[test]
+    fn multiply_point_by_scaling_matrix(){
+        let t = scaling(2.0, 3.0, 4.0);
+        let p = Tuple::point(Number::from(-4), 
+                             Number::from(6), 
+                             Number::from(8));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(-8), 
+                                                   Number::from(18), 
+                                                   Number::from(32))))
+        
     }
 }
