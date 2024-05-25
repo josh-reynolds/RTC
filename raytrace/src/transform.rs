@@ -95,4 +95,16 @@ mod tests {
                                                       Number::from(2), 
                                                       Number::from(2))))
     }
+
+    #[test]
+    fn reflection_is_scaling_by_negative_value(){
+        let t = scaling(-1.0, 1.0, 1.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(-2), 
+                                                   Number::from(3), 
+                                                   Number::from(4))))
+    }
 }
