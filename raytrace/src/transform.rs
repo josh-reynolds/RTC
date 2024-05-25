@@ -135,4 +135,17 @@ mod tests {
                                                               Number::from(0), 
                                                               Number::from(1))));
     }
+
+    #[test]
+    fn inverse_of_rotation_rotates_opposite_direction(){
+        let p = Tuple::point(Number::from(0), 
+                             Number::from(1), 
+                             Number::from(0));
+        let half_quarter = rotation_x(PI / 4.0);
+        let inv = half_quarter.inverse();
+
+        assert!( inv.multup(&p).equals( Tuple::point(Number::from(0), 
+                                                     Number::from( SQRT_2 / 2.0), 
+                                                     Number::from(-SQRT_2 / 2.0))));
+    }
 }
