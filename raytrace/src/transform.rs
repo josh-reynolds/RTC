@@ -16,6 +16,15 @@ pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
     t
 }
 
+pub fn rotation_x(r: f64) -> Matrix {
+    let mut t = Matrix::identity();
+    t.set(1,1,  r.cos());
+    t.set(1,2, -r.sin());
+    t.set(2,1,  r.sin());
+    t.set(2,2,  r.cos());
+    t
+}
+
 #[cfg(test)]
 mod tests {
     //use crate::matrix::Matrix;
@@ -23,6 +32,9 @@ mod tests {
     use crate::number::Number;
     use crate::transform::translation;
     use crate::transform::scaling;
+    use crate::transform::rotation_x;
+    use std::f64::consts::PI;
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn multiply_by_translation_matrix(){
@@ -33,7 +45,7 @@ mod tests {
 
         assert!( t.multup(&p).equals( Tuple::point(Number::from(2), 
                                                    Number::from(1), 
-                                                   Number::from(7))))
+                                                   Number::from(7))));
     }
 
     #[test]
@@ -46,7 +58,7 @@ mod tests {
 
         assert!( inv.multup(&p).equals( Tuple::point(Number::from(-8), 
                                                      Number::from(7), 
-                                                     Number::from(3))))
+                                                     Number::from(3))));
     }
 
     #[test]
@@ -68,7 +80,7 @@ mod tests {
 
         assert!( t.multup(&p).equals( Tuple::point(Number::from(-8), 
                                                    Number::from(18), 
-                                                   Number::from(32))))
+                                                   Number::from(32))));
     }
 
     #[test]
@@ -80,7 +92,7 @@ mod tests {
 
         assert!( t.multup(&v).equals( Tuple::vector(Number::from(-8), 
                                                     Number::from(18), 
-                                                    Number::from(32))))
+                                                    Number::from(32))));
     }
 
     #[test]
@@ -93,7 +105,7 @@ mod tests {
 
         assert!( inv.multup(&v).equals( Tuple::vector(Number::from(-2), 
                                                       Number::from(2), 
-                                                      Number::from(2))))
+                                                      Number::from(2))));
     }
 
     #[test]
@@ -105,6 +117,22 @@ mod tests {
 
         assert!( t.multup(&p).equals( Tuple::point(Number::from(-2), 
                                                    Number::from(3), 
-                                                   Number::from(4))))
+                                                   Number::from(4))));
+    }
+
+    #[test]
+    fn rotate_point_around_x_axis(){
+        let p = Tuple::point(Number::from(0), 
+                             Number::from(1), 
+                             Number::from(0));
+        let half_quarter = rotation_x(PI / 4.0);
+        let full_quarter = rotation_x(PI / 2.0);
+
+        assert!( half_quarter.multup(&p).equals( Tuple::point(Number::from(0), 
+                                                              Number::from(SQRT_2 / 2.0), 
+                                                              Number::from(SQRT_2 / 2.0))));
+        assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(0), 
+                                                              Number::from(0), 
+                                                              Number::from(1))));
     }
 }
