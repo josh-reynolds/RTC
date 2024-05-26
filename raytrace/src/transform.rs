@@ -43,6 +43,17 @@ pub fn rotation_z(r: f64) -> Matrix {
     t
 }
 
+pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
+    let mut t = Matrix::identity();
+    t.set(0,1, xy);
+    t.set(0,2, xz);
+    t.set(1,0, yx);
+    t.set(1,2, yz);
+    t.set(2,0, zx);
+    t.set(2,1, zy);
+    t
+}
+
 #[cfg(test)]
 mod tests {
     //use crate::matrix::Matrix;
@@ -53,6 +64,7 @@ mod tests {
     use crate::transform::rotation_x;
     use crate::transform::rotation_y;
     use crate::transform::rotation_z;
+    use crate::transform::shearing;
     use std::f64::consts::PI;
     use std::f64::consts::SQRT_2;
 
@@ -199,5 +211,17 @@ mod tests {
         assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(-1), 
                                                               Number::from(0), 
                                                               Number::from(0))));
+    }
+
+    #[test]
+    fn shearing_moves_x_proportionate_to_y(){
+        let t = shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(5.0), 
+                                                   Number::from(3.0),
+                                                   Number::from(4.0))));
     }
 }
