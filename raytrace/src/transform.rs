@@ -34,6 +34,15 @@ pub fn rotation_y(r: f64) -> Matrix {
     t
 }
 
+pub fn rotation_z(r: f64) -> Matrix {
+    let mut t = Matrix::identity();
+    t.set(0,0,  r.cos());
+    t.set(0,1, -r.sin());
+    t.set(1,0,  r.sin());
+    t.set(1,1,  r.cos());
+    t
+}
+
 #[cfg(test)]
 mod tests {
     //use crate::matrix::Matrix;
@@ -43,6 +52,7 @@ mod tests {
     use crate::transform::scaling;
     use crate::transform::rotation_x;
     use crate::transform::rotation_y;
+    use crate::transform::rotation_z;
     use std::f64::consts::PI;
     use std::f64::consts::SQRT_2;
 
@@ -171,6 +181,22 @@ mod tests {
                                                               Number::from(0),
                                                               Number::from(SQRT_2 / 2.0))));
         assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(1), 
+                                                              Number::from(0), 
+                                                              Number::from(0))));
+    }
+
+    #[test]
+    fn rotate_point_around_z_axis(){
+        let p = Tuple::point(Number::from(0), 
+                             Number::from(1), 
+                             Number::from(0));
+        let half_quarter = rotation_z(PI / 4.0);
+        let full_quarter = rotation_z(PI / 2.0);
+
+        assert!( half_quarter.multup(&p).equals( Tuple::point(Number::from(-SQRT_2 / 2.0), 
+                                                              Number::from( SQRT_2 / 2.0),
+                                                              Number::from(0))));
+        assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(-1), 
                                                               Number::from(0), 
                                                               Number::from(0))));
     }
