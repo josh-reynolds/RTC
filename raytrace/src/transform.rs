@@ -224,4 +224,64 @@ mod tests {
                                                    Number::from(3.0),
                                                    Number::from(4.0))));
     }
+
+    #[test]
+    fn shearing_moves_x_proportionate_to_z(){
+        let t = shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(6.0), 
+                                                   Number::from(3.0),
+                                                   Number::from(4.0))));
+    }
+
+    #[test]
+    fn shearing_moves_y_proportionate_to_x(){
+        let t = shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
+                                                   Number::from(5.0),
+                                                   Number::from(4.0))));
+    }
+    
+    #[test]
+    fn shearing_moves_y_proportionate_to_z(){
+        let t = shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
+                                                   Number::from(7.0),
+                                                   Number::from(4.0))));
+    }
+
+    #[test]
+    fn shearing_moves_z_proportionate_to_x(){
+        let t = shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
+                                                   Number::from(3.0),
+                                                   Number::from(6.0))));
+    }
+
+    #[test]
+    fn shearing_moves_z_proportionate_to_y(){
+        let t = shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+        let p = Tuple::point(Number::from(2), 
+                             Number::from(3), 
+                             Number::from(4));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
+                                                   Number::from(3.0),
+                                                   Number::from(7.0))));
+    }
 }
