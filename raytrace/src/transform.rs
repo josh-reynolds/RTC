@@ -309,4 +309,20 @@ mod tests {
                                          Number::from( 0), 
                                          Number::from( 7))));
     }
+
+    #[test]
+    fn chained_transforms_apply_in_reverse_order(){
+        let p = Tuple::point(Number::from(1), 
+                             Number::from(0), 
+                             Number::from(1));
+        let a = rotation_x(PI / 2.0);
+        let b = scaling(5.0, 5.0, 5.0);
+        let c = translation(10.0, 5.0, 7.0);
+
+        let t = c.mult( &b.mult( &a ));
+
+        assert!( t.multup(&p).equals( Tuple::point(Number::from(15), 
+                                                   Number::from( 0), 
+                                                   Number::from( 7))));
+    }
 }
