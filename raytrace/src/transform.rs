@@ -284,4 +284,29 @@ mod tests {
                                                    Number::from(3.0),
                                                    Number::from(7.0))));
     }
+
+    #[test]
+    fn individual_transforms_apply_in_sequence(){
+        let p = Tuple::point(Number::from(1), 
+                             Number::from(0), 
+                             Number::from(1));
+        let a = rotation_x(PI / 2.0);
+        let b = scaling(5.0, 5.0, 5.0);
+        let c = translation(10.0, 5.0, 7.0);
+
+        let p2 = a.multup(&p);
+        assert!( p2.equals( Tuple::point(Number::from( 1), 
+                                         Number::from(-1), 
+                                         Number::from( 0))));
+
+        let p3 = b.multup(&p2);
+        assert!( p3.equals( Tuple::point(Number::from( 5), 
+                                         Number::from(-5), 
+                                         Number::from( 0))));
+
+        let p4 = c.multup(&p3);
+        assert!( p4.equals( Tuple::point(Number::from(15), 
+                                         Number::from( 0), 
+                                         Number::from( 7))));
+    }
 }
