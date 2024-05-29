@@ -6,6 +6,7 @@ pub mod number;
 pub mod tuple;
 pub mod matrix;
 pub mod transform;
+pub mod rays;
 
 mod equals {
     const EPSILON: f64 = 0.00001;
