@@ -18,6 +18,10 @@ impl Tuple {
         equals( self.w, 0.0 )
     }
 
+    pub fn origin() -> Self {
+        Self { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+    }
+
     pub fn point(x: Number, y: Number, z: Number) -> Self {
         Self { x: x.value, y: y.value, z: z.value, w: 1.0 }
     }
@@ -82,7 +86,7 @@ impl Tuple {
                w: 0.0}
     }
 
-    pub fn dot(&self, v: Tuple) -> f64 {
+    pub fn dot(&self, v: &Tuple) -> f64 {
         self.x * v.x + self.y * v.y + self.z * v.z + self.w + v.w
     }
 
@@ -329,7 +333,7 @@ mod tests {
         let b = Tuple::vector(Number::from(2),
                               Number::from(3),
                               Number::from(4));
-        assert_eq!( a.dot(b), 20.0 );
+        assert_eq!( a.dot(&b), 20.0 );
     }
 
     #[test]

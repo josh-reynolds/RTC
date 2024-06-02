@@ -1,4 +1,5 @@
 use crate::rays::Ray;
+use crate::tuple::Tuple;
 
 #[derive(Debug)]
 pub struct Sphere {
@@ -10,7 +11,22 @@ impl Sphere {
     }
     
     pub fn intersect(&self, r: Ray) -> Vec<f64> {
-        vec![4.0, 6.0]
+        let sphere_to_ray = r.origin.sub( Tuple::origin() );
+
+        let a = r.direction.dot(&r.direction);
+        let b = 2.0 * ( r.direction.dot(&sphere_to_ray) );
+        let c = (sphere_to_ray.dot(&sphere_to_ray)) - 1.0;
+
+        let discriminant = b.powf(2.0) - 4.0 * a * c;
+
+        if discriminant < 0.0 {
+            return vec!();
+        } else {
+            let t1 = (-b - discriminant.sqrt()) / ( 2.0 * a);
+            let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
+            return vec!(t1, t2);
+        }
+
     }
 }
 
@@ -74,9 +90,7 @@ mod tests {
     #[test]
     fn ray_originates_inside_sphere(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(0)),
+        let r = Ray::new( Tuple::origin(),
                           Tuple::vector( Number::from(0),
                                          Number::from(0),
                                          Number::from(1)) );
