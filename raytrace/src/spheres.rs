@@ -42,4 +42,32 @@ mod tests {
         assert_eq!( xs[0], 4.0 );
         assert_eq!( xs[1], 6.0 );
     }
+
+    #[test]
+    fn ray_intersects_sphere_at_tangent(){
+        let s = Sphere::new();
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(1),
+                                        Number::from(-5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+        assert_eq!( xs.len(), 2 );
+        assert_eq!( xs[0], 5.0 );
+        assert_eq!( xs[1], 5.0 );
+    }
+
+    #[test]
+    fn ray_misses_sphere(){
+        let s = Sphere::new();
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(2),
+                                        Number::from(-5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+        assert_eq!( xs.len(), 0 );
+    }
 }
