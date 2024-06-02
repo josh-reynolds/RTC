@@ -147,6 +147,12 @@ mod tests {
     }
 
     #[test]
+    fn origin_creates_point_at_origin(){
+        let o = Tuple::origin();
+        assert!( o.equals(Tuple { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }));
+    }
+
+    #[test]
     fn vector_creates_vectors(){
         let a = Tuple::vector(Number::from(4.0),
                               Number::from(-4.0),
