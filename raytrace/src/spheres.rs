@@ -70,4 +70,34 @@ mod tests {
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 0 );
     }
+
+    #[test]
+    fn ray_originates_inside_sphere(){
+        let s = Sphere::new();
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(0),
+                                        Number::from(0)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+        assert_eq!( xs.len(), 2 );
+        assert_eq!( xs[0], -1.0 );
+        assert_eq!( xs[1], 1.0 );
+    }
+
+    #[test]
+    fn sphere_is_behind_ray(){
+        let s = Sphere::new();
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(0),
+                                        Number::from(5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+        assert_eq!( xs.len(), 2 );
+        assert_eq!( xs[0], -6.0 );
+        assert_eq!( xs[1], -4.0 );
+    }
 }
