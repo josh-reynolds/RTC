@@ -2,9 +2,9 @@ use crate::spheres::Sphere;
 
 #[derive(Debug)]
 pub struct Intersection<'a> {
-    t: f64,
-    object: &'a Sphere, // need to figure out type of a generic reference
-                        // for now we just have Spheres
+    pub t: f64,
+    pub object: &'a Sphere, // need to figure out type of a generic reference
+                            // for now we just have Spheres
 }
 
 impl<'a> Intersection<'a> {

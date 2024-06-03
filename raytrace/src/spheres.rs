@@ -1,16 +1,17 @@
 use crate::rays::Ray;
 use crate::tuple::Tuple;
+use crate::intersections::Intersection;
 
 #[derive(Debug)]
 pub struct Sphere {
 }
 
-impl Sphere {
+impl<'a> Sphere {
     pub fn new() -> Self {
         Self {}
     }
     
-    pub fn intersect(&self, r: Ray) -> Vec<f64> {
+    pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
         let sphere_to_ray = r.origin.sub( Tuple::origin() );
 
         let a = r.direction.dot(&r.direction);
@@ -23,10 +24,13 @@ impl Sphere {
             return vec!();
         } else {
             let t1 = (-b - discriminant.sqrt()) / ( 2.0 * a);
-            let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
-            return vec!(t1, t2);
-        }
+            let i1 = Intersection::new(t1, &self);
 
+            let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
+            let i2 = Intersection::new(t2, &self);
+
+            return Intersection::intersections(i1,i2);
+        }
     }
 }
 
@@ -55,8 +59,8 @@ mod tests {
                                          Number::from(1)) );
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0], 4.0 );
-        assert_eq!( xs[1], 6.0 );
+        assert_eq!( xs[0].t, 4.0 );
+        assert_eq!( xs[1].t, 6.0 );
     }
 
     #[test]
@@ -70,8 +74,8 @@ mod tests {
                                          Number::from(1)) );
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0], 5.0 );
-        assert_eq!( xs[1], 5.0 );
+        assert_eq!( xs[0].t, 5.0 );
+        assert_eq!( xs[1].t, 5.0 );
     }
 
     #[test]
@@ -96,8 +100,8 @@ mod tests {
                                          Number::from(1)) );
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0], -1.0 );
-        assert_eq!( xs[1], 1.0 );
+        assert_eq!( xs[0].t, -1.0 );
+        assert_eq!( xs[1].t, 1.0 );
     }
 
     #[test]
@@ -111,7 +115,22 @@ mod tests {
                                          Number::from(1)) );
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0], -6.0 );
-        assert_eq!( xs[1], -4.0 );
+        assert_eq!( xs[0].t, -6.0 );
+        assert_eq!( xs[1].t, -4.0 );
+    }
+
+    #[test]
+    fn intersect_sets_object_on_intersections(){
+        let s = Sphere::new();
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(0),
+                                        Number::from(-5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+        assert_eq!( xs.len(), 2 );
+        assert_eq!( xs[0].object as *const _, &s as *const _);
+        assert_eq!( xs[1].object as *const _, &s as *const _);
     }
 }
