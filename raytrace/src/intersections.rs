@@ -1,6 +1,6 @@
 use crate::spheres::Sphere;
 
-#[derive(Debug)]
+#[derive(Debug,Copy,Clone)]
 pub struct Intersection<'a> {
     pub t: f64,
     pub object: &'a Sphere, // need to figure out type of a generic reference
@@ -16,9 +16,9 @@ impl<'a> Intersection<'a> {
         vec!(i1, i2)
     }
 
-    //pub fn hit( xs: Vec<Intersection<'a>> ) -> Self {
-    //    Intersection::new( 
-    //}
+    pub fn hit( xs: Vec<Intersection<'a>> ) -> Self {
+        xs[0]
+    }
 }
 
 #[cfg(test)]
@@ -57,6 +57,5 @@ mod tests {
         let i = Intersection::hit(xs);
 
         assert_eq!( &i as *const _, &i1 as *const _ );
-
     }
 }
