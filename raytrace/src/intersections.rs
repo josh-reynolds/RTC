@@ -19,6 +19,11 @@ impl<'a> Intersection<'a> {
     pub fn hit( xs: Vec<Intersection<'a>> ) -> Self {
         xs[0]
     }
+
+    pub fn equals( &self, other: Intersection<'_> ) -> bool {
+        self.t == other.t && 
+            self.object as *const _ == other.object as *const _
+    }
 }
 
 #[cfg(test)]
@@ -56,6 +61,6 @@ mod tests {
         let xs = Intersection::intersections(i1, i2);
         let i = Intersection::hit(xs);
 
-        assert_eq!( &i as *const _, &i1 as *const _ );
+        assert!( i.equals( i1 ));
     }
 }
