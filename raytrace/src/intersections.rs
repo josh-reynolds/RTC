@@ -16,14 +16,18 @@ impl<'a> Intersection<'a> {
         vec!(i1, i2)
     }
 
-    pub fn hit( xs: Vec<Intersection<'a>> ) -> Self {
+    pub fn hit( xs: Vec<Intersection<'a>> ) -> Option<Intersection<'_>> {
         let mut lowest = xs[0];
         for i in xs {
             if i.t < lowest.t && i.t >= 0.0 {
                 lowest = i;
             }
         }
-        lowest
+        if lowest.t < 0.0 {
+            None
+        } else {
+            Some( lowest )
+        }
     }
 
     pub fn equals( &self, other: Intersection<'_> ) -> bool {
@@ -67,7 +71,7 @@ mod tests {
         let xs = Intersection::intersections(i2, i1);
         let i = Intersection::hit(xs);
 
-        assert!( i.equals( i1 ));
+        assert!( i.expect("positive intersections available").equals( i1 ));
     }
 
     #[test]
@@ -79,6 +83,21 @@ mod tests {
         let xs = Intersection::intersections(i2, i1);
         let i = Intersection::hit(xs);
 
-        assert!( i.equals( i2 ));
+        assert!( i.expect("positive intersection available").equals( i2 ));
+    }
+
+    #[test]
+    fn hit_when_all_intersections_are_negative(){
+        let s = Sphere::new();
+        let i1 = Intersection::new(-2.0, &s);
+        let i2 = Intersection::new(-1.0, &s);
+
+        let xs = Intersection::intersections(i2, i1);
+        let i = Intersection::hit(xs);
+
+        assert!( match i {
+                   Some(_x) => false,
+                   None => true }
+        );
     }
 }
