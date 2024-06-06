@@ -19,7 +19,7 @@ impl<'a> Intersection<'a> {
     pub fn hit( xs: Vec<Intersection<'a>> ) -> Self {
         let mut lowest = xs[0];
         for i in xs {
-            if i.t < lowest.t {
+            if i.t < lowest.t && i.t >= 0.0 {
                 lowest = i;
             }
         }
@@ -68,5 +68,17 @@ mod tests {
         let i = Intersection::hit(xs);
 
         assert!( i.equals( i1 ));
+    }
+
+    #[test]
+    fn hit_when_some_intersections_are_negative(){
+        let s = Sphere::new();
+        let i1 = Intersection::new(-1.0, &s);
+        let i2 = Intersection::new(1.0, &s);
+
+        let xs = Intersection::intersections(i2, i1);
+        let i = Intersection::hit(xs);
+
+        assert!( i.equals( i2 ));
     }
 }
