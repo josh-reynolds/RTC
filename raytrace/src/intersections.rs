@@ -100,4 +100,18 @@ mod tests {
                    None => true }
         );
     }
+
+    #[test]
+    fn hit_always_lowest_nonnegative_intersection(){
+        let s = Sphere::new();
+        let i1 = Intersection::new( 5.0, &s);
+        let i2 = Intersection::new( 7.0, &s);
+        let i3 = Intersection::new(-3.0, &s);
+        let i4 = Intersection::new( 2.0, &s);
+
+        let xs = Intersection::intersections(i1, i2, i3, i4);
+        let i = Intersection::hit(xs);
+
+        assert!( i.expect("positive intersection available").equals( i4 ));
+    }
 }
