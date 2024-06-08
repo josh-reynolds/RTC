@@ -29,7 +29,7 @@ impl<'a> Sphere {
             let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
             let i2 = Intersection::new(t2, &self);
 
-            return Intersection::intersections(i1,i2);
+            return Intersection::intersections(&[i1,i2]);
         }
     }
 }

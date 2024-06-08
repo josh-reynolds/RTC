@@ -12,8 +12,12 @@ impl<'a> Intersection<'a> {
         Intersection { t: t, object: object }
     }
     
-    pub fn intersections(i1: Intersection<'a>, i2: Intersection<'a>) -> Vec<Intersection<'a>> {
-        vec!(i1, i2)
+    pub fn intersections(args: &[Intersection<'a>]) -> Vec<Intersection<'a>> {
+        let mut v = vec!();
+        for arg in args {
+            v.push(*arg);
+        }
+        v
     }
 
     pub fn hit( xs: Vec<Intersection<'a>> ) -> Option<Intersection<'_>> {
@@ -56,7 +60,7 @@ mod tests {
         let i1 = Intersection::new(1.0, &s);
         let i2 = Intersection::new(2.0, &s);
 
-        let xs = Intersection::intersections(i1, i2);
+        let xs = Intersection::intersections(&[i1, i2]);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 1.0 );
         assert_eq!( xs[1].t, 2.0 );
@@ -68,7 +72,7 @@ mod tests {
         let i1 = Intersection::new(1.0, &s);
         let i2 = Intersection::new(2.0, &s);
 
-        let xs = Intersection::intersections(i2, i1);
+        let xs = Intersection::intersections(&[i2, i1]);
         let i = Intersection::hit(xs);
 
         assert!( i.expect("positive intersections available").equals( i1 ));
@@ -80,7 +84,7 @@ mod tests {
         let i1 = Intersection::new(-1.0, &s);
         let i2 = Intersection::new(1.0, &s);
 
-        let xs = Intersection::intersections(i2, i1);
+        let xs = Intersection::intersections(&[i2, i1]);
         let i = Intersection::hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i2 ));
@@ -92,7 +96,7 @@ mod tests {
         let i1 = Intersection::new(-2.0, &s);
         let i2 = Intersection::new(-1.0, &s);
 
-        let xs = Intersection::intersections(i2, i1);
+        let xs = Intersection::intersections(&[i2, i1]);
         let i = Intersection::hit(xs);
 
         assert!( match i {
@@ -109,7 +113,7 @@ mod tests {
         let i3 = Intersection::new(-3.0, &s);
         let i4 = Intersection::new( 2.0, &s);
 
-        let xs = Intersection::intersections(i1, i2, i3, i4);
+        let xs = Intersection::intersections(&[i1, i2, i3, i4]);
         let i = Intersection::hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i4 ));
