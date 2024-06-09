@@ -28,6 +28,7 @@ mod tests {
     use crate::tuple::Tuple;
     use crate::number::Number;
     use crate::transform::translation;
+    use crate::transform::scaling;
 
     #[test]
     fn new_creates_rays(){
@@ -91,6 +92,26 @@ mod tests {
         assert!( r2.direction.equals(Tuple::vector( Number::from(0),
                                                     Number::from(1),
                                                     Number::from(0))) );
+    }
 
+    #[test]
+    fn scaling_a_ray(){
+        let o = Tuple::point( Number::from(1),
+                              Number::from(2),
+                              Number::from(3));
+        let d = Tuple::vector( Number::from(0),
+                               Number::from(1),
+                               Number::from(0));
+        let r = Ray::new(o, d);
+
+        let m = scaling(2.0, 3.0, 4.0);
+        let r2 = r.transform(m);
+
+        assert!( r2.origin.equals(Tuple::point( Number::from(2),
+                                                Number::from(6),
+                                                Number::from(12))) );
+        assert!( r2.direction.equals(Tuple::vector( Number::from(0),
+                                                    Number::from(3),
+                                                    Number::from(0))) );
     }
 }
