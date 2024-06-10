@@ -1,14 +1,16 @@
 use crate::rays::Ray;
 use crate::tuple::Tuple;
 use crate::intersections::Intersection;
+use crate::matrix::Matrix;
 
 #[derive(Debug)]
 pub struct Sphere {
+    pub transform: Matrix,
 }
 
 impl<'a> Sphere {
     pub fn new() -> Self {
-        Self {}
+        Self { transform: Matrix::identity() }
     }
     
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
@@ -40,6 +42,7 @@ mod tests {
     use crate::number::Number;
     use crate::tuple::Tuple;
     use crate::rays::Ray;
+    use crate::matrix::Matrix;
 
     #[test]
     fn new_creates_unique_spheres(){
@@ -132,5 +135,11 @@ mod tests {
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].object as *const _, &s as *const _);
         assert_eq!( xs[1].object as *const _, &s as *const _);
+    }
+
+    #[test]
+    fn sphere_default_transform(){
+        let s = Sphere::new();
+        assert!( s.transform.equals( Matrix::identity() ));
     }
 }
