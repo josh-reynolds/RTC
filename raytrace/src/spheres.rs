@@ -34,6 +34,10 @@ impl<'a> Sphere {
             return Intersection::intersections(&[i1,i2]);
         }
     }
+
+    pub fn set_transform(&mut self, t: Matrix){
+        self.transform = t
+    }
 }
 
 #[cfg(test)]
@@ -43,6 +47,7 @@ mod tests {
     use crate::tuple::Tuple;
     use crate::rays::Ray;
     use crate::matrix::Matrix;
+    use crate::transform::translation;
 
     #[test]
     fn new_creates_unique_spheres(){
@@ -141,5 +146,13 @@ mod tests {
     fn sphere_default_transform(){
         let s = Sphere::new();
         assert!( s.transform.equals( Matrix::identity() ));
+    }
+
+    #[test]
+    fn changing_sphere_transform(){
+        let mut s = Sphere::new();
+        let t = translation(2.0, 3.0, 4.0);
+        s.set_transform( t );
+        assert!( s.transform.equals( translation(2.0, 3.0, 4.0) ));
     }
 }
