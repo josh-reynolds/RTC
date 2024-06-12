@@ -175,4 +175,20 @@ mod tests {
         assert_eq!( xs[0].t, 3.0 );
         assert_eq!( xs[1].t, 7.0 );
     }
+
+    #[test]
+    fn intersect_translated_sphere_with_ray(){
+        let mut s = Sphere::new();
+        s.set_transform( translation( 5.0, 0.0, 0.0 ));
+
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(0),
+                                        Number::from(-5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+
+        assert_eq!( xs.len(), 0 );
+    }
 }
