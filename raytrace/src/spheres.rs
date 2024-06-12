@@ -48,6 +48,7 @@ mod tests {
     use crate::rays::Ray;
     use crate::matrix::Matrix;
     use crate::transform::translation;
+    use crate::transform::scaling;
 
     #[test]
     fn new_creates_unique_spheres(){
@@ -154,5 +155,23 @@ mod tests {
         let t = translation(2.0, 3.0, 4.0);
         s.set_transform( t );
         assert!( s.transform.equals( translation(2.0, 3.0, 4.0) ));
+    }
+
+    #[test]
+    fn intersect_scaled_sphere_with_ray(){
+        let mut s = Sphere::new();
+        s.set_transform( scaling( 2.0, 2.0, 2.0 ));
+
+        let r = Ray::new( Tuple::point( Number::from(0),
+                                        Number::from(0),
+                                        Number::from(-5)),
+                          Tuple::vector( Number::from(0),
+                                         Number::from(0),
+                                         Number::from(1)) );
+        let xs = s.intersect(r);
+
+        assert_eq!( xs.len(), 2 );
+        assert_eq!( xs[0].t, 3.0 );
+        assert_eq!( xs[1].t, 7.0 );
     }
 }
