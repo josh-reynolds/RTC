@@ -14,10 +14,11 @@ impl<'a> Sphere {
     }
     
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
-        let sphere_to_ray = r.origin.sub( Tuple::origin() );
+        let r2 = r.transform( self.transform.inverse() );
+        let sphere_to_ray = r2.origin.sub( Tuple::origin() );
 
-        let a = r.direction.dot(&r.direction);
-        let b = 2.0 * ( r.direction.dot(&sphere_to_ray) );
+        let a = r2.direction.dot(&r2.direction);
+        let b = 2.0 * ( r2.direction.dot(&sphere_to_ray) );
         let c = (sphere_to_ray.dot(&sphere_to_ray)) - 1.0;
 
         let discriminant = b.powf(2.0) - 4.0 * a * c;
