@@ -1,7 +1,7 @@
 use crate::equals;
 use crate::number::Number;
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 pub struct Tuple {
     pub x: f64,
     pub y: f64,

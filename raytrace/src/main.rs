@@ -2,28 +2,43 @@ use raytrace::number::Number;
 use raytrace::tuple::Tuple;
 use raytrace::canvas::Canvas;
 use raytrace::color::Color;
-use raytrace::transform::*;
-use std::f64::consts::PI;
+//use raytrace::transform::*;
+use raytrace::spheres::Sphere;
+use raytrace::rays::Ray;
 
 fn main() {
-    let mut c = Canvas::new(400, 400);
-    let red = Color{r:1.0,g:0.0,b:0.0};
+    let ray_origin = Tuple::point(Number::from( 0),
+                                  Number::from( 0),
+                                  Number::from(-5));
+    let wall_z = 10.0;
+    let wall_size = 7.0;
+    let half = wall_size / 2.0;
 
-    let p = Tuple::point(Number::from(0),
-                         Number::from(0),
-                         Number::from(0));
-    
-    let clock_size = translation(100.0,0.0,0.0);
-    let centering = translation(200.0,200.0,0.0);
+    let canvas_pixels = 100;
+    let pixel_size = wall_size / canvas_pixels as f64;
 
-    for count in 0..12 {
-        let hour = rotation_z((PI / 6.0) * count as f64);
-        let p2 = centering.mult( &hour.mult( &clock_size )).multup(&p);
-        c.write_pixel((p2.x as i32).try_into().unwrap(),
-                      (p2.y as i32).try_into().unwrap(),
-                      red);
+    let mut c = Canvas::new(canvas_pixels, canvas_pixels);
+    let color = Color{r:1.0,g:0.0,b:0.0};
+
+    let shape = Sphere::new();
+
+    for y in 0..(canvas_pixels-1){
+        let world_y = half - pixel_size * y as f64;
+
+        for x in 0..(canvas_pixels-1){
+            let world_x = -half + pixel_size * x as f64;
+            let position = Tuple::point(Number::from(world_x),
+                                        Number::from(world_y),
+                                        Number::from(wall_z));
+            let ray = Ray::new(ray_origin, (position.sub(ray_origin)).normal());
+            let xs = shape.intersect(ray);
+
+            if xs.len() > 0 {
+                c.write_pixel(x, y, color);
+            }
+        }
     }
     
-    let _ = c.to_ppm("clock.ppm");
+    let _ = c.to_ppm("flat_render.ppm");
 }
 
