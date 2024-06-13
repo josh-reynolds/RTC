@@ -1,5 +1,6 @@
 use crate::equals;
 use crate::number::Number;
+use std::ops::Neg;
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -7,6 +8,17 @@ pub struct Tuple {
     pub y: f64,
     pub z: f64,
     pub w: f64,
+}
+
+impl Neg for Tuple {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self { x: -self.x,
+               y: -self.y,
+               z: -self.z,
+               w: -self.w }
+    }
 }
 
 impl Tuple {
@@ -42,15 +54,6 @@ impl Tuple {
                y: self.y - t.y,
                z: self.z - t.z,
                w: self.w - t.w }
-    }
-
-    // investigate operator overloading, appears to be in std::ops
-    // the trait needed is Neg
-    pub fn negate(&self) -> Self {
-        Self { x: -self.x,
-               y: -self.y,
-               z: -self.z,
-               w: -self.w }
     }
 
     // overloading possible here too (trait == Mul)
@@ -245,7 +248,7 @@ mod tests {
     #[test]
     fn negating_a_tuple(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
-        assert!( a.negate().equals(Tuple { x: -1.0, y: 2.0, z: -3.0, w: 4.0 } ));
+        assert!( (-a).equals(Tuple { x: -1.0, y: 2.0, z: -3.0, w: 4.0 } ));
     }
 
     #[test]
