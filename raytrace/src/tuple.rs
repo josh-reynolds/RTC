@@ -1,8 +1,6 @@
 use crate::equals;
 use crate::number::Number;
-use std::ops::Neg;
-use std::ops::Mul;
-use std::ops::Add;
+use std::ops::{Neg, Mul, Add, Div};
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -45,6 +43,17 @@ impl Add for Tuple {
     }
 }
 
+impl Div<f64> for Tuple {
+    type Output = Self;
+
+    fn div(self, n: f64) -> Self {
+        Self { x: self.x / n,
+               y: self.y / n,
+               z: self.z / n,
+               w: self.w / n }
+    }
+}
+
 impl Tuple {
     pub fn is_point(&self) -> bool {
         equals( self.w, 1.0 )
@@ -71,16 +80,6 @@ impl Tuple {
                y: self.y - t.y,
                z: self.z - t.z,
                w: self.w - t.w }
-    }
-
-    // overloading possible here too (trait == Div)
-    // book divides by an integer, I will implement as float
-    // but same question as above applies - worth overload?
-    pub fn div(&self, n: f64) -> Self {
-        Self { x: self.x / n,
-               y: self.y / n,
-               z: self.z / n,
-               w: self.w / n }
     }
 
     // only applies to vectors - should we restrict usage?
@@ -274,7 +273,7 @@ mod tests {
     #[test]
     fn divide_tuple_by_scalar(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
-        assert!( a.div(2.0).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
+        assert!( (a / 2.0).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
     }
 
     #[test]
