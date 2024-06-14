@@ -1,6 +1,7 @@
 use crate::equals;
 use crate::number::Number;
 use std::ops::Neg;
+use std::ops::Mul;
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -18,6 +19,17 @@ impl Neg for Tuple {
                y: -self.y,
                z: -self.z,
                w: -self.w }
+    }
+}
+
+impl Mul<f64> for Tuple {
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self { x: self.x * rhs,
+               y: self.y * rhs,
+               z: self.z * rhs,
+               w: self.w * rhs }
     }
 }
 
@@ -54,15 +66,6 @@ impl Tuple {
                y: self.y - t.y,
                z: self.z - t.z,
                w: self.w - t.w }
-    }
-
-    // overloading possible here too (trait == Mul)
-    // also, how about multiplying by an int? Number again?
-    pub fn mult(&self, n: f64) -> Self {
-        Self { x: self.x * n,
-               y: self.y * n,
-               z: self.z * n,
-               w: self.w * n }
     }
 
     // overloading possible here too (trait == Div)
@@ -254,13 +257,13 @@ mod tests {
     #[test]
     fn multipy_tuple_by_scalar(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
-        assert!( a.mult(3.5).equals( Tuple { x: 3.5, y: -7.0, z: 10.5, w: -14.0 } ));
+        assert!( (a * 3.5).equals( Tuple { x: 3.5, y: -7.0, z: 10.5, w: -14.0 } ));
     }
 
     #[test]
     fn multipy_tuple_by_fraction(){
         let a = Tuple { x: 1.0, y: -2.0, z: 3.0, w: -4.0 };
-        assert!( a.mult(0.5).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
+        assert!( (a * 0.5).equals( Tuple { x: 0.5, y: -1.0, z: 1.5, w: -2.0 } ));
     }
 
     #[test]

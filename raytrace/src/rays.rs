@@ -13,7 +13,7 @@ impl Ray {
     }
 
     pub fn position(&self, distance: f64) -> Tuple {
-        self.origin.plus( &self.direction.mult( distance ))
+        self.origin.plus( &(*&self.direction * distance) )
     }
 
     pub fn transform(&self, t: Matrix) -> Self {
