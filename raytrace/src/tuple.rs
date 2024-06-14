@@ -2,6 +2,7 @@ use crate::equals;
 use crate::number::Number;
 use std::ops::Neg;
 use std::ops::Mul;
+use std::ops::Add;
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -33,6 +34,17 @@ impl Mul<f64> for Tuple {
     }
 }
 
+impl Add for Tuple {
+    type Output = Self;
+
+    fn add(self, t: Self) -> Self {
+        Self { x: self.x + t.x,
+               y: self.y + t.y,
+               z: self.z + t.z,
+               w: self.w + t.w }
+    }
+}
+
 impl Tuple {
     pub fn is_point(&self) -> bool {
         equals( self.w, 1.0 )
@@ -52,13 +64,6 @@ impl Tuple {
 
     pub fn vector(x: Number, y: Number, z: Number) -> Self {
         Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
-    }
-
-    pub fn plus(&self, t: &Tuple) -> Self {
-        Self { x: self.x + t.x,
-               y: self.y + t.y,
-               z: self.z + t.z,
-               w: self.w + t.w }
     }
 
     pub fn sub(&self, t: Tuple) -> Self {
@@ -193,7 +198,7 @@ mod tests {
         let b = Tuple::vector(Number::from(-2),
                               Number::from(3),
                               Number::from(1));
-        assert!( a.plus(&b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
+        assert!( (a + b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
     }
 
     #[test]
