@@ -133,6 +133,7 @@ mod tests {
     use crate::equals;
     use crate::tuple::Tuple;
     use crate::tuple::Number;
+    use crate::tuple::{point, vector};
 
     #[test]
     fn tuple_with_w_1_is_point(){
@@ -162,9 +163,7 @@ mod tests {
 
     #[test]
     fn point_creates_points(){
-        let a = Tuple::point(Number::from(4.0), 
-                             Number::from(-4.0),
-                             Number::from(3.0));
+        let a = point(4.0, -4.0, 3.0);
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
     }
 
@@ -176,13 +175,16 @@ mod tests {
 
     #[test]
     fn vector_creates_vectors(){
-        let a = Tuple::vector(Number::from(4.0),
-                              Number::from(-4.0),
-                              Number::from(3.0));
+        let a = vector(4.0, -4.0, 3.0);
         assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
 
     }
 
+    // Going to break the next two tests at least temporarily while
+    // we remove the Number type that enabled this scenario - it
+    // is cluttering up the code. Long term is to figure out a 
+    // solution using generics. For now we'll only allow creation
+    // from floats.
     #[test]
     fn can_create_points_from_ints(){
         let a = Tuple::point(Number::from(4),
@@ -203,39 +205,23 @@ mod tests {
     // Not OK: point + point
     #[test]
     fn add_two_tuples(){
-        let a = Tuple::point(Number::from(3),
-                             Number::from(-2),
-                             Number::from(5));
-        let b = Tuple::vector(Number::from(-2),
-                              Number::from(3),
-                              Number::from(1));
+        let a = point(3.0, -2.0, 5.0);
+        let b = vector(-2.0, 3.0, 1.0);
         assert!( (a + b).equals(Tuple { x: 1.0, y: 1.0, z: 6.0, w: 1.0 }));
     }
 
     #[test]
     fn sub_two_points(){
-        let a = Tuple::point(Number::from(3),
-                             Number::from(2),
-                             Number::from(1));
-        let b = Tuple::point(Number::from(5),
-                             Number::from(6),
-                             Number::from(7));
-        assert!( (a - b).equals(Tuple::vector(Number::from(-2.0), 
-                                               Number::from(-4.0), 
-                                               Number::from(-6.0))));
+        let a = point(3.0, 2.0, 1.0);
+        let b = point(5.0, 6.0, 7.0);
+        assert!( (a - b).equals(vector(-2.0, -4.0, -6.0)));
     }
 
     #[test]
     fn sub_vector_from_point(){
-        let a = Tuple::point(Number::from(3),
-                             Number::from(2),
-                             Number::from(1));
-        let b = Tuple::vector(Number::from(5),
-                              Number::from(6),
-                              Number::from(7));
-        assert!( (a - b).equals(Tuple::point(Number::from(-2.0), 
-                                              Number::from(-4.0), 
-                                              Number::from(-6.0))));
+        let a = point(3.0, 2.0, 1.0);
+        let b = vector(5.0, 6.0, 7.0);
+        assert!( (a - b).equals(point(-2.0, -4.0, -6.0)));
     }
     
     #[test]
