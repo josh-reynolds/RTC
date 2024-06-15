@@ -1,6 +1,6 @@
 use crate::equals;
 use crate::number::Number;
-use std::ops::{Neg, Mul, Add, Div};
+use std::ops::{Neg, Mul, Add, Div, Sub};
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -43,6 +43,17 @@ impl Add for Tuple {
     }
 }
 
+impl Sub for Tuple {
+    type Output = Self;
+
+    fn sub(self, t: Self) -> Self {
+        Self { x: self.x - t.x,
+               y: self.y - t.y,
+               z: self.z - t.z,
+               w: self.w - t.w }
+    }
+}
+
 impl Div<f64> for Tuple {
     type Output = Self;
 
@@ -73,13 +84,6 @@ impl Tuple {
 
     pub fn vector(x: Number, y: Number, z: Number) -> Self {
         Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
-    }
-
-    pub fn sub(&self, t: Tuple) -> Self {
-        Self { x: self.x - t.x,
-               y: self.y - t.y,
-               z: self.z - t.z,
-               w: self.w - t.w }
     }
 
     // only applies to vectors - should we restrict usage?
@@ -208,7 +212,7 @@ mod tests {
         let b = Tuple::point(Number::from(5),
                              Number::from(6),
                              Number::from(7));
-        assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
+        assert!( (a - b).equals(Tuple::vector(Number::from(-2.0), 
                                                Number::from(-4.0), 
                                                Number::from(-6.0))));
     }
@@ -221,7 +225,7 @@ mod tests {
         let b = Tuple::vector(Number::from(5),
                               Number::from(6),
                               Number::from(7));
-        assert!( a.sub(b).equals(Tuple::point(Number::from(-2.0), 
+        assert!( (a - b).equals(Tuple::point(Number::from(-2.0), 
                                               Number::from(-4.0), 
                                               Number::from(-6.0))));
     }
@@ -234,7 +238,7 @@ mod tests {
         let b = Tuple::vector(Number::from(5),
                               Number::from(6),
                               Number::from(7));
-        assert!( a.sub(b).equals(Tuple::vector(Number::from(-2.0), 
+        assert!( (a - b).equals(Tuple::vector(Number::from(-2.0), 
                                                Number::from(-4.0), 
                                                Number::from(-6.0))));
     }
@@ -247,7 +251,7 @@ mod tests {
         let v = Tuple::vector(Number::from(1),
                               Number::from(-2),
                               Number::from(3));
-        assert!( zero.sub(v).equals(Tuple::vector(Number::from(-1.0), 
+        assert!( (zero - v).equals(Tuple::vector(Number::from(-1.0), 
                                                   Number::from(2.0), 
                                                   Number::from(-3.0))));
     }

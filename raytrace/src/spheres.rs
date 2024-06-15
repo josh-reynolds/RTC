@@ -15,7 +15,7 @@ impl<'a> Sphere {
     
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
         let r2 = r.transform( self.transform.inverse() );
-        let sphere_to_ray = r2.origin.sub( Tuple::origin() );
+        let sphere_to_ray = r2.origin - Tuple::origin();
 
         let a = r2.direction.dot(&r2.direction);
         let b = 2.0 * ( r2.direction.dot(&sphere_to_ray) );

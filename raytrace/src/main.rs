@@ -30,7 +30,7 @@ fn main() {
             let position = Tuple::point(Number::from(world_x),
                                         Number::from(world_y),
                                         Number::from(wall_z));
-            let ray = Ray::new(ray_origin, (position.sub(ray_origin)).normal());
+            let ray = Ray::new(ray_origin, (position - ray_origin).normal());
             let xs = shape.intersect(ray);
 
             if xs.len() > 0 {
