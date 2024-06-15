@@ -1,6 +1,6 @@
 use crate::equals;
 use crate::number::Number;
-use std::ops::{Neg, Mul, Add, Div, Sub};
+use std::ops::{Add, Sub, Mul, Div, Neg};
 
 #[derive(Debug,Clone,Copy)]
 pub struct Tuple {
@@ -8,28 +8,6 @@ pub struct Tuple {
     pub y: f64,
     pub z: f64,
     pub w: f64,
-}
-
-impl Neg for Tuple {
-    type Output = Self;
-
-    fn neg(self) -> Self::Output {
-        Self { x: -self.x,
-               y: -self.y,
-               z: -self.z,
-               w: -self.w }
-    }
-}
-
-impl Mul<f64> for Tuple {
-    type Output = Self;
-
-    fn mul(self, rhs: f64) -> Self::Output {
-        Self { x: self.x * rhs,
-               y: self.y * rhs,
-               z: self.z * rhs,
-               w: self.w * rhs }
-    }
 }
 
 impl Add for Tuple {
@@ -54,6 +32,17 @@ impl Sub for Tuple {
     }
 }
 
+impl Mul<f64> for Tuple {
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self { x: self.x * rhs,
+               y: self.y * rhs,
+               z: self.z * rhs,
+               w: self.w * rhs }
+    }
+}
+
 impl Div<f64> for Tuple {
     type Output = Self;
 
@@ -62,6 +51,17 @@ impl Div<f64> for Tuple {
                y: self.y / n,
                z: self.z / n,
                w: self.w / n }
+    }
+}
+
+impl Neg for Tuple {
+    type Output = Self;
+
+    fn neg(self) -> Self::Output {
+        Self { x: -self.x,
+               y: -self.y,
+               z: -self.z,
+               w: -self.w }
     }
 }
 
