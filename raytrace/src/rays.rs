@@ -25,93 +25,56 @@ impl Ray {
 #[cfg(test)]
 mod tests {
     use crate::rays::Ray;
-    use crate::tuple::Tuple;
-    use crate::number::Number;
+    use crate::tuple::{point, vector};
     use crate::transform::translation;
     use crate::transform::scaling;
 
     #[test]
     fn new_creates_rays(){
-        let o = Tuple::point( Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
-        let d = Tuple::vector( Number::from(4),
-                               Number::from(5),
-                               Number::from(6));
+        let o = point( 1.0, 2.0, 3.0);
+        let d = vector( 4.0, 5.0, 6.0);
 
         let r = Ray::new(o, d);
-        assert!( r.origin.equals(Tuple::point( Number::from(1),
-                                               Number::from(2),
-                                               Number::from(3))) );
-        assert!( r.direction.equals(Tuple::vector( Number::from(4),
-                                                   Number::from(5),
-                                                   Number::from(6))) );
+        assert!( r.origin.equals(point( 1.0, 2.0, 3.0))) ;
+        assert!( r.direction.equals(vector( 4.0, 5.0, 6.0))) ;
     }
 
     #[test]
     fn computing_point_from_distance(){
-        let o = Tuple::point( Number::from(2),
-                              Number::from(3),
-                              Number::from(4));
-        let d = Tuple::vector( Number::from(1),
-                               Number::from(0),
-                               Number::from(0));
+        let o = point( 2.0, 3.0, 4.0);
+        let d = vector( 1.0, 0.0, 0.0);
 
         let r = Ray::new(o, d);
-        assert!( r.position(0.0).equals(Tuple::point( Number::from(2),
-                                                      Number::from(3),
-                                                      Number::from(4))) );
-        assert!( r.position(1.0).equals(Tuple::point( Number::from(3),
-                                                      Number::from(3),
-                                                      Number::from(4))) );
-        assert!( r.position(-1.0).equals(Tuple::point( Number::from(1),
-                                                       Number::from(3),
-                                                       Number::from(4))) );
-        assert!( r.position(2.5).equals(Tuple::point( Number::from(4.5),
-                                                      Number::from(3),
-                                                      Number::from(4))) );
+        assert!( r.position(0.0).equals(point( 2.0, 3.0, 4.0))) ;
+        assert!( r.position(1.0).equals(point( 3.0, 3.0, 4.0))) ;
+        assert!( r.position(-1.0).equals(point( 1.0, 3.0, 4.0))) ;
+        assert!( r.position(2.5).equals(point( 4.5, 3.0, 4.0))) ;
 
     }
 
     #[test]
     fn translating_a_ray(){
-        let o = Tuple::point( Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
-        let d = Tuple::vector( Number::from(0),
-                               Number::from(1),
-                               Number::from(0));
+        let o = point( 1.0, 2.0, 3.0);
+        let d = vector( 0.0, 1.0, 0.0);
         let r = Ray::new(o, d);
 
         let m = translation(3.0, 4.0, 5.0);
         let r2 = r.transform(m);
 
-        assert!( r2.origin.equals(Tuple::point( Number::from(4),
-                                                Number::from(6),
-                                                Number::from(8))) );
-        assert!( r2.direction.equals(Tuple::vector( Number::from(0),
-                                                    Number::from(1),
-                                                    Number::from(0))) );
+        assert!( r2.origin.equals(point( 4.0, 6.0, 8.0))) ;
+        assert!( r2.direction.equals(vector( 0.0, 1.0, 0.0))) ;
     }
 
     #[test]
     fn scaling_a_ray(){
-        let o = Tuple::point( Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
-        let d = Tuple::vector( Number::from(0),
-                               Number::from(1),
-                               Number::from(0));
+        let o = point( 1.0, 2.0, 3.0);
+        let d = vector( 0.0, 1.0, 0.0);
         let r = Ray::new(o, d);
 
         let m = scaling(2.0, 3.0, 4.0);
         let r2 = r.transform(m);
 
-        assert!( r2.origin.equals(Tuple::point( Number::from(2),
-                                                Number::from(6),
-                                                Number::from(12))) );
-        assert!( r2.direction.equals(Tuple::vector( Number::from(0),
-                                                    Number::from(3),
-                                                    Number::from(0))) );
+        assert!( r2.origin.equals(point( 2.0, 6.0, 12.0))) ;
+        assert!( r2.direction.equals(vector( 0.0, 3.0, 0.0))) ;
     }
 }
