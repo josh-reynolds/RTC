@@ -132,7 +132,7 @@ pub fn vector(x: f64, y: f64, z: f64) -> Tuple {
 mod tests {
     use crate::equals;
     use crate::tuple::Tuple;
-    use crate::tuple::Number;
+    //use crate::tuple::Number;
     use crate::tuple::{point, vector};
 
     #[test]
@@ -185,21 +185,21 @@ mod tests {
     // is cluttering up the code. Long term is to figure out a 
     // solution using generics. For now we'll only allow creation
     // from floats.
-    #[test]
-    fn can_create_points_from_ints(){
-        let a = Tuple::point(Number::from(4),
-                             Number::from(-4),
-                             Number::from(3));
-        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
-    }
+//    #[test]
+//    fn can_create_points_from_ints(){
+//        let a = Tuple::point(Number::from(4),
+//                             Number::from(-4),
+//                             Number::from(3));
+//        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 1.0 }));
+//    }
 
-    #[test]
-    fn can_create_vectors_from_ints(){
-        let a = Tuple::vector(Number::from(4),
-                              Number::from(-4),
-                              Number::from(3));
-        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
-    }
+//    #[test]
+//    fn can_create_vectors_from_ints(){
+//        let a = Tuple::vector(Number::from(4),
+//                              Number::from(-4),
+//                              Number::from(3));
+//        assert!( a.equals(Tuple { x: 4.0, y: -4.0, z: 3.0, w: 0.0 }));
+//    }
 
     // OK: vector + vector, vector + point
     // Not OK: point + point
@@ -226,28 +226,16 @@ mod tests {
     
     #[test]
     fn sub_two_vectors(){
-        let a = Tuple::vector(Number::from(3),
-                              Number::from(2),
-                              Number::from(1));
-        let b = Tuple::vector(Number::from(5),
-                              Number::from(6),
-                              Number::from(7));
-        assert!( (a - b).equals(Tuple::vector(Number::from(-2.0), 
-                                               Number::from(-4.0), 
-                                               Number::from(-6.0))));
+        let a = vector(3.0, 2.0, 1.0);
+        let b = vector(5.0, 6.0, 7.0);
+        assert!( (a - b).equals(vector(-2.0, -4.0, -6.0)));
     }
 
     #[test]
     fn sub_vector_from_zero_vector(){
-        let zero = Tuple::vector(Number::from(0),
-                                 Number::from(0),
-                                 Number::from(0));
-        let v = Tuple::vector(Number::from(1),
-                              Number::from(-2),
-                              Number::from(3));
-        assert!( (zero - v).equals(Tuple::vector(Number::from(-1.0), 
-                                                  Number::from(2.0), 
-                                                  Number::from(-3.0))));
+        let zero = vector(0.0, 0.0, 0.0);
+        let v = vector(1.0, -2.0, 3.0);
+        assert!( (zero - v).equals(vector(-1.0, 2.0, -3.0)));
     }
 
     #[test]
@@ -276,93 +264,65 @@ mod tests {
 
     #[test]
     fn magnitude_of_vector_1_0_0(){
-        let v = Tuple::vector(Number::from(1),
-                              Number::from(0),
-                              Number::from(0));
+        let v = vector(1.0, 0.0, 0.0);
         assert!( equals( v.mag(), 1.0 ));
     }
 
     #[test]
     fn magnitude_of_vector_0_1_0(){
-        let v = Tuple::vector(Number::from(0),
-                              Number::from(1),
-                              Number::from(0));
+        let v = vector(0.0, 1.0, 0.0);
         assert!( equals( v.mag(), 1.0 ));
     }
 
     #[test]
     fn magnitude_of_vector_0_0_1(){
-        let v = Tuple::vector(Number::from(0),
-                              Number::from(0),
-                              Number::from(1));
+        let v = vector(0.0, 0.0, 1.0);
         assert!( equals( v.mag(), 1.0 ));
     }
 
     #[test]
     fn magnitude_of_vector_1_2_3(){
-        let v = Tuple::vector(Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
+        let v = vector(1.0, 2.0, 3.0);
         assert_eq!( 14_f64.sqrt(), v.mag() );
     }
 
     #[test]
     fn magnitude_of_neg_vector_1_2_3(){
-        let v = Tuple::vector(Number::from(-1),
-                              Number::from(-2),
-                              Number::from(-3));
+        let v = vector(-1.0, -2.0, -3.0);
         assert_eq!( 14_f64.sqrt(), v.mag() );
     }
 
     #[test]
     fn normalize_vector_4_0_0_equals_vector_1_0_0(){
-        let v = Tuple::vector(Number::from(4),
-                              Number::from(0),
-                              Number::from(0));
+        let v = vector(4.0, 0.0, 0.0);
         assert!( v.normal().equals( Tuple { x: 1.0, y: 0.0, z: 0.0, w: 0.0 } ));
     }
 
     #[test]
     fn normalize_vector_1_2_3(){
-        let v = Tuple::vector(Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
+        let v = vector(1.0, 2.0, 3.0);
         assert!( v.normal().equals( Tuple { x: 1.0 / 14_f64.sqrt(), y: 2.0 / 14_f64.sqrt(),
                                             z: 3.0 / 14_f64.sqrt(), w: 0.0 } ));
     }
 
     #[test]
     fn normalized_vector_mag_equals_1(){
-        let v = Tuple::vector(Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
+        let v = vector(1.0, 2.0, 3.0);
         assert_eq!( v.normal().mag(), 1.0 );
     }
 
     #[test]
     fn dot_product_1_2_3_w_2_3_4_equals_20(){
-        let a = Tuple::vector(Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
-        let b = Tuple::vector(Number::from(2),
-                              Number::from(3),
-                              Number::from(4));
+        let a = vector(1.0, 2.0, 3.0);
+        let b = vector(2.0, 3.0, 4.0);
         assert_eq!( a.dot(&b), 20.0 );
     }
 
     #[test]
     fn cross_product_1_2_3_w_2_3_4_equals_neg1_2_neg1(){
-        let a = Tuple::vector(Number::from(1),
-                              Number::from(2),
-                              Number::from(3));
-        let b = Tuple::vector(Number::from(2),
-                              Number::from(3),
-                              Number::from(4));
-        assert!( a.cross(&b).equals( Tuple::vector(Number::from(-1),
-                                                  Number::from(2),
-                                                  Number::from(-1))));
-        assert!( b.cross(&a).equals( Tuple::vector(Number::from(1),
-                                                  Number::from(-2),
-                                                  Number::from(1))));
+        let a = vector(1.0, 2.0, 3.0);
+        let b = vector(2.0, 3.0, 4.0);
+        assert!( a.cross(&b).equals( vector(-1.0, 2.0, -1.0)));
+        assert!( b.cross(&a).equals( vector(1.0, -2.0, 1.0)));
     }    
 }
