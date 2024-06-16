@@ -56,9 +56,7 @@ pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix 
 
 #[cfg(test)]
 mod tests {
-    //use crate::matrix::Matrix;
-    use crate::tuple::Tuple;
-    use crate::number::Number;
+    use crate::tuple::{point, vector};
     use crate::transform::translation;
     use crate::transform::scaling;
     use crate::transform::rotation_x;
@@ -71,34 +69,24 @@ mod tests {
     #[test]
     fn multiply_by_translation_matrix(){
         let t = translation(5.0, -3.0, 2.0);
-        let p = Tuple::point(Number::from(-3), 
-                             Number::from(4), 
-                             Number::from(5));
+        let p = point(-3.0, 4.0, 5.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(2), 
-                                                   Number::from(1), 
-                                                   Number::from(7))));
+        assert!( t.multup(&p).equals( point(2.0, 1.0, 7.0)));
     }
 
     #[test]
     fn multiply_by_inverse_translation_matrix(){
         let t = translation(5.0, -3.0, 2.0);
         let inv = t.inverse();
-        let p = Tuple::point(Number::from(-3), 
-                             Number::from(4), 
-                             Number::from(5));
+        let p = point(-3.0, 4.0, 5.0);
 
-        assert!( inv.multup(&p).equals( Tuple::point(Number::from(-8), 
-                                                     Number::from(7), 
-                                                     Number::from(3))));
+        assert!( inv.multup(&p).equals( point(-8.0, 7.0, 3.0)));
     }
 
     #[test]
     fn translation_does_not_affect_vectors(){
         let t = translation(5.0, -3.0, 2.0);
-        let v = Tuple::vector(Number::from(-3), 
-                              Number::from(4), 
-                              Number::from(5));
+        let v = vector(-3.0, 4.0, 5.0);
 
         assert!( t.multup(&v).equals( v ));
     }
@@ -106,223 +94,149 @@ mod tests {
     #[test]
     fn multiply_point_by_scaling_matrix(){
         let t = scaling(2.0, 3.0, 4.0);
-        let p = Tuple::point(Number::from(-4), 
-                             Number::from(6), 
-                             Number::from(8));
+        let p = point(-4.0, 6.0, 8.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(-8), 
-                                                   Number::from(18), 
-                                                   Number::from(32))));
+        assert!( t.multup(&p).equals( point(-8.0, 18.0, 32.0)));
     }
 
     #[test]
     fn multiply_vector_by_scaling_matrix(){
         let t = scaling(2.0, 3.0, 4.0);
-        let v = Tuple::vector(Number::from(-4), 
-                              Number::from(6), 
-                              Number::from(8));
+        let v = vector(-4.0, 6.0, 8.0);
 
-        assert!( t.multup(&v).equals( Tuple::vector(Number::from(-8), 
-                                                    Number::from(18), 
-                                                    Number::from(32))));
+        assert!( t.multup(&v).equals( vector(-8.0, 18.0, 32.0)));
     }
 
     #[test]
     fn multiply_vector_by_inverse_scaling_matrix(){
         let t = scaling(2.0, 3.0, 4.0);
         let inv = t.inverse();
-        let v = Tuple::vector(Number::from(-4), 
-                              Number::from(6), 
-                              Number::from(8));
+        let v = vector(-4.0, 6.0, 8.0);
 
-        assert!( inv.multup(&v).equals( Tuple::vector(Number::from(-2), 
-                                                      Number::from(2), 
-                                                      Number::from(2))));
+        assert!( inv.multup(&v).equals( vector(-2.0, 2.0, 2.0)));
     }
 
     #[test]
     fn reflection_is_scaling_by_negative_value(){
         let t = scaling(-1.0, 1.0, 1.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(-2), 
-                                                   Number::from(3), 
-                                                   Number::from(4))));
+        assert!( t.multup(&p).equals( point(-2.0, 3.0, 4.0)));
     }
 
     #[test]
     fn rotate_point_around_x_axis(){
-        let p = Tuple::point(Number::from(0), 
-                             Number::from(1), 
-                             Number::from(0));
+        let p = point(0.0, 1.0, 0.0);
         let half_quarter = rotation_x(PI / 4.0);
         let full_quarter = rotation_x(PI / 2.0);
 
-        assert!( half_quarter.multup(&p).equals( Tuple::point(Number::from(0), 
-                                                              Number::from(SQRT_2 / 2.0), 
-                                                              Number::from(SQRT_2 / 2.0))));
-        assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(0), 
-                                                              Number::from(0), 
-                                                              Number::from(1))));
+        assert!( half_quarter.multup(&p).equals( point(0.0, SQRT_2 / 2.0, SQRT_2 / 2.0)));
+        assert!( full_quarter.multup(&p).equals( point(0.0, 0.0, 1.0)));
     }
 
     #[test]
     fn inverse_of_rotation_rotates_opposite_direction(){
-        let p = Tuple::point(Number::from(0), 
-                             Number::from(1), 
-                             Number::from(0));
+        let p = point(0.0, 1.0, 0.0);
         let half_quarter = rotation_x(PI / 4.0);
         let inv = half_quarter.inverse();
 
-        assert!( inv.multup(&p).equals( Tuple::point(Number::from(0), 
-                                                     Number::from( SQRT_2 / 2.0), 
-                                                     Number::from(-SQRT_2 / 2.0))));
+        assert!( inv.multup(&p).equals( point(0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0)));
     }
 
     #[test]
     fn rotate_point_around_y_axis(){
-        let p = Tuple::point(Number::from(0), 
-                             Number::from(0), 
-                             Number::from(1));
+        let p = point(0.0, 0.0, 1.0);
         let half_quarter = rotation_y(PI / 4.0);
         let full_quarter = rotation_y(PI / 2.0);
 
-        assert!( half_quarter.multup(&p).equals( Tuple::point(Number::from(SQRT_2 / 2.0), 
-                                                              Number::from(0),
-                                                              Number::from(SQRT_2 / 2.0))));
-        assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(1), 
-                                                              Number::from(0), 
-                                                              Number::from(0))));
+        assert!( half_quarter.multup(&p).equals( point(SQRT_2 / 2.0, 0.0, SQRT_2 / 2.0)));
+        assert!( full_quarter.multup(&p).equals( point(1.0, 0.0, 0.0)));
     }
 
     #[test]
     fn rotate_point_around_z_axis(){
-        let p = Tuple::point(Number::from(0), 
-                             Number::from(1), 
-                             Number::from(0));
+        let p = point(0.0, 1.0, 0.0);
         let half_quarter = rotation_z(PI / 4.0);
         let full_quarter = rotation_z(PI / 2.0);
 
-        assert!( half_quarter.multup(&p).equals( Tuple::point(Number::from(-SQRT_2 / 2.0), 
-                                                              Number::from( SQRT_2 / 2.0),
-                                                              Number::from(0))));
-        assert!( full_quarter.multup(&p).equals( Tuple::point(Number::from(-1), 
-                                                              Number::from(0), 
-                                                              Number::from(0))));
+        assert!( half_quarter.multup(&p).equals( point(-SQRT_2 / 2.0, SQRT_2 / 2.0, 0.0)));
+        assert!( full_quarter.multup(&p).equals( point(-1.0, 0.0, 0.0)));
     }
 
     #[test]
     fn shearing_moves_x_proportionate_to_y(){
         let t = shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(5.0), 
-                                                   Number::from(3.0),
-                                                   Number::from(4.0))));
+        assert!( t.multup(&p).equals( point(5.0, 3.0, 4.0)));
     }
 
     #[test]
     fn shearing_moves_x_proportionate_to_z(){
         let t = shearing(0.0, 1.0, 0.0, 0.0, 0.0, 0.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(6.0), 
-                                                   Number::from(3.0),
-                                                   Number::from(4.0))));
+        assert!( t.multup(&p).equals( point(6.0, 3.0, 4.0)));
     }
 
     #[test]
     fn shearing_moves_y_proportionate_to_x(){
         let t = shearing(0.0, 0.0, 1.0, 0.0, 0.0, 0.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
-                                                   Number::from(5.0),
-                                                   Number::from(4.0))));
+        assert!( t.multup(&p).equals( point(2.0, 5.0, 4.0)));
     }
     
     #[test]
     fn shearing_moves_y_proportionate_to_z(){
         let t = shearing(0.0, 0.0, 0.0, 1.0, 0.0, 0.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
-                                                   Number::from(7.0),
-                                                   Number::from(4.0))));
+        assert!( t.multup(&p).equals( point(2.0, 7.0, 4.0)));
     }
 
     #[test]
     fn shearing_moves_z_proportionate_to_x(){
         let t = shearing(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
-                                                   Number::from(3.0),
-                                                   Number::from(6.0))));
+        assert!( t.multup(&p).equals( point(2.0, 3.0, 6.0)));
     }
 
     #[test]
     fn shearing_moves_z_proportionate_to_y(){
         let t = shearing(0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-        let p = Tuple::point(Number::from(2), 
-                             Number::from(3), 
-                             Number::from(4));
+        let p = point(2.0, 3.0, 4.0);
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(2.0), 
-                                                   Number::from(3.0),
-                                                   Number::from(7.0))));
+        assert!( t.multup(&p).equals( point(2.0, 3.0, 7.0)));
     }
 
     #[test]
     fn individual_transforms_apply_in_sequence(){
-        let p = Tuple::point(Number::from(1), 
-                             Number::from(0), 
-                             Number::from(1));
+        let p = point(1.0, 0.0, 1.0);
         let a = rotation_x(PI / 2.0);
         let b = scaling(5.0, 5.0, 5.0);
         let c = translation(10.0, 5.0, 7.0);
 
         let p2 = a.multup(&p);
-        assert!( p2.equals( Tuple::point(Number::from( 1), 
-                                         Number::from(-1), 
-                                         Number::from( 0))));
+        assert!( p2.equals( point( 1.0, -1.0, 0.0)));
 
         let p3 = b.multup(&p2);
-        assert!( p3.equals( Tuple::point(Number::from( 5), 
-                                         Number::from(-5), 
-                                         Number::from( 0))));
+        assert!( p3.equals( point( 5.0, -5.0, 0.0)));
 
         let p4 = c.multup(&p3);
-        assert!( p4.equals( Tuple::point(Number::from(15), 
-                                         Number::from( 0), 
-                                         Number::from( 7))));
+        assert!( p4.equals( point(15.0, 0.0, 7.0)));
     }
 
     #[test]
     fn chained_transforms_apply_in_reverse_order(){
-        let p = Tuple::point(Number::from(1), 
-                             Number::from(0), 
-                             Number::from(1));
+        let p = point(1.0, 0.0, 1.0);
         let a = rotation_x(PI / 2.0);
         let b = scaling(5.0, 5.0, 5.0);
         let c = translation(10.0, 5.0, 7.0);
 
         let t = c.mult( &b.mult( &a ));
 
-        assert!( t.multup(&p).equals( Tuple::point(Number::from(15), 
-                                                   Number::from( 0), 
-                                                   Number::from( 7))));
+        assert!( t.multup(&p).equals( point(15.0, 0.0, 7.0)));
     }
 }
