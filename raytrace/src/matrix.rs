@@ -189,8 +189,8 @@ pub fn v_equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
 #[cfg(test)]
 mod tests {
     use crate::matrix::Matrix;
-    use crate::number::Number;
     use crate::tuple::Tuple;
+    use crate::tuple::point;
 
     #[test]
     fn matrix_has_cols_and_rows(){
@@ -318,13 +318,9 @@ mod tests {
                                  vec![8.0, 6.0, 4.0, 1.0],
                                  vec![0.0, 0.0, 0.0, 1.0]] };
 
-        let b = Tuple::point(Number::from(1.0), 
-                             Number::from(2.0),
-                             Number::from(3.0));
+        let b = point(1.0, 2.0, 3.0);
 
-        assert!( a.multup(&b).equals( Tuple::point(Number::from(18.0), 
-                                                  Number::from(24.0),
-                                                  Number::from(33.0)) ));
+        assert!( a.multup(&b).equals( point(18.0, 24.0, 33.0)) );
     }
 
     #[test]
