@@ -44,8 +44,8 @@ impl<'a> Sphere {
 #[cfg(test)]
 mod tests {
     use crate::spheres::Sphere;
-    use crate::number::Number;
     use crate::tuple::Tuple;
+    use crate::tuple::{point, vector};
     use crate::rays::Ray;
     use crate::matrix::Matrix;
     use crate::transform::translation;
@@ -61,12 +61,8 @@ mod tests {
     #[test]
     fn ray_intersects_sphere_at_two_points(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 4.0 );
@@ -76,12 +72,8 @@ mod tests {
     #[test]
     fn ray_intersects_sphere_at_tangent(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(1),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 1.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 5.0 );
@@ -91,12 +83,8 @@ mod tests {
     #[test]
     fn ray_misses_sphere(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(2),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 2.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 0 );
     }
@@ -105,9 +93,7 @@ mod tests {
     fn ray_originates_inside_sphere(){
         let s = Sphere::new();
         let r = Ray::new( Tuple::origin(),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -1.0 );
@@ -117,12 +103,8 @@ mod tests {
     #[test]
     fn sphere_is_behind_ray(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 0.0, 5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -6.0 );
@@ -132,12 +114,8 @@ mod tests {
     #[test]
     fn intersect_sets_object_on_intersections(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].object as *const _, &s as *const _);
@@ -153,9 +131,9 @@ mod tests {
     #[test]
     fn changing_sphere_transform(){
         let mut s = Sphere::new();
-        let t = translation(2.0, 3.0, 4.0);
+        let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
-        assert!( s.transform.equals( translation(2.0, 3.0, 4.0) ));
+        assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
     }
 
     #[test]
@@ -163,12 +141,8 @@ mod tests {
         let mut s = Sphere::new();
         s.set_transform( scaling( 2.0, 2.0, 2.0 ));
 
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 2 );
@@ -181,12 +155,8 @@ mod tests {
         let mut s = Sphere::new();
         s.set_transform( translation( 5.0, 0.0, 0.0 ));
 
-        let r = Ray::new( Tuple::point( Number::from(0),
-                                        Number::from(0),
-                                        Number::from(-5)),
-                          Tuple::vector( Number::from(0),
-                                         Number::from(0),
-                                         Number::from(1)) );
+        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
+                          vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 0 );
