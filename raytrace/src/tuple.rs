@@ -1,5 +1,4 @@
 use crate::equals;
-use crate::number::Number;
 use std::ops::{Add, Sub, Mul, Div, Neg};
 
 #[derive(Debug,Clone,Copy)]
@@ -78,14 +77,6 @@ impl Tuple {
         Self { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
     }
 
-    pub fn point(x: Number, y: Number, z: Number) -> Self {
-        Self { x: x.value, y: y.value, z: z.value, w: 1.0 }
-    }
-
-    pub fn vector(x: Number, y: Number, z: Number) -> Self {
-        Self { x: x.value, y: y.value, z: z.value, w: 0.0 }
-    }
-
     // only applies to vectors - should we restrict usage?
     pub fn mag(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
@@ -132,7 +123,6 @@ pub fn vector(x: f64, y: f64, z: f64) -> Tuple {
 mod tests {
     use crate::equals;
     use crate::tuple::Tuple;
-    //use crate::tuple::Number;
     use crate::tuple::{point, vector};
 
     #[test]
