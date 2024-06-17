@@ -1,5 +1,5 @@
 use crate::rays::Ray;
-use crate::tuple::Tuple;
+use crate::tuple::origin;
 use crate::intersections::Intersection;
 use crate::matrix::Matrix;
 
@@ -15,7 +15,7 @@ impl<'a> Sphere {
     
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
         let r2 = r.transform( self.transform.inverse() );
-        let sphere_to_ray = r2.origin - Tuple::origin();
+        let sphere_to_ray = r2.origin - origin();
 
         let a = r2.direction.dot(&r2.direction);
         let b = 2.0 * ( r2.direction.dot(&sphere_to_ray) );
@@ -44,8 +44,7 @@ impl<'a> Sphere {
 #[cfg(test)]
 mod tests {
     use crate::spheres::Sphere;
-    use crate::tuple::Tuple;
-    use crate::tuple::{point, vector};
+    use crate::tuple::{point, vector, origin};
     use crate::rays::Ray;
     use crate::matrix::Matrix;
     use crate::transform::translation;
@@ -92,7 +91,7 @@ mod tests {
     #[test]
     fn ray_originates_inside_sphere(){
         let s = Sphere::new();
-        let r = Ray::new( Tuple::origin(),
+        let r = Ray::new( origin(),
                           vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );

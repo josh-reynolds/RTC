@@ -73,10 +73,6 @@ impl Tuple {
         equals( self.w, 0.0 )
     }
 
-    pub fn origin() -> Self {
-        Self { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
-    }
-
     // only applies to vectors - should we restrict usage?
     pub fn mag(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt()
@@ -119,11 +115,15 @@ pub fn vector(x: f64, y: f64, z: f64) -> Tuple {
     Tuple { x: x, y: y, z: z, w: 0.0 }
 }
 
+pub fn origin() -> Tuple {
+    Tuple { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::equals;
     use crate::tuple::Tuple;
-    use crate::tuple::{point, vector};
+    use crate::tuple::{point, vector, origin};
 
     #[test]
     fn tuple_with_w_1_is_point(){
@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn origin_creates_point_at_origin(){
-        let o = Tuple::origin();
+        let o = origin();
         assert!( o.equals(Tuple { x: 0.0, y: 0.0, z: 0.0, w: 1.0 }));
     }
 

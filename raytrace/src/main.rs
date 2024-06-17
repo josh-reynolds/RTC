@@ -1,7 +1,6 @@
 use raytrace::tuple::point;
 use raytrace::canvas::Canvas;
 use raytrace::color::Color;
-//use raytrace::transform::*;
 use raytrace::spheres::Sphere;
 use raytrace::rays::Ray;
 
