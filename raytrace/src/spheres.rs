@@ -1,4 +1,5 @@
 use crate::rays::Ray;
+use crate::tuple::Tuple;
 use crate::tuple::origin;
 use crate::intersections::Intersection;
 use crate::matrix::Matrix;
@@ -39,6 +40,10 @@ impl<'a> Sphere {
     pub fn set_transform(&mut self, t: Matrix){
         self.transform = t
     }
+
+    pub fn normal_at(&self, p: Tuple) -> Tuple {
+        (p - origin()).normal()
+    }
 }
 
 #[cfg(test)]
@@ -49,6 +54,7 @@ mod tests {
     use crate::matrix::Matrix;
     use crate::transform::translation;
     use crate::transform::scaling;
+    //use std::f64::consts::SQRT_3;  // unfortunately still in experimental branch...
 
     #[test]
     fn new_creates_unique_spheres(){
@@ -159,5 +165,47 @@ mod tests {
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 0 );
+    }
+
+    #[test]
+    fn normal_on_sphere_along_x_axis(){
+        let s = Sphere::new();
+        let n = s.normal_at( point( 1.0, 0.0, 0.0 ));
+
+        assert!( n.equals( vector( 1.0, 0.0, 0.0 )));
+    }
+
+    #[test]
+    fn normal_on_sphere_along_y_axis(){
+        let s = Sphere::new();
+        let n = s.normal_at( point( 0.0, 1.0, 0.0 ));
+
+        assert!( n.equals( vector( 0.0, 1.0, 0.0 )));
+    }
+
+    #[test]
+    fn normal_on_sphere_along_z_axis(){
+        let s = Sphere::new();
+        let n = s.normal_at( point( 0.0, 0.0, 1.0 ));
+
+        assert!( n.equals( vector( 0.0, 0.0, 1.0 )));
+    }
+
+    #[test]
+    fn normal_on_sphere_at_nonaxial_point(){
+        let sqrt_3: f64 = 3_f64.sqrt();   // see comment above about constant in std::f64
+        let s = Sphere::new();
+        let n = s.normal_at( point( sqrt_3 / 3.0, sqrt_3 / 3.0, sqrt_3 / 3.0 ));
+
+        assert!( n.equals( vector( sqrt_3 / 3.0, sqrt_3 / 3.0, sqrt_3 / 3.0 )));
+    }
+
+    #[test]
+    fn normal_is_normalized_vector(){
+        let sqrt_3: f64 = 3_f64.sqrt();   // see comment above about constant in std::f64
+        let s = Sphere::new();
+        let n = s.normal_at( point( sqrt_3 / 3.0, sqrt_3 / 3.0, sqrt_3 / 3.0 ));
+
+        assert!( n.equals( n.normal() ));
     }
 }
