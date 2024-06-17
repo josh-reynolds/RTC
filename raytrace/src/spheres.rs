@@ -41,8 +41,12 @@ impl<'a> Sphere {
         self.transform = t
     }
 
-    pub fn normal_at(&self, p: Tuple) -> Tuple {
-        (p - origin()).normal()
+    pub fn normal_at(&self, world_point: Tuple) -> Tuple {
+        let object_point = self.transform.inverse().multup( &world_point );
+        let object_normal = object_point - origin();
+        let mut world_normal = self.transform.inverse().transpose().multup( &object_normal );
+        world_normal.w = 0.0;
+        world_normal.normal()
     }
 }
 
@@ -52,10 +56,11 @@ mod tests {
     use crate::tuple::{point, vector, origin};
     use crate::rays::Ray;
     use crate::matrix::Matrix;
-    use crate::transform::translation;
-    use crate::transform::scaling;
+    use crate::transform::{translation, scaling, rotation_z};
     //use std::f64::consts::SQRT_3;  // unfortunately still in experimental branch...
-
+    use std::f64::consts::PI;
+    use std::f64::consts::SQRT_2;
+    
     #[test]
     fn new_creates_unique_spheres(){
         let s1 = Sphere::new();
@@ -207,5 +212,24 @@ mod tests {
         let n = s.normal_at( point( sqrt_3 / 3.0, sqrt_3 / 3.0, sqrt_3 / 3.0 ));
 
         assert!( n.equals( n.normal() ));
+    }
+
+    #[test]
+    fn normal_on_translated_sphere(){
+        let mut s = Sphere::new();
+        s.set_transform( translation( 0.0, 1.0, 0.0 ));
+        let n = s.normal_at( point( 0.0, 1.70711, -0.70711 ));
+
+        assert!( n.equals( vector( 0.0, 0.70711, -0.70711 )));
+    }
+
+    #[test]
+    fn normal_on_transformed_sphere(){
+        let mut s = Sphere::new();
+        let m = scaling( 1.0, 0.5, 1.0 ).mult( &rotation_z( PI / 5.0 ));
+        s.set_transform( m );
+        let n = s.normal_at( point( 0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0 ));
+
+        assert!( n.equals( vector( 0.0, 0.97014, -0.24254 )));
     }
 }
