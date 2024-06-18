@@ -99,6 +99,11 @@ impl Tuple {
                w: 0.0 }
     }
 
+    // also only applies to vectors
+    pub fn reflect(&self, v: &Tuple) -> Self {
+        *self - (*v * 2.0 * self.dot(&v))
+    }
+
     pub fn equals(&self, t: Tuple) -> bool {
         equals( self.x, t.x ) && 
         equals( self.y, t.y ) &&
@@ -124,6 +129,7 @@ mod tests {
     use crate::equals;
     use crate::tuple::Tuple;
     use crate::tuple::{point, vector, origin};
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn tuple_with_w_1_is_point(){
@@ -315,4 +321,20 @@ mod tests {
         assert!( a.cross(&b).equals( vector(-1.0, 2.0, -1.0)));
         assert!( b.cross(&a).equals( vector(1.0, -2.0, 1.0)));
     }    
+
+    #[test]
+    fn reflecting_vector_approaching_at_45_deg(){
+        let v = vector(1.0, -1.0, 0.0);
+        let n = vector(0.0, 1.0, 0.0);
+        let r = v.reflect(&n);
+        assert!( r.equals( vector(1.0, 1.0, 0.0)));
+    }
+
+    #[test]
+    fn reflecting_vector_off_slanted_surface(){
+        let v = vector(0.0, -1.0, 0.0);
+        let n = vector(SQRT_2 / 2.0, SQRT_2 / 2.0, 0.0);
+        let r = v.reflect(&n);
+        assert!( r.equals( vector(1.0, 0.0, 0.0)));
+    }
 }
