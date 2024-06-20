@@ -48,7 +48,6 @@ pub fn color( r: f64, g: f64, b: f64 ) -> Color {
 #[cfg(test)]
 mod tests {
     use crate::equals;
-    use crate::color::Color;
     use crate::color::color;
 
     #[test]
@@ -61,29 +60,29 @@ mod tests {
 
     #[test]
     fn adding_colors(){
-        let c1 = Color { r: 0.9, g: 0.6, b: 0.75 };
-        let c2 = Color { r: 0.7, g: 0.1, b: 0.25 };
-        assert!( c1.plus(&c2).equals(Color { r: 1.6, g: 0.7, b: 1.0 }));
+        let c1 = color( 0.9, 0.6, 0.75 );
+        let c2 = color( 0.7, 0.1, 0.25 );
+        assert!( c1.plus(&c2).equals(color( 1.6, 0.7, 1.0 )));
     }
 
     #[test]
     fn subtracting_colors(){
-        let c1 = Color { r: 0.9, g: 0.6, b: 0.75 };
-        let c2 = Color { r: 0.7, g: 0.1, b: 0.25 };
-        assert!( c1.sub(&c2).equals(Color { r: 0.2, g: 0.5, b: 0.5 }));
+        let c1 = color( 0.9, 0.6, 0.75 );
+        let c2 = color( 0.7, 0.1, 0.25 );
+        assert!( c1.sub(&c2).equals(color( 0.2, 0.5, 0.5 )));
     }
 
     // in the text, this is multiplied by an integer, but I think float will be needed
     #[test]
     fn multipy_color_by_scalar(){
-        let c = Color { r: 0.2, g: 0.3, b: 0.4 };
-        assert!( c.mult(2.0).equals( Color { r: 0.4, g: 0.6, b: 0.8 } ));
+        let c = color( 0.2, 0.3, 0.4 );
+        assert!( c.mult(2.0).equals( color( 0.4, 0.6, 0.8 ) ));
     }
 
     #[test]
     fn multiply_color_by_color(){
-        let c1 = Color { r: 1.0, g: 0.2, b: 0.4 };
-        let c2 = Color { r: 0.9, g: 1.0, b: 0.1 };
-        assert!( c1.mult_c(c2).equals( Color { r: 0.9, g: 0.2, b: 0.04 } ));
+        let c1 = color( 1.0, 0.2, 0.4 );
+        let c2 = color( 0.9, 1.0, 0.1 );
+        assert!( c1.mult_c(c2).equals( color( 0.9, 0.2, 0.04 ) ));
     }
 }

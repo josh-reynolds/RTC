@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Write;
 use std::io::Result;
 use crate::color::Color;
+use crate::color::color;
 
 #[derive(Debug)]
 pub struct Canvas {
@@ -12,7 +13,7 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn new(width: usize, height:usize) -> Self {
-        let v = vec![vec![Color{r:0.0,g:0.0,b:0.0};width];height];
+        let v = vec![vec![color( 0.0, 0.0, 0.0 );width];height];
 
         Self { width: width,
                height: height,
@@ -108,25 +109,25 @@ pub fn c_equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
 #[cfg(test)]
 mod tests {
     use crate::canvas::Canvas;
-    use crate::color::Color;
+    use crate::color::color;
     use std::fs::read_to_string;
 
     #[test]
     fn canvas_has_width_and_height(){
-        let c = Canvas { width: 10, height: 20, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
+        let c = Canvas { width: 10, height: 20, pixels: vec![vec![color( 0.0, 0.0, 0.0 )]] };
         assert!( (c.width == 10) && (c.height == 20) );
     }
 
     #[test]
     fn canvas_1_1_has_1_pixel(){
-        let c = Canvas { width: 1, height: 1, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
+        let c = Canvas { width: 1, height: 1, pixels: vec![vec![color( 0.0, 0.0, 0.0 )]] };
         assert!( (c.pixels.len() == 1) && (c.pixels[0].len() == 1) );
     }
 
     #[test]
     fn canvas_default_color_eq_0_0_0(){
-        let c = Canvas { width: 1, height: 1, pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] };
-        assert!( c.pixels[0][0].equals( Color{r:0.0,g:0.0,b:0.0} ));
+        let c = Canvas { width: 1, height: 1, pixels: vec![vec![color( 0.0, 0.0, 0.0 )]] };
+        assert!( c.pixels[0][0].equals( color( 0.0, 0.0, 0.0 ) ));
     }
 
     #[test]
@@ -134,7 +135,7 @@ mod tests {
         let c = Canvas::new(1,1);
         assert!( c.equals( Canvas { width: 1, 
                                     height: 1, 
-                                    pixels: vec![vec![Color{r:0.0,g:0.0,b:0.0}]] }));
+                                    pixels: vec![vec![color( 0.0, 0.0, 0.0 )]] }));
     }
 
     #[test]
@@ -146,7 +147,7 @@ mod tests {
     #[test]
     fn writing_pixels_to_canvas(){
         let mut c = Canvas::new(10,20);
-        let red = Color{r:1.0,g:0.0,b:0.0};
+        let red = color( 1.0, 0.0, 0.0 );
         c.write_pixel(2, 3, red);
         assert!( c.pixel_at(2, 3).equals( red ));
     }
@@ -193,7 +194,7 @@ mod tests {
     #[test]
     fn ppm_for_color(){
         let mut c = Canvas::new(1,1);
-        let red = Color{r:1.0,g:0.0,b:0.0};
+        let red = color( 1.0, 0.0, 0.0 );
         c.write_pixel(0, 0, red);
         let _ = c.to_ppm("red_pixel.ppm");
         let lines = read_lines("red_pixel.ppm");
@@ -202,15 +203,15 @@ mod tests {
 
     #[test]
     fn pixel_to_string(){
-        let black = Color{r:0.0,g:0.0,b:0.0};
+        let black = color( 0.0, 0.0, 0.0 );
         assert_eq!("0 0 0", Canvas::pixel_to_string(black));
-        let red = Color{r:1.0,g:0.0,b:0.0};
+        let red = color( 1.0, 0.0, 0.0 );
         assert_eq!("255 0 0", Canvas::pixel_to_string(red));
-        let green = Color{r:0.0,g:1.0,b:0.0};
+        let green = color( 0.0, 1.0, 0.0 );
         assert_eq!("0 255 0", Canvas::pixel_to_string(green));
-        let blue = Color{r:0.0,g:0.0,b:1.0};
+        let blue = color( 0.0, 0.0, 1.0 );
         assert_eq!("0 0 255", Canvas::pixel_to_string(blue));
-        let grey = Color{r:0.5,g:0.5,b:0.5};
+        let grey = color( 0.5, 0.5, 0.5 );
         assert_eq!("128 128 128", Canvas::pixel_to_string(grey));
     }
     
@@ -244,9 +245,9 @@ mod tests {
     #[test]
     fn ppm_coloring_pixels(){
         let mut c = Canvas::new(5, 3);
-        let c1 = Color{r:1.5,g:0.0,b:0.0};
-        let c2 = Color{r:0.0,g:0.5,b:0.0};
-        let c3 = Color{r:-0.5,g:0.0,b:1.0};
+        let c1 = color( 1.5, 0.0, 0.0 );
+        let c2 = color( 0.0, 0.5, 0.0 );
+        let c3 = color( -0.5, 0.0, 1.0 );
         c.write_pixel(0, 0, c1);
         c.write_pixel(2, 1, c2);
         c.write_pixel(4, 2, c3);
@@ -270,7 +271,7 @@ mod tests {
         let w = 9;
         let h = 2;
         let mut c = Canvas::new(w,h);
-        let c1 = Color{r:1.0,g:0.8,b:0.6};
+        let c1 = color( 1.0, 0.8, 0.6 );
         for i in 0..w {
             for j in 0..h {
                 c.write_pixel(i,j,c1);   // should implement Canvas.fill()
