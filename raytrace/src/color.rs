@@ -41,14 +41,19 @@ impl Color {
     }
 }
 
+pub fn color( r: f64, g: f64, b: f64 ) -> Color {
+    Color { r: r, g: g, b: b }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::equals;
     use crate::color::Color;
+    use crate::color::color;
 
     #[test]
     fn colors_are_r_g_b_tuples(){
-        let c = Color { r: -0.5, g: 0.4, b: 1.7 };
+        let c = color( -0.5, 0.4, 1.7 );
         assert!( equals(c.r, -0.5) &&
                  equals(c.g, 0.4) &&
                  equals(c.b, 1.7));
