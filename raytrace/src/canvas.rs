@@ -12,14 +12,6 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn new(width: usize, height:usize) -> Self {
-        let v = vec![vec![color( 0.0, 0.0, 0.0 );width];height];
-
-        Self { width: width,
-               height: height,
-               pixels: v }
-    }
-
     pub fn equals(&self, c: Canvas) -> bool {
         ( self.width == c.width ) &&
         ( self.height == c.height ) &&
@@ -88,6 +80,14 @@ impl Canvas {
     }
 }
 
+pub fn canvas(width: usize, height:usize) -> Canvas {
+    let v = vec![vec![color( 0.0, 0.0, 0.0 );width];height];
+
+    Canvas { width: width,
+             height: height,
+             pixels: v }
+}
+
 // uncertain whether this should go into the equals module in
 // lib.rs, but for now keeping it here - only Canvas uses it right now
 pub fn c_equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
@@ -109,6 +109,7 @@ pub fn c_equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
 #[cfg(test)]
 mod tests {
     use crate::canvas::Canvas;
+    use crate::canvas::canvas;
     use crate::color::color;
     use std::fs::read_to_string;
 
@@ -131,22 +132,22 @@ mod tests {
     }
 
     #[test]
-    fn canvas_created_with_new(){
-        let c = Canvas::new(1,1);
+    fn canvas_created_with_canvas(){
+        let c = canvas(1,1);
         assert!( c.equals( Canvas { width: 1, 
                                     height: 1, 
                                     pixels: vec![vec![color( 0.0, 0.0, 0.0 )]] }));
     }
 
     #[test]
-    fn canvas_created_with_new_has_pixel_array(){
-        let c = Canvas::new(10,20);
+    fn canvas_created_with_canvas_has_pixel_array(){
+        let c = canvas(10,20);
         assert!( c.pixels.len() == 20 && c.pixels[0].len() == 10 );
     }
 
     #[test]
     fn writing_pixels_to_canvas(){
-        let mut c = Canvas::new(10,20);
+        let mut c = canvas(10,20);
         let red = color( 1.0, 0.0, 0.0 );
         c.write_pixel(2, 3, red);
         assert!( c.pixel_at(2, 3).equals( red ));
@@ -154,7 +155,7 @@ mod tests {
 
     #[test]
     fn constructing_ppm_header(){
-        let c = Canvas::new(5,3);
+        let c = canvas(5,3);
         let _ = c.to_ppm("header.ppm");
 
         let result = ["P3", "5 3", "255"];
@@ -185,7 +186,7 @@ mod tests {
 
     #[test]
     fn ppm_for_one_pixel(){
-        let c = Canvas::new(1,1);
+        let c = canvas(1,1);
         let _ = c.to_ppm("one_pixel.ppm");
         let lines = read_lines("one_pixel.ppm");
         assert_eq!("0 0 0 ", lines[3]);
@@ -193,7 +194,7 @@ mod tests {
 
     #[test]
     fn ppm_for_color(){
-        let mut c = Canvas::new(1,1);
+        let mut c = canvas(1,1);
         let red = color( 1.0, 0.0, 0.0 );
         c.write_pixel(0, 0, red);
         let _ = c.to_ppm("red_pixel.ppm");
@@ -217,7 +218,7 @@ mod tests {
     
     #[test]
     fn ppm_one_row_of_array(){
-        let c = Canvas::new(10,10);
+        let c = canvas(10,10);
         let _ = c.to_ppm("hundred_pixels.ppm");
         let lines = read_lines("hundred_pixels.ppm");
         assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
@@ -225,7 +226,7 @@ mod tests {
 
     #[test]
     fn ppm_long_row(){
-        let c = Canvas::new(25,10);
+        let c = canvas(25,10);
         let _ = c.to_ppm("long_row.ppm");
         let lines = read_lines("long_row.ppm");
         assert_eq!("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ", lines[3]);
@@ -233,7 +234,7 @@ mod tests {
 
     #[test]
     fn ppm_all_pixel_rows(){
-        let c = Canvas::new(5,5);
+        let c = canvas(5,5);
         let _ = c.to_ppm("all_rows.ppm");
         let lines = read_lines("all_rows.ppm");
         assert_eq!(lines.len(),8);
@@ -244,7 +245,7 @@ mod tests {
 
     #[test]
     fn ppm_coloring_pixels(){
-        let mut c = Canvas::new(5, 3);
+        let mut c = canvas(5, 3);
         let c1 = color( 1.5, 0.0, 0.0 );
         let c2 = color( 0.0, 0.5, 0.0 );
         let c3 = color( -0.5, 0.0, 1.0 );
@@ -270,7 +271,7 @@ mod tests {
     fn ppm_split_lines(){
         let w = 9;
         let h = 2;
-        let mut c = Canvas::new(w,h);
+        let mut c = canvas(w,h);
         let c1 = color( 1.0, 0.8, 0.6 );
         for i in 0..w {
             for j in 0..h {
@@ -290,7 +291,7 @@ mod tests {
     
     #[test]
     fn ppm_terminated_by_newline(){
-        let c = Canvas::new(2,2);
+        let c = canvas(2,2);
         let _ = c.to_ppm("terminator.ppm");
         let bytes = std::fs::read("terminator.ppm").unwrap();
         let last_byte = bytes[bytes.len()-1];

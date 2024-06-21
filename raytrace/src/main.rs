@@ -1,5 +1,5 @@
 use raytrace::tuple::point;
-use raytrace::canvas::Canvas;
+use raytrace::canvas::canvas;
 use raytrace::color::color;
 use raytrace::spheres::Sphere;
 use raytrace::rays::Ray;
@@ -13,7 +13,7 @@ fn main() {
     let canvas_pixels = 100;
     let pixel_size = wall_size / canvas_pixels as f64;
 
-    let mut c = Canvas::new(canvas_pixels, canvas_pixels);
+    let mut c = canvas(canvas_pixels, canvas_pixels);
     let color = color( 1.0, 0.0, 0.0 );
 
     let shape = Sphere::new();
