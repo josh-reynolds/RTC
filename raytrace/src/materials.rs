@@ -135,7 +135,7 @@ mod tests {
 
         let eyev = vector(0.0, 0.0, -1.0);
         let normalv = vector(0.0, 0.0, -1.0);
-        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+        let light = point_light(point(0.0, 0.0, 10.0), color(1.0, 1.0, 1.0));
 
         let result = lighting(m, light, p, eyev, normalv);
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
