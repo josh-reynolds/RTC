@@ -9,6 +9,7 @@ pub mod rays;
 pub mod spheres;
 pub mod intersections;
 pub mod lights;
+pub mod materials;
 
 mod equals {
     const EPSILON: f64 = 0.00001;
