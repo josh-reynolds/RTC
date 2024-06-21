@@ -1,5 +1,7 @@
 use crate::color::{Color, color};
 use crate::equals::equals;
+use crate::lights::Light;
+use crate::tuple::Tuple;
 
 #[derive(Debug,Clone,Copy)]
 pub struct Material {
@@ -30,11 +32,18 @@ pub fn material() -> Material {
     }
 }
 
+pub fn lighting(m: Material, l: Light, p: Tuple, eye: Tuple, normal: Tuple) -> Color {
+    color(1.9,1.9,1.9)
+}
+
 #[cfg(test)]
 mod tests {
     use crate::equals::equals;
     use crate::color::color;
-    use crate::materials::material;
+    use crate::materials::{material, lighting};
+    use crate::tuple::{origin, point, vector};
+    use crate::lights::point_light;
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn default_material(){
@@ -45,5 +54,70 @@ mod tests {
         assert!( equals( m.diffuse, 0.9 ));
         assert!( equals( m.specular, 0.9 ));
         assert!( equals( m.shininess, 200.0 ));
+    }
+
+    #[test]
+    fn lighting_eye_between_light_and_surface(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, 0.0, -1.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+
+        let result = lighting(m, light, p, eyev, normalv);
+        assert!( result.equals(color(1.9, 1.9, 1.9)) );
+    }
+
+    #[test]
+    fn lighting_eye_between_light_and_surface_eye_offset_45(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+
+        let result = lighting(m, light, p, eyev, normalv);
+        assert!( result.equals(color(1.0, 1.0, 1.0)) );
+    }
+
+    #[test]
+    fn lighting_eye_opposite_surface_light_offset_45(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, 0.0, -1.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
+
+        let result = lighting(m, light, p, eyev, normalv);
+        assert!( result.equals(color(0.7364, 0.7364, 0.7364)) );
+    }
+
+    #[test]
+    fn lighting_eye_in_path_of_reflection(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, -SQRT_2 / 2.0, -SQRT_2 / 2.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
+
+        let result = lighting(m, light, p, eyev, normalv);
+        assert!( result.equals(color(1.6364, 1.6364, 1.6364)) );
+    }
+
+    #[test]
+    fn lighting_light_behind_surface(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, 0.0, -1.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+
+        let result = lighting(m, light, p, eyev, normalv);
+        assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 }
