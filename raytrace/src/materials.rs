@@ -1,4 +1,5 @@
 use crate::color::{Color, color};
+use crate::equals::equals;
 
 #[derive(Debug)]
 pub struct Material {
@@ -7,6 +8,16 @@ pub struct Material {
     pub diffuse: f64,      // typical range 0-1
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
+}
+
+impl Material {
+    pub fn equals(&self, m: Material) -> bool {
+        self.color.equals( m.color ) &&
+        equals(self.ambient, m.ambient) &&
+        equals(self.diffuse, m.diffuse) &&
+        equals(self.specular, m.specular) &&
+        equals(self.shininess, m.shininess) 
+    }
 }
 
 pub fn material() -> Material {

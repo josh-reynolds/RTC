@@ -3,15 +3,20 @@ use crate::tuple::Tuple;
 use crate::tuple::origin;
 use crate::intersections::Intersection;
 use crate::matrix::Matrix;
+use crate::materials::{Material, material};
 
 #[derive(Debug)]
 pub struct Sphere {
     pub transform: Matrix,
+    pub material: Material,
 }
 
 impl<'a> Sphere {
     pub fn new() -> Self {
-        Self { transform: Matrix::identity() }
+        Self { 
+            transform: Matrix::identity(),
+            material: material(),
+        }
     }
     
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
@@ -57,6 +62,7 @@ mod tests {
     use crate::rays::Ray;
     use crate::matrix::Matrix;
     use crate::transform::{translation, scaling, rotation_z};
+    use crate::materials::material;
     //use std::f64::consts::SQRT_3;  // unfortunately still in experimental branch...
     use std::f64::consts::PI;
     use std::f64::consts::SQRT_2;
@@ -231,5 +237,11 @@ mod tests {
         let n = s.normal_at( point( 0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0 ));
 
         assert!( n.equals( vector( 0.0, 0.97014, -0.24254 )));
+    }
+
+    #[test]
+    fn sphere_has_default_material(){
+        let s = Sphere::new();
+        assert!( s.material.equals( material() ));
     }
 }
