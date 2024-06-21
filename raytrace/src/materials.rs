@@ -1,7 +1,7 @@
 use crate::color::{Color, color};
 use crate::equals::equals;
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy)]
 pub struct Material {
     pub color: Color,
     pub ambient: f64,      // typical range 0-1

@@ -244,4 +244,14 @@ mod tests {
         let s = Sphere::new();
         assert!( s.material.equals( material() ));
     }
+
+    #[test]
+    fn sphere_can_be_assigned_material(){
+        let mut s = Sphere::new();
+        let mut m = material();
+        m.ambient = 1.0;
+        s.material = m;
+        assert!( !s.material.equals( material() ));
+        assert!( s.material.equals( m ));
+    }
 }
