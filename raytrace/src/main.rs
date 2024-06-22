@@ -2,7 +2,7 @@ use raytrace::tuple::point;
 use raytrace::canvas::canvas;
 use raytrace::color::color;
 use raytrace::spheres::sphere;
-use raytrace::rays::Ray;
+use raytrace::rays::ray;
 use raytrace::materials::{material, lighting};
 use raytrace::lights::point_light;
 
@@ -30,14 +30,14 @@ fn main() {
         for x in 0..(canvas_pixels-1){
             let world_x = -half + pixel_size * x as f64;
             let position = point(world_x, world_y, wall_z);
-            let ray = Ray::new(ray_origin, (position - ray_origin).normal());
-            let xs = shape.intersect(ray);
+            let r = ray(ray_origin, (position - ray_origin).normal());
+            let xs = shape.intersect(r);
 
             if xs.len() > 0 {
                 let hit = xs[0];
-                let p = ray.position( hit.t );
+                let p = r.position( hit.t );
                 let normal = hit.object.normal_at( p );
-                let eye = -ray.direction;
+                let eye = -r.direction;
                 let col = lighting(hit.object.material, &light, p, eye, normal);
                 c.write_pixel(x, y, col);
             }

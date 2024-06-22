@@ -59,7 +59,7 @@ pub fn sphere() -> Sphere {
 mod tests {
     use crate::spheres::sphere;
     use crate::tuple::{point, vector, origin};
-    use crate::rays::Ray;
+    use crate::rays::ray;
     use crate::matrix::Matrix;
     use crate::transform::{translation, scaling, rotation_z};
     use crate::materials::material;
@@ -77,8 +77,8 @@ mod tests {
     #[test]
     fn ray_intersects_sphere_at_two_points(){
         let s = sphere();
-        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 0.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 4.0 );
@@ -88,8 +88,8 @@ mod tests {
     #[test]
     fn ray_intersects_sphere_at_tangent(){
         let s = sphere();
-        let r = Ray::new( point( 0.0, 1.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 1.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 5.0 );
@@ -99,8 +99,8 @@ mod tests {
     #[test]
     fn ray_misses_sphere(){
         let s = sphere();
-        let r = Ray::new( point( 0.0, 2.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 2.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 0 );
     }
@@ -108,8 +108,8 @@ mod tests {
     #[test]
     fn ray_originates_inside_sphere(){
         let s = sphere();
-        let r = Ray::new( origin(),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( origin(),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -1.0 );
@@ -119,8 +119,8 @@ mod tests {
     #[test]
     fn sphere_is_behind_ray(){
         let s = sphere();
-        let r = Ray::new( point( 0.0, 0.0, 5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 0.0, 5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -6.0 );
@@ -130,8 +130,8 @@ mod tests {
     #[test]
     fn intersect_sets_object_on_intersections(){
         let s = sphere();
-        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 0.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].object as *const _, &s as *const _);
@@ -157,8 +157,8 @@ mod tests {
         let mut s = sphere();
         s.set_transform( scaling( 2.0, 2.0, 2.0 ));
 
-        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 0.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 2 );
@@ -171,8 +171,8 @@ mod tests {
         let mut s = sphere();
         s.set_transform( translation( 5.0, 0.0, 0.0 ));
 
-        let r = Ray::new( point( 0.0, 0.0, -5.0 ),
-                          vector( 0.0, 0.0, 1.0 ));
+        let r = ray( point( 0.0, 0.0, -5.0 ),
+                     vector( 0.0, 0.0, 1.0 ));
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 0 );

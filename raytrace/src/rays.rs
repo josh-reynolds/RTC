@@ -8,23 +8,23 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub fn new(origin: Tuple, direction: Tuple) -> Self {
-        Self { origin: origin, direction: direction }
-    }
-
     pub fn position(&self, distance: f64) -> Tuple {
         self.origin + (*&self.direction * distance)
     }
 
     pub fn transform(&self, t: Matrix) -> Self {
-        Ray::new( t.multup( &self.origin ),
-                  t.multup( &self.direction ))
+        ray( t.multup( &self.origin ),
+             t.multup( &self.direction ))
     }
+}
+
+pub fn ray(origin: Tuple, direction: Tuple) -> Ray {
+    Ray { origin: origin, direction: direction }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::rays::Ray;
+    use crate::rays::ray;
     use crate::tuple::{point, vector};
     use crate::transform::translation;
     use crate::transform::scaling;
@@ -34,7 +34,7 @@ mod tests {
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 4.0, 5.0, 6.0);
 
-        let r = Ray::new(o, d);
+        let r = ray(o, d);
         assert!( r.origin.equals(point( 1.0, 2.0, 3.0))) ;
         assert!( r.direction.equals(vector( 4.0, 5.0, 6.0))) ;
     }
@@ -44,7 +44,7 @@ mod tests {
         let o = point( 2.0, 3.0, 4.0);
         let d = vector( 1.0, 0.0, 0.0);
 
-        let r = Ray::new(o, d);
+        let r = ray(o, d);
         assert!( r.position(0.0).equals(point( 2.0, 3.0, 4.0))) ;
         assert!( r.position(1.0).equals(point( 3.0, 3.0, 4.0))) ;
         assert!( r.position(-1.0).equals(point( 1.0, 3.0, 4.0))) ;
@@ -56,7 +56,7 @@ mod tests {
     fn translating_a_ray(){
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 0.0, 1.0, 0.0);
-        let r = Ray::new(o, d);
+        let r = ray(o, d);
 
         let m = translation(3.0, 4.0, 5.0);
         let r2 = r.transform(m);
@@ -69,7 +69,7 @@ mod tests {
     fn scaling_a_ray(){
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 0.0, 1.0, 0.0);
-        let r = Ray::new(o, d);
+        let r = ray(o, d);
 
         let m = scaling(2.0, 3.0, 4.0);
         let r2 = r.transform(m);
