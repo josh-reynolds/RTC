@@ -1,5 +1,5 @@
 use crate::equals;
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, Mul};
 
 #[derive(Debug,Copy,Clone)]
 pub struct Color {
@@ -28,6 +28,16 @@ impl Sub for Color {
     }
 }
 
+impl Mul for Color {
+    type Output = Self;
+
+    fn mul(self, c: Self) -> Self {
+        Self { r: self.r * c.r,
+               g: self.g * c.g,
+               b: self.b * c.b }
+    }
+}
+
 impl Color {
     // see comments in tuple.rs regarding overloading operators
     
@@ -41,12 +51,6 @@ impl Color {
         Self { r: self.r * n,
                g: self.g * n,
                b: self.b * n }
-    }
-
-    pub fn mult_c(&self, c: Color) -> Self {
-        Self { r: self.r * c.r,
-               g: self.g * c.g,
-               b: self.b * c.b }
     }
 }
 
@@ -92,6 +96,6 @@ mod tests {
     fn multiply_color_by_color(){
         let c1 = color( 1.0, 0.2, 0.4 );
         let c2 = color( 0.9, 1.0, 0.1 );
-        assert!( c1.mult_c(c2).equals( color( 0.9, 0.2, 0.04 ) ));
+        assert!( (c1 * c2).equals( color( 0.9, 0.2, 0.04 ) ));
     }
 }

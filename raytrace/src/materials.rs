@@ -33,7 +33,7 @@ pub fn material() -> Material {
 }
 
 pub fn lighting(m: Material, l: &Light, p: Tuple, eye: Tuple, normal: Tuple) -> Color {
-    let effective_color = m.color.mult_c( l.intensity );
+    let effective_color = m.color * l.intensity;
     let lightv = (l.position - p).normal();
     let ambient = effective_color.mult( m.ambient );
 
