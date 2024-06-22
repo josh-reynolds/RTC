@@ -53,7 +53,7 @@ pub fn lighting(m: Material, l: &Light, p: Tuple, eye: Tuple, normal: Tuple) -> 
         }
     }
     
-    ambient.plus(&diffuse).plus(&specular)
+    ambient + diffuse + specular
 }
 
 #[cfg(test)]

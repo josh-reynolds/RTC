@@ -1,4 +1,5 @@
 use crate::equals;
+use std::ops::Add;
 
 #[derive(Debug,Copy,Clone)]
 pub struct Color {
@@ -7,14 +8,18 @@ pub struct Color {
     pub b: f64,
 }
 
-impl Color {
-    // see comments in tuple.rs regarding overloading operators
+impl Add for Color {
+    type Output = Self;
 
-    pub fn plus(&self, c: &Color) -> Self {
+    fn add(self, c: Self) -> Self {
         Self { r: self.r + c.r,
                g: self.g + c.g,
                b: self.b + c.b, }
     }
+}
+
+impl Color {
+    // see comments in tuple.rs regarding overloading operators
 
     pub fn sub(&self, c: &Color) -> Self {
         Self { r: self.r - c.r,
@@ -62,7 +67,7 @@ mod tests {
     fn adding_colors(){
         let c1 = color( 0.9, 0.6, 0.75 );
         let c2 = color( 0.7, 0.1, 0.25 );
-        assert!( c1.plus(&c2).equals(color( 1.6, 0.7, 1.0 )));
+        assert!( (c1 + c2).equals(color( 1.6, 0.7, 1.0 )));
     }
 
     #[test]
