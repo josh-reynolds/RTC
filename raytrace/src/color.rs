@@ -1,5 +1,5 @@
 use crate::equals;
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 #[derive(Debug,Copy,Clone)]
 pub struct Color {
@@ -18,14 +18,18 @@ impl Add for Color {
     }
 }
 
-impl Color {
-    // see comments in tuple.rs regarding overloading operators
+impl Sub for Color {
+    type Output = Self;
 
-    pub fn sub(&self, c: &Color) -> Self {
+    fn sub(self, c: Self) -> Self {
         Self { r: self.r - c.r,
                g: self.g - c.g,
                b: self.b - c.b, }
     }
+}
+
+impl Color {
+    // see comments in tuple.rs regarding overloading operators
     
     pub fn equals(&self, c: Color) -> bool {
         equals( self.r, c.r ) && 
@@ -74,7 +78,7 @@ mod tests {
     fn subtracting_colors(){
         let c1 = color( 0.9, 0.6, 0.75 );
         let c2 = color( 0.7, 0.1, 0.25 );
-        assert!( c1.sub(&c2).equals(color( 0.2, 0.5, 0.5 )));
+        assert!( (c1 - c2).equals(color( 0.2, 0.5, 0.5 )));
     }
 
     // in the text, this is multiplied by an integer, but I think float will be needed
