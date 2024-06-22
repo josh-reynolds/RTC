@@ -35,21 +35,21 @@ pub fn material() -> Material {
 pub fn lighting(m: Material, l: &Light, p: Tuple, eye: Tuple, normal: Tuple) -> Color {
     let effective_color = m.color * l.intensity;
     let lightv = (l.position - p).normal();
-    let ambient = effective_color.mult( m.ambient );
+    let ambient = effective_color * m.ambient;
 
     let light_dot_normal = lightv.dot( &normal );
     let mut diffuse = color(0.0, 0.0, 0.0);
     let mut specular = color(0.0, 0.0, 0.0);
 
     if light_dot_normal >= 0.0 {
-        diffuse = effective_color.mult( m.diffuse ).mult( light_dot_normal );
+        diffuse = effective_color * m.diffuse * light_dot_normal;
 
         let reflectv = -lightv.reflect(&normal);
         let reflect_dot_eye = reflectv.dot( &eye );
 
         if reflect_dot_eye > 0.0 {
             let factor = reflect_dot_eye.powf( m.shininess );
-            specular = l.intensity.mult( m.specular).mult( factor );
+            specular = l.intensity * m.specular * factor;
         }
     }
     
