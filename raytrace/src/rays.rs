@@ -26,8 +26,7 @@ pub fn ray(origin: Tuple, direction: Tuple) -> Ray {
 mod tests {
     use crate::rays::ray;
     use crate::tuple::{point, vector};
-    use crate::transform::translation;
-    use crate::transform::scaling;
+    use crate::transform::{translation, scaling};
 
     #[test]
     fn new_creates_rays(){

@@ -1,8 +1,6 @@
 use std::fs::File;
-use std::io::Write;
-use std::io::Result;
-use crate::color::Color;
-use crate::color::color;
+use std::io::{Write, Result};
+use crate::color::{Color, color};
 
 #[derive(Debug)]
 pub struct Canvas {
@@ -108,8 +106,7 @@ pub fn c_equals(a: &Vec<Vec<Color>>, b: &Vec<Vec<Color>>) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::canvas::Canvas;
-    use crate::canvas::canvas;
+    use crate::canvas::{Canvas, canvas};
     use crate::color::color;
     use std::fs::read_to_string;
 

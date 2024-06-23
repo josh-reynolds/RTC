@@ -127,8 +127,7 @@ pub fn origin() -> Tuple {
 #[cfg(test)]
 mod tests {
     use crate::equals;
-    use crate::tuple::Tuple;
-    use crate::tuple::{point, vector, origin};
+    use crate::tuple::{Tuple, point, vector, origin};
     use std::f64::consts::SQRT_2;
 
     #[test]
