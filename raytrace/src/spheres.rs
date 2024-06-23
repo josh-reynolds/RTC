@@ -1,8 +1,7 @@
 use crate::rays::Ray;
-use crate::tuple::Tuple;
-use crate::tuple::origin;
+use crate::tuple::{Tuple, origin};
 use crate::intersections::Intersection;
-use crate::matrix::Matrix;
+use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
 
 #[derive(Debug)]
@@ -50,7 +49,7 @@ impl<'a> Sphere {
 
 pub fn sphere() -> Sphere {
     Sphere { 
-        transform: Matrix::identity(),
+        transform: identity(),
         material: material(),
     }
 }
@@ -60,12 +59,11 @@ mod tests {
     use crate::spheres::sphere;
     use crate::tuple::{point, vector, origin};
     use crate::rays::ray;
-    use crate::matrix::Matrix;
+    use crate::matrix::identity;
     use crate::transform::{translation, scaling, rotation_z};
     use crate::materials::material;
+    use std::f64::consts::{PI, SQRT_2};
     //use std::f64::consts::SQRT_3;  // unfortunately still in experimental branch...
-    use std::f64::consts::PI;
-    use std::f64::consts::SQRT_2;
     
     #[test]
     fn new_creates_unique_spheres(){
@@ -141,7 +139,7 @@ mod tests {
     #[test]
     fn sphere_default_transform(){
         let s = sphere();
-        assert!( s.transform.equals( Matrix::identity() ));
+        assert!( s.transform.equals( identity() ));
     }
 
     #[test]

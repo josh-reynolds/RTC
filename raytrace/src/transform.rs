@@ -1,7 +1,7 @@
-use crate::matrix::Matrix;
+use crate::matrix::{Matrix, identity};
 
 pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(0,3,x);
     t.set(1,3,y);
     t.set(2,3,z);
@@ -9,7 +9,7 @@ pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
 }
 
 pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(0,0,x);
     t.set(1,1,y);
     t.set(2,2,z);
@@ -17,7 +17,7 @@ pub fn scaling(x: f64, y: f64, z: f64) -> Matrix {
 }
 
 pub fn rotation_x(r: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(1,1,  r.cos());
     t.set(1,2, -r.sin());
     t.set(2,1,  r.sin());
@@ -26,7 +26,7 @@ pub fn rotation_x(r: f64) -> Matrix {
 }
 
 pub fn rotation_y(r: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(0,0,  r.cos());
     t.set(0,2,  r.sin());
     t.set(2,0, -r.sin());
@@ -35,7 +35,7 @@ pub fn rotation_y(r: f64) -> Matrix {
 }
 
 pub fn rotation_z(r: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(0,0,  r.cos());
     t.set(0,1, -r.sin());
     t.set(1,0,  r.sin());
@@ -44,7 +44,7 @@ pub fn rotation_z(r: f64) -> Matrix {
 }
 
 pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix {
-    let mut t = Matrix::identity();
+    let mut t = identity();
     t.set(0,1, xy);
     t.set(0,2, xz);
     t.set(1,0, yx);
@@ -57,14 +57,8 @@ pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix 
 #[cfg(test)]
 mod tests {
     use crate::tuple::{point, vector};
-    use crate::transform::translation;
-    use crate::transform::scaling;
-    use crate::transform::rotation_x;
-    use crate::transform::rotation_y;
-    use crate::transform::rotation_z;
-    use crate::transform::shearing;
-    use std::f64::consts::PI;
-    use std::f64::consts::SQRT_2;
+    use crate::transform::*;
+    use std::f64::consts::{PI, SQRT_2};
 
     #[test]
     fn multiply_by_translation_matrix(){

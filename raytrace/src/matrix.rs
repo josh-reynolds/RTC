@@ -15,15 +15,6 @@ impl Matrix {
                m: vec![vec![0.0;cols];rows] }
     }
 
-    pub fn identity() -> Self {
-        Self { cols: 4,
-               rows: 4,
-               m: vec![vec![1.0, 0.0, 0.0, 0.0],
-                       vec![0.0, 1.0, 0.0, 0.0],
-                       vec![0.0, 0.0, 1.0, 0.0],
-                       vec![0.0, 0.0, 0.0, 1.0]] }
-    }
-
     pub fn equals(&self, m: Matrix) -> bool {
         ( self.rows == m.rows ) &&
         ( self.cols == m.cols ) &&
@@ -168,6 +159,15 @@ impl Matrix {
     }
 }
 
+pub fn identity() -> Matrix {
+    Matrix { cols: 4,
+             rows: 4,
+             m: vec![vec![1.0, 0.0, 0.0, 0.0],
+                     vec![0.0, 1.0, 0.0, 0.0],
+                     vec![0.0, 0.0, 1.0, 0.0],
+                     vec![0.0, 0.0, 0.0, 1.0]] }
+}
+
 // very similar function in Canvas, may want to refactor all
 // this later
 pub fn v_equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
@@ -188,9 +188,8 @@ pub fn v_equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::matrix::Matrix;
-    use crate::tuple::Tuple;
-    use crate::tuple::point;
+    use crate::matrix::{Matrix, identity};
+    use crate::tuple::{Tuple, point};
 
     #[test]
     fn matrix_has_cols_and_rows(){
@@ -325,13 +324,13 @@ mod tests {
 
     #[test]
     fn matrix_identity(){
-        let identity = Matrix { cols: 4, rows: 4,
-                                m: vec![vec![1.0, 0.0, 0.0, 0.0],
-                                        vec![0.0, 1.0, 0.0, 0.0],
-                                        vec![0.0, 0.0, 1.0, 0.0],
-                                        vec![0.0, 0.0, 0.0, 1.0]] };
+        let i = Matrix { cols: 4, rows: 4,
+                         m: vec![vec![1.0, 0.0, 0.0, 0.0],
+                                 vec![0.0, 1.0, 0.0, 0.0],
+                                 vec![0.0, 0.0, 1.0, 0.0],
+                                 vec![0.0, 0.0, 0.0, 1.0]] };
         
-        assert!( Matrix::identity().equals(identity) );
+        assert!( identity().equals(i) );
     }
 
     #[test]
@@ -352,13 +351,13 @@ mod tests {
                                  vec![1.0,2.0, 4.0, 8.0],
                                  vec![2.0,4.0, 8.0,16.0],
                                  vec![4.0,8.0,16.0,32.0]] };
-        assert!( m.mult(&Matrix::identity()).equals(m));
+        assert!( m.mult(&identity()).equals(m));
     }
 
     #[test]
     fn tuple_multiply_by_identity(){
         let t = Tuple{ x: 1.0, y: 2.0, z: 3.0, w: 4.0 };
-        assert!( Matrix::identity().multup(&t).equals(t) );
+        assert!( identity().multup(&t).equals(t) );
     }
 
     #[test]
@@ -380,7 +379,7 @@ mod tests {
 
     #[test]
     fn matrix_transpose_identity(){
-        assert!( Matrix::identity().transpose().equals(Matrix::identity()) );
+        assert!( identity().transpose().equals(identity()) );
     }
 
     #[test]
