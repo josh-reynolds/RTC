@@ -7,6 +7,13 @@ pub struct Light {
     pub intensity: Color,
 }
 
+impl Light {
+    pub fn equals(&self, l: Light) -> bool {
+        self.position.equals( l.position ) &&
+        self.intensity.equals( l.intensity )
+    }
+}
+
 pub fn point_light(position: Tuple, intensity: Color) -> Light {
     Light { position: position, intensity: intensity }
 }
