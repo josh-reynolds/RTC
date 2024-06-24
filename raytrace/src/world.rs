@@ -1,7 +1,9 @@
 use crate::lights::{Light, point_light};
-use crate::spheres::Sphere;
+use crate::spheres::{Sphere,sphere};
 use crate::tuple::point;
 use crate::color::color;
+use crate::materials::material;
+use crate::transform::scaling;
 
 #[derive(Debug)]
 pub struct World{
@@ -16,9 +18,20 @@ pub fn world() -> World {
 }
 
 pub fn default_world() -> World {
+    let mut s1 = sphere();
+    let mut m = material();
+    m.color = color(0.8, 1.0, 0.6);
+    m.diffuse = 0.7;
+    m.specular = 0.2;
+    s1.material = m;
+
+    let mut s2 = sphere();
+    let t = scaling(0.5, 0.5, 0.5);
+    s2.set_transform( t );
+
     World { 
         light: Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0))),
-        objects: vec![] }
+        objects: vec![s1,s2] }
 }
 
 #[cfg(test)]
@@ -57,10 +70,12 @@ mod tests {
         s2.set_transform( t );
 
         let w = default_world();
+
         assert!( match w.light {
                    Some(lgt) => lgt.equals( l ),
                    None => false, 
         });
-
+        assert!( w.objects.contains( &s1 ));
+        assert!( w.objects.contains( &s2 ));
     }
 }

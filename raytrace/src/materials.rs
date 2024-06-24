@@ -3,7 +3,7 @@ use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
 
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug,Clone,Copy,PartialEq)]
 pub struct Material {
     pub color: Color,
     pub ambient: f64,      // typical range 0-1

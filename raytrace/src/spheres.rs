@@ -4,7 +4,7 @@ use crate::intersections::Intersection;
 use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq)]
 pub struct Sphere {
     pub transform: Matrix,
     pub material: Material,

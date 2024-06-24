@@ -1,7 +1,7 @@
 use crate::equals;
 use std::ops::{Add, Sub, Mul};
 
-#[derive(Debug,Copy,Clone)]
+#[derive(Debug,Copy,Clone,PartialEq)]
 pub struct Color {
     pub r: f64,
     pub g: f64,

@@ -1,7 +1,7 @@
 use crate::equals;
 use crate::tuple::Tuple;
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq)]
 pub struct Matrix {
     pub rows: usize,
     pub cols: usize,
