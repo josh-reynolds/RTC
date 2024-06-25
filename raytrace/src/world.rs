@@ -24,7 +24,7 @@ impl World {
             }
         }
 
-        //result.sort();
+        result.sort_by( |a, b| a.t.partial_cmp(&b.t).unwrap() );
         result
     }
 }
@@ -104,8 +104,6 @@ mod tests {
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
 
         let xs = w.intersect( r );
-
-        //println!( "{:?}", xs );
 
         assert_eq!( xs.len(), 4 );
         assert_eq!( xs[0].t, 4.0 );
