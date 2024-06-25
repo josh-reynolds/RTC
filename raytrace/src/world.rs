@@ -4,12 +4,20 @@ use crate::tuple::point;
 use crate::color::color;
 use crate::materials::material;
 use crate::transform::scaling;
+use crate::rays::Ray;
+use crate::intersections::Intersection;
 
 #[derive(Debug)]
 pub struct World{
     pub light: Option<Light>,
     pub objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
 }                               // parent class and how to implement properly
+
+impl World {
+    pub fn intersect(&self, r: Ray) -> Vec<Intersection> {
+        vec!()
+    }
+}
 
 pub fn world() -> World {
     World { 
@@ -38,11 +46,12 @@ pub fn default_world() -> World {
 mod tests {
     use crate::world::{world, default_world};
     use crate::color::color;
-    use crate::tuple::point;
+    use crate::tuple::{point, vector};
     use crate::spheres::sphere;
     use crate::transform::scaling;
     use crate::lights::point_light;
     use crate::materials::material;
+    use crate::rays::ray;
 
     #[test]
     fn creating_a_world(){
@@ -77,5 +86,19 @@ mod tests {
         });
         assert!( w.objects.contains( &s1 ));
         assert!( w.objects.contains( &s2 ));
+    }
+
+    #[test]
+    fn intersect_world_with_ray(){
+        let w = default_world();
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+
+        let xs = w.intersect( r );
+
+        assert_eq!( xs.len(), 4 );
+        assert_eq!( xs[0].t, 4.0 );
+        assert_eq!( xs[1].t, 4.5 );
+        assert_eq!( xs[2].t, 5.5 );
+        assert_eq!( xs[3].t, 6.0 );
     }
 }
