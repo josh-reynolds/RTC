@@ -44,11 +44,11 @@ impl<'a> Intersection<'a> {
 
 #[derive(Debug)]
 pub struct Computations<'a> {
-    t: f64,
-    object: &'a Sphere,
-    point: Tuple,
-    eyev: Tuple,
-    normalv: Tuple,
+    pub t: f64,
+    pub object: &'a Sphere,
+    pub point: Tuple,
+    pub eyev: Tuple,
+    pub normalv: Tuple,
 }
 
 pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
