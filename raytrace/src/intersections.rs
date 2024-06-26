@@ -1,4 +1,6 @@
 use crate::spheres::Sphere;
+use crate::rays::Ray;
+use crate::tuple::{Tuple, point, vector};
 
 #[derive(Debug,Copy,Clone)]
 pub struct Intersection<'a> {
@@ -40,10 +42,32 @@ impl<'a> Intersection<'a> {
     }
 }
 
+#[derive(Debug)]
+pub struct Computations<'a> {
+    t: f64,
+    object: &'a Sphere,
+    point: Tuple,
+    eyev: Tuple,
+    normalv: Tuple,
+}
+
+pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
+    Computations { 
+        t: i.t,
+        object: i.object,
+        point: point(0.0, 0.0, 0.0),
+        eyev: vector(0.0, 0.0, 0.0),
+        normalv: vector(0.0, 0.0, 0.0),
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::intersections::Intersection;
+    use crate::intersections::{Intersection, prepare_computations};
     use crate::spheres::sphere;
+    use crate::tuple::{point, vector};
+    use crate::rays::ray;
+    use crate::equals::equals;
 
     #[test]
     fn new_creates_intersections(){
@@ -117,5 +141,20 @@ mod tests {
         let i = Intersection::hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i4 ));
+    }
+
+    #[test]
+    fn precomputing_intersection_state(){
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let s = sphere();
+        let i = Intersection::new(4.0, &s);
+
+        let comps = prepare_computations(i, r);
+
+        assert!( equals(comps.t, i.t) );
+        assert_eq!( comps.object as *const _, &s as *const _ );
+        assert!( comps.point.equals( point(0.0, 0.0, -1.0) ));
+        assert!( comps.eyev.equals( vector(0.0, 0.0, -1.0) ));
+        assert!( comps.normalv.equals( vector(0.0, 0.0, -1.0) ));
     }
 }
