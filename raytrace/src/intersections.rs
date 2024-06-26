@@ -1,6 +1,6 @@
 use crate::spheres::Sphere;
 use crate::rays::Ray;
-use crate::tuple::{Tuple, point, vector};
+use crate::tuple::Tuple;
 
 #[derive(Debug,Copy,Clone)]
 pub struct Intersection<'a> {
@@ -55,9 +55,9 @@ pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
     Computations { 
         t: i.t,
         object: i.object,
-        point: point(0.0, 0.0, 0.0),
-        eyev: vector(0.0, 0.0, 0.0),
-        normalv: vector(0.0, 0.0, 0.0),
+        point: r.position( i.t ),
+        eyev: -r.direction,
+        normalv: i.object.normal_at( r.position(i.t) ),
     }
 }
 
