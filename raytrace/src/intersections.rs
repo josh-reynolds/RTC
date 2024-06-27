@@ -53,13 +53,20 @@ pub struct Computations<'a> {
 }
 
 pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
+    let mut ins = false;
+    let mut n = i.object.normal_at( r.position(i.t) );
+    if n.dot( &-r.direction ) < 0.0 {
+        n = -n;
+        ins = true;
+    }
+
     Computations { 
         t: i.t,
         object: i.object,
         point: r.position( i.t ),
         eyev: -r.direction,
-        normalv: i.object.normal_at( r.position(i.t) ),
-        inside: true,
+        normalv: n,
+        inside: ins,
     }
 }
 
@@ -169,5 +176,19 @@ mod tests {
         let comps = prepare_computations(i, r);
 
         assert!( comps.inside == false );
+    }
+
+    #[test]
+    fn intersection_on_inside(){
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let s = sphere();
+        let i = Intersection::new(1.0, &s);
+
+        let comps = prepare_computations(i, r);
+
+        assert!( comps.point.equals( point(0.0, 0.0, 1.0) ));
+        assert!( comps.eyev.equals( vector(0.0, 0.0, -1.0) ));
+        assert!( comps.normalv.equals( vector(0.0, 0.0, -1.0) ));
+        assert!( comps.inside == true );
     }
 }
