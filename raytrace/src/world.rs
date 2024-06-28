@@ -37,6 +37,10 @@ impl World {
 
         lighting( comps.object.material, &l, comps.point, comps.eyev, comps.normalv )
     }
+
+    pub fn color_at(&self, r: Ray) -> Color {
+        color(0.0, 0.0, 0.0)
+    }
 }
 
 pub fn world() -> World {
@@ -148,5 +152,15 @@ mod tests {
         let c = w.shade_hit(comps);
 
         assert!( c.equals( color(0.90498, 0.90498, 0.90498) ));
+    }
+
+    #[test]
+    fn color_when_ray_misses(){
+        let w = default_world();
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 1.0, 0.0) );
+
+        let c = w.color_at(r);
+        
+        assert!( c.equals( color(0.0, 0.0, 0.0) ));
     }
 }
