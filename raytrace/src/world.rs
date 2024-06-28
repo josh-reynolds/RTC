@@ -1,11 +1,11 @@
 use crate::lights::{Light, point_light};
 use crate::spheres::{Sphere,sphere};
 use crate::tuple::point;
-use crate::color::color;
-use crate::materials::material;
+use crate::color::{Color, color};
+use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::Ray;
-use crate::intersections::Intersection;
+use crate::intersections::{Intersection, Computations};
 
 #[derive(Debug)]
 pub struct World{
@@ -26,6 +26,16 @@ impl World {
 
         result.sort_by( |a, b| a.t.partial_cmp(&b.t).unwrap() );
         result
+    }
+
+    pub fn shade_hit(&self, comps: Computations) -> Color {
+        let binding = point_light( point(0.0, 0.0, 0.0), color(0.0, 0.0, 0.0) );
+        let l = match &self.light {
+            Some(lgt) => lgt,
+            None      => &binding,
+        };
+
+        lighting( comps.object.material, &l, comps.point, comps.eyev, comps.normalv )
     }
 }
 
@@ -62,6 +72,7 @@ mod tests {
     use crate::lights::point_light;
     use crate::materials::material;
     use crate::rays::ray;
+    use crate::intersections::{Intersection, prepare_computations};
 
     #[test]
     fn creating_a_world(){
@@ -110,5 +121,32 @@ mod tests {
         assert_eq!( xs[1].t, 4.5 );
         assert_eq!( xs[2].t, 5.5 );
         assert_eq!( xs[3].t, 6.0 );
+    }
+
+    #[test]
+    fn shading_an_intersection(){
+        let w = default_world();
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let s = &w.objects[0];
+        let i = Intersection::new(4.0, &s);
+        let comps = prepare_computations(i, r);
+
+        let c = w.shade_hit(comps);
+
+        assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
+    }
+
+    #[test]
+    fn shading_an_intersection_from_inside(){
+        let mut w = default_world();
+        w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let s = &w.objects[1];
+        let i = Intersection::new(0.5, &s);
+        let comps = prepare_computations(i, r);
+
+        let c = w.shade_hit(comps);
+
+        assert!( c.equals( color(0.90498, 0.90498, 0.90498) ));
     }
 }
