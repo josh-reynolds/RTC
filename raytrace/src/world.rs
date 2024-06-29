@@ -43,7 +43,16 @@ impl World {
         if xs.len() == 0 {
             return color(0.0, 0.0, 0.0)
         } else {
-            let hit = xs[0]; 
+            let mut hit = xs[0];
+            if hit.t < 0.0 {
+                for i in xs {
+                    if i.t >= 0.0 {
+                        hit = i;
+                        break;
+                    }
+                    // need to consider case when all hits are behind (i.e. negative)
+                }
+            }
             let comps = prepare_computations(hit, r);
             self.shade_hit(comps)
         }
@@ -143,7 +152,6 @@ mod tests {
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
-
         assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
     }
 
@@ -157,7 +165,6 @@ mod tests {
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
-
         assert!( c.equals( color(0.90498, 0.90498, 0.90498) ));
     }
 
@@ -167,7 +174,6 @@ mod tests {
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 1.0, 0.0) );
 
         let c = w.color_at(r);
-        
         assert!( c.equals( color(0.0, 0.0, 0.0) ));
     }
 
@@ -177,7 +183,19 @@ mod tests {
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
 
         let c = w.color_at(r);
-        println!("{:?}", c);
         assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
+    }
+
+    #[test]
+    fn color_with_intersection_behind_ray(){
+        let mut w = default_world();
+        w.objects[0].material.ambient = 1.0;
+        w.objects[1].material.ambient = 1.0;
+        let r = ray( point(0.0, 0.0, 0.75), vector(0.0, 0.0, -1.0) );
+
+        let c = w.color_at(r);
+        println!("{:?}", c);
+        assert!( c.equals( w.objects[1].material.color ));
+
     }
 }
