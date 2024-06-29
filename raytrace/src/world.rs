@@ -5,7 +5,7 @@ use crate::color::{Color, color};
 use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::Ray;
-use crate::intersections::{Intersection, Computations};
+use crate::intersections::{Intersection, Computations, prepare_computations};
 
 #[derive(Debug)]
 pub struct World{
@@ -39,7 +39,14 @@ impl World {
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
-        color(0.0, 0.0, 0.0)
+        let xs = self.intersect(r);
+        if xs.len() == 0 {
+            return color(0.0, 0.0, 0.0)
+        } else {
+            let hit = xs[0]; 
+            let comps = prepare_computations(hit, r);
+            self.shade_hit(comps)
+        }
     }
 }
 
@@ -162,5 +169,15 @@ mod tests {
         let c = w.color_at(r);
         
         assert!( c.equals( color(0.0, 0.0, 0.0) ));
+    }
+
+    #[test]
+    fn color_when_ray_hits(){
+        let w = default_world();
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+
+        let c = w.color_at(r);
+        println!("{:?}", c);
+        assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
     }
 }
