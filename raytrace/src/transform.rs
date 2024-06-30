@@ -1,4 +1,5 @@
 use crate::matrix::{Matrix, identity};
+use crate::tuple::Tuple;
 
 pub fn translation(x: f64, y: f64, z: f64) -> Matrix {
     let mut t = identity();
@@ -52,6 +53,10 @@ pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix 
     t.set(2,0, zx);
     t.set(2,1, zy);
     t
+}
+
+pub fn view_transform(from: Tuple, to: Tuple, up: Tuple) -> Matrix {
+    identity()
 }
 
 #[cfg(test)]
@@ -232,5 +237,15 @@ mod tests {
         let t = c.mult( &b.mult( &a ));
 
         assert!( t.multup(&p).equals( point(15.0, 0.0, 7.0)));
+    }
+
+    #[test]
+    fn default_view_transformation(){
+        let from = point(0.0, 0.0, 0.0);
+        let to = point(0.0, 0.0, -1.0);
+        let up = vector(0.0, 1.0, 0.0);
+
+        let t = view_transform(from, to, up);
+        assert!( t.equals( identity() ));
     }
 }
