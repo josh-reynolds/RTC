@@ -56,7 +56,17 @@ pub fn shearing(xy: f64, xz: f64, yx: f64, yz: f64, zx: f64, zy: f64) -> Matrix 
 }
 
 pub fn view_transform(from: Tuple, to: Tuple, up: Tuple) -> Matrix {
-    identity()
+    let forward = (to - from).normal();
+    let left = forward.cross( &up.normal() );
+    let true_up = left.cross( &forward );
+    let orientation = Matrix {
+                       cols: 4, rows: 4,
+                       m: vec![vec![     left.x,     left.y,     left.z, 0.0],
+                               vec![  true_up.x,  true_up.y,  true_up.z, 0.0],
+                               vec![ -forward.x, -forward.y, -forward.z, 0.0],
+                               vec![        0.0,        0.0,        0.0, 1.0]] };
+
+    orientation.mult( &translation(-from.x, -from.y, -from.z) )
 }
 
 #[cfg(test)]
@@ -247,5 +257,41 @@ mod tests {
 
         let t = view_transform(from, to, up);
         assert!( t.equals( identity() ));
+    }
+
+    #[test]
+    fn view_transformation_looking_positive_z(){
+        let from = point(0.0, 0.0, 0.0);
+        let to = point(0.0, 0.0, 1.0);
+        let up = vector(0.0, 1.0, 0.0);
+
+        let t = view_transform(from, to, up);
+        assert!( t.equals( scaling(-1.0, 1.0, -1.0) ));
+    }
+
+    #[test]
+    fn view_transformation_moves_eye(){
+        let from = point(0.0, 0.0, 8.0);
+        let to = point(0.0, 0.0, 0.0);
+        let up = vector(0.0, 1.0, 0.0);
+
+        let t = view_transform(from, to, up);
+        assert!( t.equals( translation(0.0, 0.0, -8.0) ));
+    }
+
+    #[test]
+    fn arbitrary_view_transformation(){
+        let from = point(1.0, 3.0, 2.0);
+        let to = point(4.0, -2.0, 8.0);
+        let up = vector(1.0, 1.0, 0.0);
+
+        let t = view_transform(from, to, up);
+        assert!( t.equals( Matrix { 
+                            cols: 4, rows: 4,
+                            m: vec![vec![-0.50709, 0.50709,  0.67612, -2.36643],
+                                    vec![ 0.76772, 0.60609,  0.12122, -2.82843],
+                                    vec![-0.35857, 0.59761, -0.71714,  0.00000],
+                                    vec![ 0.00000, 0.00000,  0.00000,  1.00000]] }
+        ));
     }
 }
