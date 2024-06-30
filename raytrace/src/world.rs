@@ -40,7 +40,8 @@ impl World {
 
     pub fn color_at(&self, r: Ray) -> Color {
         let xs = self.intersect(r);
-        if xs.len() == 0 {
+        let n = xs.len();
+        if n == 0 || xs[n-1].t < 0.0 {
             return color(0.0, 0.0, 0.0)
         } else {
             let mut hit = xs[0];
@@ -50,7 +51,6 @@ impl World {
                         hit = i;
                         break;
                     }
-                    // need to consider case when all hits are behind (i.e. negative)
                 }
             }
             let comps = prepare_computations(hit, r);
@@ -194,8 +194,15 @@ mod tests {
         let r = ray( point(0.0, 0.0, 0.75), vector(0.0, 0.0, -1.0) );
 
         let c = w.color_at(r);
-        println!("{:?}", c);
         assert!( c.equals( w.objects[1].material.color ));
+    }
 
+    #[test]
+    fn color_with_all_intersections_behind_ray(){
+        let w = default_world();
+        let r = ray( point(0.0, 0.0, 10.0), vector(0.0, 0.0, 1.0) );
+
+        let c = w.color_at(r);
+        assert!( c.equals( color(0.0, 0.0, 0.0) ));
     }
 }
