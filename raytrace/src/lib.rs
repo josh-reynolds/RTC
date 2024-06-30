@@ -11,6 +11,7 @@ pub mod intersections;
 pub mod lights;
 pub mod materials;
 pub mod world;
+pub mod camera;
 
 mod equals {
     const EPSILON: f64 = 0.00001;
