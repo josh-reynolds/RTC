@@ -1,6 +1,8 @@
 use crate::matrix::{Matrix, identity};
 use crate::rays::{Ray, ray};
 use crate::tuple::{point, origin};
+use crate::world::World;
+use crate::canvas::{Canvas, canvas};
 
 #[derive(Debug)]
 pub struct Camera {
@@ -26,6 +28,10 @@ impl Camera {
         let direction = (pixel - origin).normal();
 
         ray( origin, direction )
+    }
+
+    pub fn render(&self, w: World) -> Canvas {
+        canvas(10, 10)
     }
 }
 
@@ -57,7 +63,9 @@ mod tests {
     use crate::matrix::identity;
     use crate::equals::equals;
     use crate::tuple::{point, vector};
-    use crate::transform::{rotation_y, translation};
+    use crate::transform::{rotation_y, translation, view_transform};
+    use crate::world::default_world;
+    use crate::color::color;
 
     #[test]
     fn constructing_a_camera(){
@@ -108,5 +116,19 @@ mod tests {
         let r = c.ray_for_pixel(100, 50);
         assert!( r.origin.equals( point(0.0, 2.0, -5.0) ));
         assert!( r.direction.equals( vector(SQRT_2 / 2.0, 0.0, -SQRT_2 / 2.0) ));
+    }
+
+    #[test]
+    fn rendering_a_world_with_a_camera(){
+        let w = default_world();
+        
+        let mut c = camera(11, 11, PI / 2.0);
+        let from = point(0.0, 0.0, -5.0);
+        let to = point(0.0, 0.0, 0.0);
+        let up = vector(0.0, 1.0, 0.0);
+        c.transform = view_transform(from, to, up);
+
+        let image = c.render(w);
+        assert!( image.pixel_at(5, 5).equals( color(0.38066, 0.47583, 0.2855) ));
     }
 }
