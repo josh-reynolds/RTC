@@ -19,7 +19,7 @@ impl Ray {
 }
 
 pub fn ray(origin: Tuple, direction: Tuple) -> Ray {
-    Ray { origin: origin, direction: direction }
+    Ray { origin, direction }
 }
 
 #[cfg(test)]

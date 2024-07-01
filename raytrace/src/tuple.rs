@@ -113,11 +113,11 @@ impl Tuple {
 }
 
 pub fn point(x: f64, y: f64, z: f64) -> Tuple {
-    Tuple { x: x, y: y, z: z, w: 1.0 }
+    Tuple { x, y, z, w: 1.0 }
 }
 
 pub fn vector(x: f64, y: f64, z: f64) -> Tuple {
-    Tuple { x: x, y: y, z: z, w: 0.0 }
+    Tuple { x, y, z, w: 0.0 }
 }
 
 pub fn origin() -> Tuple {

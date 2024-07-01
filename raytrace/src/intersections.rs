@@ -11,7 +11,7 @@ pub struct Intersection<'a> {
 
 impl<'a> Intersection<'a> {
     pub fn new(t: f64, object: &'a Sphere) -> Self {
-        Intersection { t: t, object: object }
+        Intersection { t, object }
     }
     
     pub fn intersections(args: &[Intersection<'a>]) -> Vec<Intersection<'a>> {

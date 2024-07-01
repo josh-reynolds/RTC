@@ -81,8 +81,8 @@ impl Canvas {
 pub fn canvas(width: usize, height:usize) -> Canvas {
     let v = vec![vec![color( 0.0, 0.0, 0.0 );width];height];
 
-    Canvas { width: width,
-             height: height,
+    Canvas { width,
+             height,
              pixels: v }
 }
 

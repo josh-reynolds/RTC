@@ -15,7 +15,7 @@ impl Light {
 }
 
 pub fn point_light(position: Tuple, intensity: Color) -> Light {
-    Light { position: position, intensity: intensity }
+    Light { position, intensity }
 }
 
 

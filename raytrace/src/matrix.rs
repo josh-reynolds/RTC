@@ -10,8 +10,8 @@ pub struct Matrix {
 
 impl Matrix {
     pub fn new(cols: usize, rows: usize) -> Self {
-        Self { cols: cols,
-               rows: rows,
+        Self { cols,
+               rows,
                m: vec![vec![0.0;cols];rows] }
     }
 
