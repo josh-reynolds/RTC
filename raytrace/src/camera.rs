@@ -31,7 +31,17 @@ impl Camera {
     }
 
     pub fn render(&self, w: World) -> Canvas {
-        canvas(10, 10)
+        let mut image = canvas(self.hsize.try_into().unwrap(), self.vsize.try_into().unwrap());
+
+        for y in 0..(self.vsize - 1){
+            for x in 0..(self.hsize - 1){
+                let ray = self.ray_for_pixel(x, y);
+                let color = w.color_at(ray);
+                image.write_pixel(x.try_into().unwrap(), y.try_into().unwrap(), color);
+            }
+        }
+
+        image
     }
 }
 
