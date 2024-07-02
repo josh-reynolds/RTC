@@ -59,7 +59,11 @@ pub fn lighting(m: Material,
         }
     }
     
-    ambient + diffuse + specular
+    if in_shadow {
+        ambient
+    } else {
+        ambient + diffuse + specular
+    }
 }
 
 #[cfg(test)]
