@@ -35,7 +35,7 @@ impl World {
             None      => &binding,
         };
 
-        lighting( comps.object.material, &l, comps.point, comps.eyev, comps.normalv )
+        lighting(comps.object.material, &l, comps.point, comps.eyev, comps.normalv, false)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {

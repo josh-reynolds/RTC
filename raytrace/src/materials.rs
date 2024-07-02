@@ -32,7 +32,13 @@ pub fn material() -> Material {
     }
 }
 
-pub fn lighting(m: Material, l: &Light, p: Tuple, eye: Tuple, normal: Tuple) -> Color {
+pub fn lighting(m: Material, 
+                l: &Light, 
+                p: Tuple, 
+                eye: Tuple, 
+                normal: Tuple, 
+                in_shadow: bool
+  ) -> Color {
     let effective_color = m.color * l.intensity;
     let lightv = (l.position - p).normal();
     let ambient = effective_color * m.ambient;
@@ -85,7 +91,7 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv);
+        let result = lighting(m, &light, p, eyev, normalv, false);
         assert!( result.equals(color(1.9, 1.9, 1.9)) );
     }
 
@@ -98,7 +104,7 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv);
+        let result = lighting(m, &light, p, eyev, normalv, false);
         assert!( result.equals(color(1.0, 1.0, 1.0)) );
     }
 
@@ -111,7 +117,7 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv);
+        let result = lighting(m, &light, p, eyev, normalv, false);
         assert!( result.equals(color(0.7364, 0.7364, 0.7364)) );
     }
 
@@ -124,7 +130,7 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv);
+        let result = lighting(m, &light, p, eyev, normalv, false);
         assert!( result.equals(color(1.6364, 1.6364, 1.6364)) );
     }
 
@@ -137,7 +143,21 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, 10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv);
+        let result = lighting(m, &light, p, eyev, normalv, false);
+        assert!( result.equals(color(0.1, 0.1, 0.1)) );
+    }
+
+    #[test]
+    fn lighting_with_surface_in_shadow(){
+        let m = material();
+        let p = origin();
+
+        let eyev = vector(0.0, 0.0, -1.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+        let in_shadow = true;
+
+        let result = lighting(m, &light, p, eyev, normalv, in_shadow);
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 }
