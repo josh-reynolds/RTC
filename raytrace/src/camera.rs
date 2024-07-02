@@ -11,8 +11,8 @@ pub struct Camera {
     pub field_of_view: f64,
     pub transform: Matrix,
     pub pixel_size: f64,
-    pub half_width: f64,
-    pub half_height: f64,
+    half_width: f64,
+    half_height: f64,
 }
 
 impl Camera {
