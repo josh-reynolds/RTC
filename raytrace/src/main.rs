@@ -7,8 +7,11 @@ use raytrace::spheres::sphere;
 use raytrace::color::color;
 use raytrace::materials::material;
 use raytrace::lights::point_light;
+use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();
+
     let mut w = world();
     w.light = Some(point_light( point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0) ));
 
@@ -71,5 +74,9 @@ fn main() {
     let image = c.render(w);
 
     let _ = image.to_ppm("world_render.ppm");
+
+    let elapsed = now.elapsed();
+    println!("Size: {} x {}", c.hsize, c.vsize);
+    println!("Rendering time: {} seconds", elapsed.as_secs());
 }
 
