@@ -217,4 +217,28 @@ mod tests {
 
         assert!( !w.is_shadowed(p) );
     }
+
+    #[test]
+    fn shading_when_object_between_point_and_light(){
+        let w = default_world();
+        let p = point(10.0, -10.0, 10.0);
+
+        assert!( w.is_shadowed(p) );
+    }
+
+    #[test]
+    fn shading_when_light_between_point_and_object(){
+        let w = default_world();
+        let p = point(-20.0, 20.0, -20.0);
+
+        assert!( !w.is_shadowed(p) );
+    }
+
+    #[test]
+    fn shading_when_point_between_light_and_object(){
+        let w = default_world();
+        let p = point(-2.0, 2.0, -2.0);
+
+        assert!( !w.is_shadowed(p) );
+    }
 }
