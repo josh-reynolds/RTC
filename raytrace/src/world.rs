@@ -1,6 +1,6 @@
 use crate::lights::{Light, point_light};
 use crate::spheres::{Sphere,sphere};
-use crate::tuple::point;
+use crate::tuple::{Tuple, point};
 use crate::color::{Color, color};
 use crate::materials::{material, lighting};
 use crate::transform::scaling;
@@ -56,6 +56,10 @@ impl World {
             let comps = prepare_computations(hit, r);
             self.shade_hit(comps)
         }
+    }
+
+    pub fn is_shadowed(&self, p: Tuple) -> bool {
+        false
     }
 }
 
@@ -204,5 +208,13 @@ mod tests {
 
         let c = w.color_at(r);
         assert!( c.equals( color(0.0, 0.0, 0.0) ));
+    }
+
+    #[test]
+    fn shading_when_nothing_colinear(){
+        let w = default_world();
+        let p = point(0.0, 10.0, 0.0);
+
+        assert!( !w.is_shadowed(p) );
     }
 }
