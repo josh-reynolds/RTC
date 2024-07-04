@@ -1,3 +1,4 @@
+use crate::equals::EPSILON;
 use crate::spheres::Sphere;
 use crate::rays::Ray;
 use crate::tuple::Tuple;
@@ -60,12 +61,13 @@ pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
         n = -n;
         ins = true;
     }
+    let op = r.position(i.t) + n * EPSILON;
 
     Computations { 
         t: i.t,
         object: i.object,
         point: r.position( i.t ),
-        over_point: r.position( i.t ),
+        over_point: op,
         eyev: -r.direction,
         normalv: n,
         inside: ins,
