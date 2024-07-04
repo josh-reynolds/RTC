@@ -111,7 +111,7 @@ mod tests {
     use crate::color::color;
     use crate::tuple::{point, vector};
     use crate::spheres::sphere;
-    use crate::transform::scaling;
+    use crate::transform::{scaling, translation};
     use crate::lights::point_light;
     use crate::materials::material;
     use crate::rays::ray;
@@ -259,5 +259,25 @@ mod tests {
         let p = point(-2.0, 2.0, -2.0);
 
         assert!( !w.is_shadowed(p) );
+    }
+
+    #[test]
+    fn shade_hit_given_an_intersection_in_shadow(){
+        let mut w = world();
+        w.light = Some(point_light( point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0) ));
+        let s1 = sphere();
+        let mut s2 = sphere();
+        s2.set_transform( translation(0.0, 0.0, 10.0) );
+        w.objects.push(s1);
+        w.objects.push(s2);
+        
+        let s = &w.objects[1];
+        let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
+        let i = Intersection::new(4.0, &s);
+        let comps = prepare_computations(i, r);
+
+        let c = w.shade_hit(comps);
+
+        assert!( c.equals(color(0.1, 0.1, 0.1)));
     }
 }
