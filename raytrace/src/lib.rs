@@ -14,7 +14,7 @@ pub mod world;
 pub mod camera;
 
 mod equals {
-    const EPSILON: f64 = 0.00001;
+    pub const EPSILON: f64 = 0.00001;
     
     pub fn equals(a: f64, b: f64) -> bool {
         (a - b).abs() < EPSILON 

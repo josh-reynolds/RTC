@@ -107,6 +107,7 @@ pub fn default_world() -> World {
 
 #[cfg(test)]
 mod tests {
+    use crate::equals::EPSILON;
     use crate::world::{world, default_world};
     use crate::color::color;
     use crate::tuple::{point, vector};
@@ -279,5 +280,17 @@ mod tests {
         let c = w.shade_hit(comps);
 
         assert!( c.equals(color(0.1, 0.1, 0.1)));
+    }
+
+    #[test]
+    fn hit_should_offset_point(){
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+        let mut s = sphere();
+        s.set_transform( translation(0.0, 0.0, 1.0) );
+        let i = Intersection::new(5.0, &s);
+        let comps = prepare_computations(i, r);
+
+        assert!( comps.over_point.z < -EPSILON/2.0 );
+        assert!( comps.point.z > comps.over_point.z );
     }
 }
