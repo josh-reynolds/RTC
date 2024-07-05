@@ -35,7 +35,9 @@ impl World {
             None      => &binding,
         };
 
-        lighting(comps.object.material, &l, comps.point, comps.eyev, comps.normalv, false)
+        let shadowed = self.is_shadowed(comps.over_point);
+
+        lighting(comps.object.material, &l, comps.point, comps.eyev, comps.normalv, shadowed)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -274,9 +276,9 @@ mod tests {
         
         let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
-        let i = Intersection::new(4.0, &s);
+        let i = Intersection::new(9.0, &s);   // I think the book has a typo here
         let comps = prepare_computations(i, r);
-
+        
         let c = w.shade_hit(comps);
 
         assert!( c.equals(color(0.1, 0.1, 0.1)));
