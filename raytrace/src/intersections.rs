@@ -121,7 +121,7 @@ mod tests {
         let i1 = Intersection::new(-1.0, &s);
         let i2 = Intersection::new(1.0, &s);
 
-        let xs = Intersection::intersections(&[i2, i1]);
+        let xs = Intersection::intersections(&[i1, i2]);
         let i = Intersection::hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i2 ));
