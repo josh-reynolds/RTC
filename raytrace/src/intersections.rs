@@ -26,7 +26,7 @@ impl<'a> Intersection<'a> {
     pub fn hit( xs: Vec<Intersection<'a>> ) -> Option<Intersection<'_>> {
         let mut lowest = xs[0];
         for i in xs {
-            if i.t < lowest.t && i.t >= 0.0 {
+            if (lowest.t < 0.0 || i.t < lowest.t ) && i.t >= 0.0 {
                 lowest = i;
             }
         }
