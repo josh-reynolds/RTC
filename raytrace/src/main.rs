@@ -38,7 +38,7 @@ fn main() {
     let mut middle = sphere();
     middle.transform = translation(-0.5, 1.0, 0.5);
     middle.material = material();
-    middle.material.color = color(0.1, 1.0, 0.5);
+    middle.material.color = color(0.9, 0.1, 0.1);
     middle.material.diffuse = 0.7;
     middle.material.specular = 0.3;
 
@@ -46,7 +46,7 @@ fn main() {
     right.transform = translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5));
     right.material = material();
-    right.material.color = color(0.5, 1.0, 0.1);
+    right.material.color = color(0.1, 0.9, 0.1);
     right.material.diffuse = 0.7;
     right.material.specular = 0.3;
 
@@ -54,7 +54,7 @@ fn main() {
     left.transform = translation(-1.5, 0.33, -0.75).mult(
                           &scaling(0.33, 0.33, 0.33));
     left.material = material();
-    left.material.color = color(1.0, 0.8, 0.1);
+    left.material.color = color(0.1, 0.1, 0.9);
     left.material.diffuse = 0.7;
     left.material.specular = 0.3;
     
@@ -65,8 +65,7 @@ fn main() {
     w.objects.push(right);
     w.objects.push(left);
 
-
-    let mut c = camera(200, 100, PI / 3.0);
+    let mut c = camera(800, 400, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
     let to = point(0.0, 1.0, 0.0);
     let up = vector(0.0, 1.0, 0.0);
