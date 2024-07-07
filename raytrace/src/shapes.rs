@@ -1,13 +1,30 @@
 use crate::matrix::{Matrix, identity};
 
+// Current concrete 'class' is Sphere:
+//   Sphere.transform         OK
+//   Sphere.material
+//   Sphere.intersect()
+//   Sphere.set_transform()   OK
+//   Sphere.normal_at()
+//   sphere()
+
 #[derive(Debug)]
-pub struct Shape {           // Shape should probably be a trait, not a struct
-                             // will be moving in that direction
+pub struct Base {
     pub transform: Matrix,
 }
 
-pub fn test_shape() -> Shape {
-    Shape {
+impl Shape for Base {
+    fn set_transform(&mut self, t: Matrix){
+        self.transform = t
+    }
+}
+
+pub trait Shape {
+    fn set_transform(&mut self, t: Matrix);
+}
+
+pub fn test_shape() -> Base {
+    Base {
         transform: identity(),
     }
 }
@@ -15,11 +32,20 @@ pub fn test_shape() -> Shape {
 #[cfg(test)]
 mod tests {
     use crate::matrix::identity;
-    use crate::shapes::test_shape;
+    use crate::shapes::{Shape, test_shape};
+    use crate::transform::translation;
 
     #[test]
-    fn shape_default_transform(){
+    fn shape_default_transformation(){
         let s = test_shape();
         assert!( s.transform.equals( identity() ));
+    }
+
+    #[test]
+    fn assigning_a_transformation(){
+        let mut s = test_shape();
+        let t = translation( 2.0, 3.0, 4.0 );
+        s.set_transform( t );
+        assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
     }
 }
