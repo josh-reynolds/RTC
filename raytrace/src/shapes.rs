@@ -3,7 +3,7 @@ use crate::materials::{Material, material};
 
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
-//   Sphere.material
+//   Sphere.material          OK
 //   Sphere.intersect()
 //   Sphere.set_transform()   OK
 //   Sphere.normal_at()
@@ -57,5 +57,15 @@ mod tests {
     fn shape_default_material(){
         let s = test_shape();
         assert!( s.material.equals( material() ));
+    }
+
+    #[test]
+    fn assigning_a_material(){
+        let mut s = test_shape();
+        let mut m = material();
+        m.ambient = 1.0;
+        s.material = m;
+        assert!( !s.material.equals( material() ));
+        assert!( s.material.equals( m ));
     }
 }
