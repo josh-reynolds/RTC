@@ -1,4 +1,5 @@
 use crate::matrix::{Matrix, identity};
+use crate::materials::{Material, material};
 
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
@@ -11,6 +12,7 @@ use crate::matrix::{Matrix, identity};
 #[derive(Debug)]
 pub struct Base {
     pub transform: Matrix,
+    pub material: Material,
 }
 
 impl Shape for Base {
@@ -26,6 +28,7 @@ pub trait Shape {
 pub fn test_shape() -> Base {
     Base {
         transform: identity(),
+        material: material(),
     }
 }
 
@@ -34,6 +37,7 @@ mod tests {
     use crate::matrix::identity;
     use crate::shapes::{Shape, test_shape};
     use crate::transform::translation;
+    use crate::materials::material;
 
     #[test]
     fn shape_default_transformation(){
@@ -47,5 +51,11 @@ mod tests {
         let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
         assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
+    }
+
+    #[test]
+    fn shape_default_material(){
+        let s = test_shape();
+        assert!( s.material.equals( material() ));
     }
 }
