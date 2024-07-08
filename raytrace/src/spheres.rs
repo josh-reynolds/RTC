@@ -3,7 +3,7 @@ use crate::tuple::{Tuple, origin};
 use crate::intersections::Intersection;
 use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
-use crate::shapes::{Base, test_shape};
+use crate::shapes::{Base, shape};
 
 #[derive(Debug,PartialEq)]
 pub struct Sphere {
@@ -51,7 +51,7 @@ impl<'a> Sphere {
 
 pub fn sphere() -> Sphere {
     Sphere { 
-        supe: test_shape(),
+        supe: shape(),
         transform: identity(),
         material: material(),
     }

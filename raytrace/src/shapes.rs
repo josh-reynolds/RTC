@@ -25,7 +25,7 @@ pub trait Shape {
     fn set_transform(&mut self, t: Matrix);
 }
 
-pub fn test_shape() -> Base {
+pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
@@ -35,19 +35,19 @@ pub fn test_shape() -> Base {
 #[cfg(test)]
 mod tests {
     use crate::matrix::identity;
-    use crate::shapes::{Shape, test_shape};
+    use crate::shapes::{Shape, shape};
     use crate::transform::translation;
     use crate::materials::material;
 
     #[test]
     fn shape_default_transformation(){
-        let s = test_shape();
+        let s = shape();
         assert!( s.transform.equals( identity() ));
     }
 
     #[test]
     fn assigning_a_transformation(){
-        let mut s = test_shape();
+        let mut s = shape();
         let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
         assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
@@ -55,13 +55,13 @@ mod tests {
 
     #[test]
     fn shape_default_material(){
-        let s = test_shape();
+        let s = shape();
         assert!( s.material.equals( material() ));
     }
 
     #[test]
     fn assigning_a_material(){
-        let mut s = test_shape();
+        let mut s = shape();
         let mut m = material();
         m.ambient = 1.0;
         s.material = m;
