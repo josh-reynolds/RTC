@@ -2,14 +2,12 @@ use crate::rays::Ray;
 use crate::tuple::{Tuple, origin};
 use crate::intersections::Intersection;
 use crate::matrix::{Matrix, identity};
-use crate::materials::{Material, material};
 use crate::shapes::{Base, shape};
 
 #[derive(Debug,PartialEq)]
 pub struct Sphere {
     pub supe: Base,
     pub transform: Matrix,
-    pub material: Material,
 }
 
 impl<'a> Sphere {
@@ -53,7 +51,6 @@ pub fn sphere() -> Sphere {
     Sphere { 
         supe: shape(),
         transform: identity(),
-        material: material(),
     }
 }
 
@@ -243,7 +240,7 @@ mod tests {
     #[test]
     fn sphere_has_default_material(){
         let s = sphere();
-        assert!( s.material.equals( material() ));
+        assert!( s.supe.material.equals( material() ));
     }
 
     #[test]
@@ -251,8 +248,8 @@ mod tests {
         let mut s = sphere();
         let mut m = material();
         m.ambient = 1.0;
-        s.material = m;
-        assert!( !s.material.equals( material() ));
-        assert!( s.material.equals( m ));
+        s.supe.material = m;
+        assert!( !s.supe.material.equals( material() ));
+        assert!( s.supe.material.equals( m ));
     }
 }

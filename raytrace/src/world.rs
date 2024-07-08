@@ -37,7 +37,7 @@ impl World {
 
         let shadowed = self.is_shadowed(comps.over_point);
 
-        lighting(comps.object.material, &l, comps.point, comps.eyev, comps.normalv, shadowed)
+        lighting(comps.object.supe.material, &l, comps.point, comps.eyev, comps.normalv, shadowed)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -96,7 +96,7 @@ pub fn default_world() -> World {
     m.color = color(0.8, 1.0, 0.6);
     m.diffuse = 0.7;
     m.specular = 0.2;
-    s1.material = m;
+    s1.supe.material = m;
 
     let mut s2 = sphere();
     let t = scaling(0.5, 0.5, 0.5);
@@ -139,7 +139,7 @@ mod tests {
         m.color = color(0.8, 1.0, 0.6);
         m.diffuse = 0.7;
         m.specular = 0.2;
-        s1.material = m;
+        s1.supe.material = m;
 
         let mut s2 = sphere();
         let t = scaling(0.5, 0.5, 0.5);
@@ -215,12 +215,12 @@ mod tests {
     #[test]
     fn color_with_intersection_behind_ray(){
         let mut w = default_world();
-        w.objects[0].material.ambient = 1.0;
-        w.objects[1].material.ambient = 1.0;
+        w.objects[0].supe.material.ambient = 1.0;
+        w.objects[1].supe.material.ambient = 1.0;
         let r = ray( point(0.0, 0.0, 0.75), vector(0.0, 0.0, -1.0) );
 
         let c = w.color_at(r);
-        assert!( c.equals( w.objects[1].material.color ));
+        assert!( c.equals( w.objects[1].supe.material.color ));
     }
 
     #[test]
