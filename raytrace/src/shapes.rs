@@ -9,7 +9,7 @@ use crate::materials::{Material, material};
 //   Sphere.normal_at()
 //   sphere()
 
-#[derive(Debug)]
+#[derive(Debug,PartialEq)]
 pub struct Base {
     pub transform: Matrix,
     pub material: Material,
