@@ -1,18 +1,17 @@
 use crate::rays::Ray;
 use crate::tuple::{Tuple, origin};
 use crate::intersections::Intersection;
-use crate::matrix::{Matrix, identity};
+use crate::matrix::Matrix;
 use crate::shapes::{Base, shape};
 
 #[derive(Debug,PartialEq)]
 pub struct Sphere {
     pub supe: Base,
-    pub transform: Matrix,
 }
 
 impl<'a> Sphere {
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
-        let r2 = r.transform( self.transform.inverse() );
+        let r2 = r.transform( self.supe.transform.inverse() );
         let sphere_to_ray = r2.origin - origin();
 
         let a = r2.direction.dot(&r2.direction);
@@ -35,13 +34,13 @@ impl<'a> Sphere {
     }
 
     pub fn set_transform(&mut self, t: Matrix){
-        self.transform = t
+        self.supe.transform = t;
     }
 
     pub fn normal_at(&self, world_point: Tuple) -> Tuple {
-        let object_point = self.transform.inverse().multup( &world_point );
+        let object_point = self.supe.transform.inverse().multup( &world_point );
         let object_normal = object_point - origin();
-        let mut world_normal = self.transform.inverse().transpose().multup( &object_normal );
+        let mut world_normal = self.supe.transform.inverse().transpose().multup( &object_normal );
         world_normal.w = 0.0;
         world_normal.normal()
     }
@@ -50,7 +49,6 @@ impl<'a> Sphere {
 pub fn sphere() -> Sphere {
     Sphere { 
         supe: shape(),
-        transform: identity(),
     }
 }
 
@@ -139,7 +137,7 @@ mod tests {
     #[test]
     fn sphere_default_transform(){
         let s = sphere();
-        assert!( s.transform.equals( identity() ));
+        assert!( s.supe.transform.equals( identity() ));
     }
 
     #[test]
@@ -147,7 +145,7 @@ mod tests {
         let mut s = sphere();
         let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
-        assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
+        assert!( s.supe.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
     }
 
     #[test]

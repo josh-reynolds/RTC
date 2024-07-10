@@ -8,7 +8,7 @@ use crate::rays::{Ray, ray};
 use crate::intersections::{Intersection, Computations, prepare_computations};
 
 #[derive(Debug)]
-pub struct World{
+pub struct World {
     pub light: Option<Light>,
     pub objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
 }                               // parent class and how to implement properly

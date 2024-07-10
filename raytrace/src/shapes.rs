@@ -4,8 +4,8 @@ use crate::materials::{Material, material};
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
 //   Sphere.material          OK
-//   Sphere.intersect()
 //   Sphere.set_transform()   OK
+//   Sphere.intersect()
 //   Sphere.normal_at()
 //   sphere()
 
