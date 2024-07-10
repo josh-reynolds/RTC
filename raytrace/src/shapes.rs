@@ -19,10 +19,15 @@ impl Shape for Base {
     fn set_transform(&mut self, t: Matrix){
         self.transform = t
     }
+
+    fn get_transform(&self) -> &Matrix {
+        &self.transform
+    }
 }
 
 pub trait Shape {
     fn set_transform(&mut self, t: Matrix);
+    fn get_transform(&self) -> &Matrix;
 }
 
 pub fn shape() -> Base {
@@ -42,7 +47,7 @@ mod tests {
     #[test]
     fn shape_default_transformation(){
         let s = shape();
-        assert!( s.transform.equals( identity() ));
+        assert!( s.get_transform().equals( identity() ));
     }
 
     #[test]
@@ -50,7 +55,7 @@ mod tests {
         let mut s = shape();
         let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
-        assert!( s.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
+        assert!( s.get_transform().equals( translation( 2.0, 3.0, 4.0 ) ));
     }
 
     #[test]

@@ -65,7 +65,7 @@ fn main() {
     w.objects.push(right);
     w.objects.push(left);
 
-    let mut c = camera(800, 400, PI / 3.0);
+    let mut c = camera(200, 100, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
     let to = point(0.0, 1.0, 0.0);
     let up = vector(0.0, 1.0, 0.0);
