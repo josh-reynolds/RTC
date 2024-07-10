@@ -1,5 +1,6 @@
 use crate::lights::{Light, point_light};
 use crate::spheres::{Sphere,sphere};
+use crate::shapes::Shape;
 use crate::tuple::{Tuple, point};
 use crate::color::{Color, color};
 use crate::materials::{material, lighting};
@@ -114,6 +115,7 @@ mod tests {
     use crate::color::color;
     use crate::tuple::{point, vector};
     use crate::spheres::sphere;
+    use crate::shapes::Shape;
     use crate::transform::{scaling, translation};
     use crate::lights::point_light;
     use crate::materials::material;

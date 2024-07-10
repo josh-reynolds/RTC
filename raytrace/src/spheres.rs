@@ -2,7 +2,7 @@ use crate::rays::Ray;
 use crate::tuple::{Tuple, origin};
 use crate::intersections::Intersection;
 use crate::matrix::Matrix;
-use crate::shapes::{Base, shape};
+use crate::shapes::{Base, Shape, shape};
 
 #[derive(Debug,PartialEq)]
 pub struct Sphere {
@@ -33,16 +33,22 @@ impl<'a> Sphere {
         }
     }
 
-    pub fn set_transform(&mut self, t: Matrix){
-        self.supe.transform = t;
-    }
-
     pub fn normal_at(&self, world_point: Tuple) -> Tuple {
         let object_point = self.supe.transform.inverse().multup( &world_point );
         let object_normal = object_point - origin();
         let mut world_normal = self.supe.transform.inverse().transpose().multup( &object_normal );
         world_normal.w = 0.0;
         world_normal.normal()
+    }
+}
+
+impl Shape for Sphere {
+    fn set_transform(&mut self, t: Matrix){
+        self.supe.transform = t;
+    }
+
+    fn get_transform(&self) -> &Matrix {
+        &self.supe.transform
     }
 }
 
@@ -55,6 +61,7 @@ pub fn sphere() -> Sphere {
 #[cfg(test)]
 mod tests {
     use crate::spheres::sphere;
+    use crate::shapes::Shape;
     use crate::tuple::{point, vector, origin};
     use crate::rays::ray;
     use crate::matrix::identity;
