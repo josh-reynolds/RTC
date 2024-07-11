@@ -11,7 +11,7 @@ pub struct Sphere {
 
 impl<'a> Sphere {
     pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
-        let r2 = r.transform( self.supe.transform.inverse() );
+        let r2 = r.transform( self.get_transform().inverse() );
         let sphere_to_ray = r2.origin - origin();
 
         let a = r2.direction.dot(&r2.direction);
@@ -34,9 +34,9 @@ impl<'a> Sphere {
     }
 
     pub fn normal_at(&self, world_point: Tuple) -> Tuple {
-        let object_point = self.supe.transform.inverse().multup( &world_point );
+        let object_point = self.get_transform().inverse().multup( &world_point );
         let object_normal = object_point - origin();
-        let mut world_normal = self.supe.transform.inverse().transpose().multup( &object_normal );
+        let mut world_normal = self.get_transform().inverse().transpose().multup( &object_normal );
         world_normal.w = 0.0;
         world_normal.normal()
     }
@@ -144,7 +144,7 @@ mod tests {
     #[test]
     fn sphere_default_transform(){
         let s = sphere();
-        assert!( s.supe.transform.equals( identity() ));
+        assert!( s.get_transform().equals( identity() ));
     }
 
     #[test]
@@ -152,7 +152,7 @@ mod tests {
         let mut s = sphere();
         let t = translation( 2.0, 3.0, 4.0 );
         s.set_transform( t );
-        assert!( s.supe.transform.equals( translation( 2.0, 3.0, 4.0 ) ));
+        assert!( s.get_transform().equals( translation( 2.0, 3.0, 4.0 ) ));
     }
 
     #[test]
