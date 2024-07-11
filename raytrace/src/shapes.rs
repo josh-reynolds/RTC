@@ -23,11 +23,16 @@ impl Shape for Base {
     fn get_transform(&self) -> &Matrix {
         &self.transform
     }
+
+    fn get_material(&self) -> &Material {
+        &self.material
+    }
 }
 
 pub trait Shape {
     fn set_transform(&mut self, t: Matrix);
     fn get_transform(&self) -> &Matrix;
+    fn get_material(&self) -> &Material;
 }
 
 pub fn shape() -> Base {
