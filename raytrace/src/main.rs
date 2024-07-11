@@ -18,46 +18,50 @@ fn main() {
 
     let mut floor = sphere();
     floor.set_transform( scaling(10.0, 0.01, 10.0) );
-    floor.supe.material = material();
-    floor.supe.material.color = color(1.0, 0.9, 0.9);
-    floor.supe.material.specular = 0.0;
+    let mut mat = material();
+    mat.color = color(1.0, 0.9, 0.9);
+    mat.specular = 0.0;
+    floor.set_material( mat );
 
     let mut left_wall = sphere();
     left_wall.set_transform( translation(0.0, 0.0, 5.0).mult(
                             &rotation_y(-PI / 4.0).mult(
                                 &rotation_x(PI / 2.0).mult(
                                     &scaling(10.0, 0.01, 10.0)))));
-    left_wall.supe.material = floor.supe.material;
+    left_wall.set_material( *floor.get_material() );
 
     let mut right_wall = sphere();
     right_wall.set_transform( translation(0.0, 0.0, 5.0).mult(
                             &rotation_y(PI / 4.0).mult(
                                 &rotation_x(PI / 2.0).mult(
                                     &scaling(10.0, 0.01, 10.0)))));
-    right_wall.supe.material = floor.supe.material;
+    right_wall.set_material( *floor.get_material() );
 
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
-    middle.supe.material = material();
-    middle.supe.material.color = color(0.9, 0.1, 0.1);
-    middle.supe.material.diffuse = 0.7;
-    middle.supe.material.specular = 0.3;
+    let mut mat = material();
+    mat.color = color(0.9, 0.1, 0.1);
+    mat.diffuse = 0.7;
+    mat.specular = 0.3;
+    middle.set_material( mat );
 
     let mut right = sphere();
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
-    right.supe.material = material();
-    right.supe.material.color = color(0.1, 0.9, 0.1);
-    right.supe.material.diffuse = 0.7;
-    right.supe.material.specular = 0.3;
+    let mut mat = material();
+    mat.color = color(0.1, 0.9, 0.1);
+    mat.diffuse = 0.7;
+    mat.specular = 0.3;
+    right.set_material( mat );
 
     let mut left = sphere();
     left.set_transform( translation(-1.5, 0.33, -0.75).mult(
                           &scaling(0.33, 0.33, 0.33)));
-    left.supe.material = material();
-    left.supe.material.color = color(0.1, 0.1, 0.9);
-    left.supe.material.diffuse = 0.7;
-    left.supe.material.specular = 0.3;
+    let mut mat = material();
+    mat.color = color(0.1, 0.1, 0.9);
+    mat.diffuse = 0.7;
+    mat.specular = 0.3;
+    left.set_material( mat );
     
     w.objects.push(floor);
     w.objects.push(left_wall);

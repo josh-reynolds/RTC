@@ -7,7 +7,7 @@ use crate::materials::Material;
 
 #[derive(Debug,PartialEq)]
 pub struct Sphere {
-    pub supe: Base,
+    supe: Base,
 }
 
 impl<'a> Sphere {
@@ -52,9 +52,15 @@ impl Shape for Sphere {
         &self.supe.transform
     }
 
+    fn set_material(&mut self, m: Material){
+        self.supe.material = m;
+    }
+
     fn get_material(&self) -> &Material {
         &self.supe.material
     }
+
+
 }
 
 pub fn sphere() -> Sphere {
@@ -250,7 +256,7 @@ mod tests {
     #[test]
     fn sphere_has_default_material(){
         let s = sphere();
-        assert!( s.supe.material.equals( material() ));
+        assert!( s.get_material().equals( material() ));
     }
 
     #[test]
@@ -258,8 +264,8 @@ mod tests {
         let mut s = sphere();
         let mut m = material();
         m.ambient = 1.0;
-        s.supe.material = m;
-        assert!( !s.supe.material.equals( material() ));
-        assert!( s.supe.material.equals( m ));
+        s.set_material( m );
+        assert!( !s.get_material().equals( material() ));
+        assert!( s.get_material().equals( m ));
     }
 }
