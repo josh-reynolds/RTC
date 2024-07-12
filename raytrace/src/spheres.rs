@@ -1,6 +1,6 @@
 use crate::rays::Ray;
 use crate::tuple::{Tuple, origin};
-use crate::intersections::Intersection;
+use crate::intersections::{Intersection, intersection};
 use crate::matrix::Matrix;
 use crate::shapes::{Base, Shape, shape};
 use crate::materials::Material;
@@ -25,10 +25,10 @@ impl<'a> Sphere {
             return vec!();
         } else {
             let t1 = (-b - discriminant.sqrt()) / ( 2.0 * a);
-            let i1 = Intersection::new(t1, &self);
+            let i1 = intersection(t1, &self);
 
             let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
-            let i2 = Intersection::new(t2, &self);
+            let i2 = intersection(t2, &self);
 
             return Intersection::intersections(&[i1,i2]);
         }

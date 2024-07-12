@@ -120,7 +120,7 @@ mod tests {
     use crate::lights::point_light;
     use crate::materials::material;
     use crate::rays::ray;
-    use crate::intersections::{Intersection, prepare_computations};
+    use crate::intersections::{intersection, prepare_computations};
 
     #[test]
     fn creating_a_world(){
@@ -176,7 +176,7 @@ mod tests {
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
         let s = &w.objects[0];
-        let i = Intersection::new(4.0, &s);
+        let i = intersection(4.0, &s);
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
@@ -189,7 +189,7 @@ mod tests {
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
         let s = &w.objects[1];
-        let i = Intersection::new(0.5, &s);
+        let i = intersection(0.5, &s);
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
@@ -285,7 +285,7 @@ mod tests {
         
         let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
-        let i = Intersection::new(9.0, &s);   // I think the book has a typo here
+        let i = intersection(9.0, &s);   // I think the book has a typo here
         let comps = prepare_computations(i, r);
         
         let c = w.shade_hit(comps);
@@ -298,7 +298,7 @@ mod tests {
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
         let mut s = sphere();
         s.set_transform( translation(0.0, 0.0, 1.0) );
-        let i = Intersection::new(5.0, &s);
+        let i = intersection(5.0, &s);
         let comps = prepare_computations(i, r);
 
         assert!( comps.over_point.z < -EPSILON/2.0 );

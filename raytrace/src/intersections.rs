@@ -12,10 +12,6 @@ pub struct Intersection<'a> {
 }
 
 impl<'a> Intersection<'a> {
-    pub fn new(t: f64, object: &'a Sphere) -> Self {
-        Intersection { t, object }
-    }
-    
     pub fn intersections(args: &[Intersection<'a>]) -> Vec<Intersection<'a>> {
         let mut v = vec!();
         for arg in args {
@@ -88,15 +84,6 @@ mod tests {
     use crate::equals::equals;
 
     #[test]
-    fn new_creates_intersections(){
-        let s = sphere();
-        let i = Intersection::new(3.5, &s);
-
-        assert_eq!( 3.5, i.t );
-        assert_eq!( i.object as *const _, &s as *const _ );
-    }
-
-    #[test]
     fn intersection_creates_intersections(){
         let s = sphere();
         let i = intersection(3.5, &s);
@@ -108,8 +95,8 @@ mod tests {
     #[test]
     fn aggregating_intersections(){
         let s = sphere();
-        let i1 = Intersection::new(1.0, &s);
-        let i2 = Intersection::new(2.0, &s);
+        let i1 = intersection(1.0, &s);
+        let i2 = intersection(2.0, &s);
 
         let xs = Intersection::intersections(&[i1, i2]);
         assert_eq!( xs.len(), 2 );
@@ -120,8 +107,8 @@ mod tests {
     #[test]
     fn hit_with_all_positive_intersections(){
         let s = sphere();
-        let i1 = Intersection::new(1.0, &s);
-        let i2 = Intersection::new(2.0, &s);
+        let i1 = intersection(1.0, &s);
+        let i2 = intersection(2.0, &s);
 
         let xs = Intersection::intersections(&[i2, i1]);
         let i = Intersection::hit(xs);
@@ -132,8 +119,8 @@ mod tests {
     #[test]
     fn hit_when_some_intersections_are_negative(){
         let s = sphere();
-        let i1 = Intersection::new(-1.0, &s);
-        let i2 = Intersection::new(1.0, &s);
+        let i1 = intersection(-1.0, &s);
+        let i2 = intersection(1.0, &s);
 
         let xs = Intersection::intersections(&[i1, i2]);
         let i = Intersection::hit(xs);
@@ -144,8 +131,8 @@ mod tests {
     #[test]
     fn hit_when_all_intersections_are_negative(){
         let s = sphere();
-        let i1 = Intersection::new(-2.0, &s);
-        let i2 = Intersection::new(-1.0, &s);
+        let i1 = intersection(-2.0, &s);
+        let i2 = intersection(-1.0, &s);
 
         let xs = Intersection::intersections(&[i2, i1]);
         let i = Intersection::hit(xs);
@@ -159,10 +146,10 @@ mod tests {
     #[test]
     fn hit_always_lowest_nonnegative_intersection(){
         let s = sphere();
-        let i1 = Intersection::new( 5.0, &s);
-        let i2 = Intersection::new( 7.0, &s);
-        let i3 = Intersection::new(-3.0, &s);
-        let i4 = Intersection::new( 2.0, &s);
+        let i1 = intersection( 5.0, &s);
+        let i2 = intersection( 7.0, &s);
+        let i3 = intersection(-3.0, &s);
+        let i4 = intersection( 2.0, &s);
 
         let xs = Intersection::intersections(&[i1, i2, i3, i4]);
         let i = Intersection::hit(xs);
@@ -174,7 +161,7 @@ mod tests {
     fn precomputing_intersection_state(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
         let s = sphere();
-        let i = Intersection::new(4.0, &s);
+        let i = intersection(4.0, &s);
 
         let comps = prepare_computations(i, r);
 
@@ -189,7 +176,7 @@ mod tests {
     fn intersection_on_outside(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
         let s = sphere();
-        let i = Intersection::new(4.0, &s);
+        let i = intersection(4.0, &s);
 
         let comps = prepare_computations(i, r);
 
@@ -200,7 +187,7 @@ mod tests {
     fn intersection_on_inside(){
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
         let s = sphere();
-        let i = Intersection::new(1.0, &s);
+        let i = intersection(1.0, &s);
 
         let comps = prepare_computations(i, r);
 
