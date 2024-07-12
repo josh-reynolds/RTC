@@ -37,19 +37,19 @@ impl<'a> Sphere {
 
 impl Shape for Sphere {
     fn set_transform(&mut self, t: Matrix){
-        self.supe.transform = t;
+        self.supe.set_transform( t );
     }
 
     fn get_transform(&self) -> &Matrix {
-        &self.supe.transform
+        &self.supe.get_transform()
     }
 
     fn set_material(&mut self, m: Material){
-        self.supe.material = m;
+        self.supe.set_material( m );
     }
 
     fn get_material(&self) -> &Material {
-        &self.supe.material
+        &self.supe.get_material()
     }
 
     fn normal_at(&self, world_point: Tuple) -> Tuple {

@@ -12,8 +12,8 @@ use crate::tuple::{Tuple, vector};
 
 #[derive(Debug,PartialEq)]
 pub struct Base {
-    pub transform: Matrix,
-    pub material: Material,
+    transform: Matrix,
+    material: Material,
 }
 
 impl Shape for Base {
@@ -77,7 +77,7 @@ mod tests {
     #[test]
     fn shape_default_material(){
         let s = shape();
-        assert!( s.material.equals( material() ));
+        assert!( s.get_material().equals( material() ));
     }
 
     #[test]
@@ -86,7 +86,7 @@ mod tests {
         let mut m = material();
         m.ambient = 1.0;
         s.material = m;
-        assert!( !s.material.equals( material() ));
-        assert!( s.material.equals( m ));
+        assert!( !s.get_material().equals( material() ));
+        assert!( s.get_material().equals( m ));
     }
 }
