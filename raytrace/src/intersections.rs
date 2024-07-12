@@ -44,6 +44,10 @@ impl<'a> Intersection<'a> {
     }
 }
 
+pub fn intersection<'a>(t: f64, object: &'a Sphere) -> Intersection<'a> {
+    Intersection { t, object }
+}
+
 #[derive(Debug)]
 pub struct Computations<'a> {
     pub t: f64,
@@ -77,7 +81,7 @@ pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
 
 #[cfg(test)]
 mod tests {
-    use crate::intersections::{Intersection, prepare_computations};
+    use crate::intersections::{Intersection, intersection, prepare_computations};
     use crate::spheres::sphere;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
@@ -87,6 +91,15 @@ mod tests {
     fn new_creates_intersections(){
         let s = sphere();
         let i = Intersection::new(3.5, &s);
+
+        assert_eq!( 3.5, i.t );
+        assert_eq!( i.object as *const _, &s as *const _ );
+    }
+
+    #[test]
+    fn intersection_creates_intersections(){
+        let s = sphere();
+        let i = intersection(3.5, &s);
 
         assert_eq!( 3.5, i.t );
         assert_eq!( i.object as *const _, &s as *const _ );
