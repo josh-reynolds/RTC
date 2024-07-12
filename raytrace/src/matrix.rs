@@ -9,12 +9,6 @@ pub struct Matrix {
 }
 
 impl Matrix {
-    pub fn new(cols: usize, rows: usize) -> Self {
-        Self { cols,
-               rows,
-               m: vec![vec![0.0;cols];rows] }
-    }
-
     pub fn equals(&self, m: Matrix) -> bool {
         ( self.rows == m.rows ) &&
         ( self.cols == m.cols ) &&
@@ -31,7 +25,7 @@ impl Matrix {
 
     // only valid for 4x4 matrices - should add assert
     pub fn mult(&self, other: &Matrix) -> Self {
-        let mut m = Matrix::new(4,4);
+        let mut m = matrix(4,4);
         for row in 0..4 {
             for col in 0..4 {
                 let val = self.get(row,0) * other.get(0,col) +
@@ -71,7 +65,7 @@ impl Matrix {
     }
 
     pub fn transpose(&self) -> Self {
-        let mut m = Matrix::new(4,4);
+        let mut m = matrix(4,4);
         for row in 0..4 {
             for col in 0..4 {
                 let val = self.get(col,row);
@@ -100,7 +94,7 @@ impl Matrix {
     }
 
     pub fn submatrix(&self, row: usize, col: usize) -> Self {
-        let mut m = Matrix::new(self.rows-1, self.cols-1);
+        let mut m = matrix(self.rows-1, self.cols-1);
 
         let mut current_row = 0;
         for r in 0..self.rows {
@@ -145,7 +139,7 @@ impl Matrix {
 
         let size = self.cols;
         let det = self.determinant();
-        let mut result = Matrix::new(size, size);
+        let mut result = matrix(size, size);
 
         for row in 0..size {
             for col in 0..size {
@@ -157,6 +151,12 @@ impl Matrix {
         }
         result
     }
+}
+
+pub fn matrix(cols: usize, rows: usize) -> Matrix {
+    Matrix { cols,
+             rows,
+             m: vec![vec![0.0;cols];rows] }
 }
 
 pub fn identity() -> Matrix {
@@ -188,7 +188,7 @@ pub fn v_equals(a: &Vec<Vec<f64>>, b: &Vec<Vec<f64>>) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::matrix::{Matrix, identity};
+    use crate::matrix::{Matrix, matrix, identity};
     use crate::tuple::{Tuple, point};
 
     #[test]
@@ -198,8 +198,8 @@ mod tests {
     }
 
     #[test]
-    fn matrix_created_with_new(){
-        let m = Matrix::new(4,4);
+    fn matrix_created_with_matrix(){
+        let m = matrix(4,4);
         assert!( m.equals( Matrix { cols: 4,
                                     rows: 4,
                                     m: vec![vec![0.0;4];4] }));
