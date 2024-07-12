@@ -1,12 +1,13 @@
 use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
+use crate::tuple::{Tuple, vector};
 
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
 //   Sphere.material          OK
 //   Sphere.set_transform()   OK
-//   Sphere.intersect()
-//   Sphere.normal_at()
+//   Sphere.normal_at()       OK
+//   Sphere.intersect()       
 //   sphere()
 
 #[derive(Debug,PartialEq)]
@@ -31,6 +32,10 @@ impl Shape for Base {
     fn get_material(&self) -> &Material {
         &self.material
     }
+
+    fn normal_at(&self, _world_point: Tuple) -> Tuple {
+        vector(0.0, 0.0, 0.0)
+    }
 }
 
 pub trait Shape {
@@ -38,6 +43,7 @@ pub trait Shape {
     fn get_transform(&self) -> &Matrix;
     fn set_material(&mut self, m: Material);
     fn get_material(&self) -> &Material;
+    fn normal_at(&self, world_point: Tuple) -> Tuple;
 }
 
 pub fn shape() -> Base {

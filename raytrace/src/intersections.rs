@@ -2,6 +2,7 @@ use crate::equals::EPSILON;
 use crate::spheres::Sphere;
 use crate::rays::Ray;
 use crate::tuple::Tuple;
+use crate::shapes::Shape;
 
 #[derive(Debug,Copy,Clone)]
 pub struct Intersection<'a> {

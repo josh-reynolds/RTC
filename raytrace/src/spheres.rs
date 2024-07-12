@@ -33,14 +33,6 @@ impl<'a> Sphere {
             return Intersection::intersections(&[i1,i2]);
         }
     }
-
-    pub fn normal_at(&self, world_point: Tuple) -> Tuple {
-        let object_point = self.get_transform().inverse().multup( &world_point );
-        let object_normal = object_point - origin();
-        let mut world_normal = self.get_transform().inverse().transpose().multup( &object_normal );
-        world_normal.w = 0.0;
-        world_normal.normal()
-    }
 }
 
 impl Shape for Sphere {
@@ -60,7 +52,16 @@ impl Shape for Sphere {
         &self.supe.material
     }
 
-
+    fn normal_at(&self, world_point: Tuple) -> Tuple {
+        let object_point = self.get_transform().inverse().multup( &world_point );
+        let object_normal = object_point - origin();
+        let mut world_normal = self.get_transform()
+                                   .inverse()
+                                   .transpose()
+                                   .multup( &object_normal );
+        world_normal.w = 0.0;
+        world_normal.normal()
+    }
 }
 
 pub fn sphere() -> Sphere {
