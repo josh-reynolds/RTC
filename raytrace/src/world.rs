@@ -6,7 +6,7 @@ use crate::color::{Color, color};
 use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::{Ray, ray};
-use crate::intersections::{Intersection, Computations, prepare_computations};
+use crate::intersections::{Intersection, hit, Computations, prepare_computations};
 
 #[derive(Debug)]
 pub struct World {
@@ -71,7 +71,7 @@ impl World {
 
         let mut result = false;
         if xs.len() > 0 {
-            let h = Intersection::hit(xs);
+            let h = hit(xs);
             let t = match h {
                 Some(hit) => hit.t,
                 None => distance + 1.0

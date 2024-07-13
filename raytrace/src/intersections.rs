@@ -20,20 +20,6 @@ impl<'a> Intersection<'a> {
         v
     }
 
-    pub fn hit( xs: Vec<Intersection<'a>> ) -> Option<Intersection<'_>> {
-        let mut lowest = xs[0];
-        for i in xs {
-            if (lowest.t < 0.0 || i.t < lowest.t ) && i.t >= 0.0 {
-                lowest = i;
-            }
-        }
-        if lowest.t < 0.0 {
-            None
-        } else {
-            Some( lowest )
-        }
-    }
-
     pub fn equals( &self, other: Intersection<'_> ) -> bool {
         self.t == other.t && 
             self.object as *const _ == other.object as *const _
@@ -42,6 +28,20 @@ impl<'a> Intersection<'a> {
 
 pub fn intersection<'a>(t: f64, object: &'a Sphere) -> Intersection<'a> {
     Intersection { t, object }
+}
+
+pub fn hit<'a>( xs: Vec<Intersection<'a>> ) -> Option<Intersection<'a>> {
+    let mut lowest = xs[0];
+    for i in xs {
+        if (lowest.t < 0.0 || i.t < lowest.t ) && i.t >= 0.0 {
+            lowest = i;
+        }
+    }
+    if lowest.t < 0.0 {
+        None
+    } else {
+        Some( lowest )
+    }
 }
 
 #[derive(Debug)]
@@ -77,7 +77,7 @@ pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
 
 #[cfg(test)]
 mod tests {
-    use crate::intersections::{Intersection, intersection, prepare_computations};
+    use crate::intersections::{Intersection, intersection, hit, prepare_computations};
     use crate::spheres::sphere;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
@@ -111,7 +111,7 @@ mod tests {
         let i2 = intersection(2.0, &s);
 
         let xs = Intersection::intersections(&[i2, i1]);
-        let i = Intersection::hit(xs);
+        let i = hit(xs);
 
         assert!( i.expect("positive intersections available").equals( i1 ));
     }
@@ -123,7 +123,7 @@ mod tests {
         let i2 = intersection(1.0, &s);
 
         let xs = Intersection::intersections(&[i1, i2]);
-        let i = Intersection::hit(xs);
+        let i = hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i2 ));
     }
@@ -135,7 +135,7 @@ mod tests {
         let i2 = intersection(-1.0, &s);
 
         let xs = Intersection::intersections(&[i2, i1]);
-        let i = Intersection::hit(xs);
+        let i = hit(xs);
 
         assert!( match i {
                    Some(_x) => false,
@@ -152,7 +152,7 @@ mod tests {
         let i4 = intersection( 2.0, &s);
 
         let xs = Intersection::intersections(&[i1, i2, i3, i4]);
-        let i = Intersection::hit(xs);
+        let i = hit(xs);
 
         assert!( i.expect("positive intersection available").equals( i4 ));
     }
