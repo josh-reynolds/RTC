@@ -11,7 +11,7 @@ use crate::intersections::{Intersection, hit, Computations, prepare_computations
 #[derive(Debug)]
 pub struct World {
     pub light: Option<Light>,
-    pub objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
+    objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
 }                               // parent class and how to implement properly
 
 impl World {
@@ -82,6 +82,10 @@ impl World {
         }
 
         result
+    }
+
+    pub fn add(&mut self, obj: Sphere){
+        self.objects.push( obj );
     }
 }
 
@@ -280,8 +284,8 @@ mod tests {
         let s1 = sphere();
         let mut s2 = sphere();
         s2.set_transform( translation(0.0, 0.0, 10.0) );
-        w.objects.push(s1);
-        w.objects.push(s2);
+        w.add(s1);
+        w.add(s2);
         
         let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
