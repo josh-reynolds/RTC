@@ -1,13 +1,15 @@
 use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
 use crate::tuple::{Tuple, vector};
+use crate::rays::Ray;
+use crate::intersections::Intersection;
 
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
 //   Sphere.material          OK
 //   Sphere.set_transform()   OK
 //   Sphere.normal_at()       OK
-//   Sphere.intersect()       
+//   Sphere.intersect()       OK
 //   sphere()
 
 #[derive(Debug,PartialEq)]
@@ -17,33 +19,39 @@ pub struct Base {
 }
 
 impl Shape for Base {
-    fn set_transform(&mut self, t: Matrix){
-        self.transform = t
-    }
-
     fn get_transform(&self) -> &Matrix {
         &self.transform
     }
 
-    fn set_material(&mut self, m: Material){
-        self.material = m
+    fn set_transform(&mut self, t: Matrix){
+        self.transform = t
     }
 
     fn get_material(&self) -> &Material {
         &self.material
     }
 
+    fn set_material(&mut self, m: Material){
+        self.material = m
+    }
+
+
     fn normal_at(&self, _world_point: Tuple) -> Tuple {
         vector(0.0, 0.0, 0.0)
+    }
+
+    fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
+        vec!()
     }
 }
 
 pub trait Shape {
-    fn set_transform(&mut self, t: Matrix);
     fn get_transform(&self) -> &Matrix;
-    fn set_material(&mut self, m: Material);
+    fn set_transform(&mut self, t: Matrix);
     fn get_material(&self) -> &Material;
+    fn set_material(&mut self, m: Material);
     fn normal_at(&self, world_point: Tuple) -> Tuple;
+    fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
 }
 
 pub fn shape() -> Base {

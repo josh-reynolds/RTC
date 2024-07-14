@@ -10,8 +10,35 @@ pub struct Sphere {
     supe: Base,
 }
 
-impl<'a> Sphere {
-    pub fn intersect(&'a self, r: Ray) -> Vec<Intersection<'a>> {
+impl Shape for Sphere {
+    fn get_transform(&self) -> &Matrix {
+        &self.supe.get_transform()
+    }
+
+    fn set_transform(&mut self, t: Matrix){
+        self.supe.set_transform( t );
+    }
+
+    fn get_material(&self) -> &Material {
+        &self.supe.get_material()
+    }
+
+    fn set_material(&mut self, m: Material){
+        self.supe.set_material( m );
+    }
+
+    fn normal_at(&self, world_point: Tuple) -> Tuple {
+        let object_point = self.get_transform().inverse().multup( &world_point );
+        let object_normal = object_point - origin();
+        let mut world_normal = self.get_transform()
+                                   .inverse()
+                                   .transpose()
+                                   .multup( &object_normal );
+        world_normal.w = 0.0;
+        world_normal.normal()
+    }
+
+    fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
         let r2 = r.transform( self.get_transform().inverse() );
         let sphere_to_ray = r2.origin - origin();
 
@@ -32,35 +59,6 @@ impl<'a> Sphere {
 
             return intersections(&[i1,i2]);
         }
-    }
-}
-
-impl Shape for Sphere {
-    fn set_transform(&mut self, t: Matrix){
-        self.supe.set_transform( t );
-    }
-
-    fn get_transform(&self) -> &Matrix {
-        &self.supe.get_transform()
-    }
-
-    fn set_material(&mut self, m: Material){
-        self.supe.set_material( m );
-    }
-
-    fn get_material(&self) -> &Material {
-        &self.supe.get_material()
-    }
-
-    fn normal_at(&self, world_point: Tuple) -> Tuple {
-        let object_point = self.get_transform().inverse().multup( &world_point );
-        let object_normal = object_point - origin();
-        let mut world_normal = self.get_transform()
-                                   .inverse()
-                                   .transpose()
-                                   .multup( &object_normal );
-        world_normal.w = 0.0;
-        world_normal.normal()
     }
 }
 
