@@ -113,4 +113,16 @@ mod tests {
         assert!( s.saved_ray.unwrap().origin.equals( point(0.0, 0.0, -2.5) ));
         assert!( s.saved_ray.unwrap().direction.equals( vector(0.0, 0.0, 1.0) ));
     }
+
+    #[test]
+    fn intersecting_translated_shape_with_ray(){
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let mut s = shape();
+        s.set_transform( translation(5.0, 0.0, 0.0) );
+
+        let _xs = s.intersect( r );
+
+        assert!( s.saved_ray.unwrap().origin.equals( point(-5.0, 0.0, -5.0) ));
+        assert!( s.saved_ray.unwrap().direction.equals( vector(0.0, 0.0, 1.0) ));
+    }
 }
