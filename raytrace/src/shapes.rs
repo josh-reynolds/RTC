@@ -16,6 +16,7 @@ use crate::intersections::Intersection;
 pub struct Base {
     transform: Matrix,
     material: Material,
+    saved_ray: Option<Ray>,
 }
 
 impl Shape for Base {
@@ -35,12 +36,12 @@ impl Shape for Base {
         self.material = m
     }
 
-
     fn normal_at(&self, _world_point: Tuple) -> Tuple {
         vector(0.0, 0.0, 0.0)
     }
 
     fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
+        //self.saved_ray = Some(r);
         vec!()
     }
 }
@@ -58,6 +59,7 @@ pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
+        saved_ray: None,
     }
 }
 
@@ -65,8 +67,10 @@ pub fn shape() -> Base {
 mod tests {
     use crate::matrix::identity;
     use crate::shapes::{Shape, shape};
-    use crate::transform::translation;
+    use crate::transform::{scaling, translation};
     use crate::materials::material;
+    use crate::rays::ray;
+    use crate::tuple::{point, vector};
 
     #[test]
     fn shape_default_transformation(){
@@ -96,5 +100,17 @@ mod tests {
         s.material = m;
         assert!( !s.get_material().equals( material() ));
         assert!( s.get_material().equals( m ));
+    }
+
+    #[test]
+    fn intersecting_scaled_shape_with_ray(){
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let mut s = shape();
+        s.set_transform( scaling(2.0, 2.0, 2.0) );
+
+        let _xs = s.intersect( r );
+
+        assert!( s.saved_ray.unwrap().origin.equals( point(0.0, 0.0, -2.5) ));
+        assert!( s.saved_ray.unwrap().direction.equals( vector(0.0, 0.0, 1.0) ));
     }
 }

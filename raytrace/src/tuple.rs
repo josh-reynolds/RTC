@@ -1,7 +1,7 @@
 use crate::equals;
 use std::ops::{Add, Sub, Mul, Div, Neg};
 
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug,Clone,Copy,PartialEq)]
 pub struct Tuple {
     pub x: f64,
     pub y: f64,
