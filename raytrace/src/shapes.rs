@@ -16,7 +16,6 @@ use crate::intersections::Intersection;
 pub struct Base {
     transform: Matrix,
     material: Material,
-    saved_ray: Option<Ray>,
 }
 
 impl Shape for Base {
@@ -41,7 +40,6 @@ impl Shape for Base {
     }
 
     fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
-        //self.saved_ray = Some(r);
         vec!()
     }
 }
@@ -53,13 +51,20 @@ pub trait Shape {
     fn set_material(&mut self, m: Material);
     fn normal_at(&self, world_point: Tuple) -> Tuple;
     fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
+
+    // text implements this as a mutable field on Shape,
+    // but this causes mutability contagion across the entire
+    // project - trying this out as a query method instead
+    // will probably want to figure out a better name here
+    fn saved_ray(&self, r: Ray) -> Ray {
+        r.transform( self.get_transform().inverse() )
+    }
 }
 
 pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
-        saved_ray: None,
     }
 }
 
@@ -108,10 +113,10 @@ mod tests {
         let mut s = shape();
         s.set_transform( scaling(2.0, 2.0, 2.0) );
 
-        let _xs = s.intersect( r );
-
-        assert!( s.saved_ray.unwrap().origin.equals( point(0.0, 0.0, -2.5) ));
-        assert!( s.saved_ray.unwrap().direction.equals( vector(0.0, 0.0, 1.0) ));
+        let local_ray = s.saved_ray(r);
+        
+        assert!( local_ray.origin.equals( point(0.0, 0.0, -2.5) ));
+        assert!( local_ray.direction.equals( vector(0.0, 0.0, 0.5) ));
     }
 
     #[test]
@@ -120,9 +125,9 @@ mod tests {
         let mut s = shape();
         s.set_transform( translation(5.0, 0.0, 0.0) );
 
-        let _xs = s.intersect( r );
+        let local_ray = s.saved_ray(r);
 
-        assert!( s.saved_ray.unwrap().origin.equals( point(-5.0, 0.0, -5.0) ));
-        assert!( s.saved_ray.unwrap().direction.equals( vector(0.0, 0.0, 1.0) ));
+        assert!( local_ray.origin.equals( point(-5.0, 0.0, -5.0) ));
+        assert!( local_ray.direction.equals( vector(0.0, 0.0, 1.0) ));
     }
 }
