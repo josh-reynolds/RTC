@@ -35,8 +35,8 @@ impl Shape for Base {
         self.material = m
     }
 
-    fn normal_at(&self, _world_point: Tuple) -> Tuple {
-        vector(0.0, 0.0, 0.0)
+    fn local_normal_at(&self, object_point: Tuple) -> Tuple {
+        vector(object_point.x, object_point.y, object_point.z)
     }
 
     fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
@@ -49,7 +49,18 @@ pub trait Shape {
     fn set_transform(&mut self, t: Matrix);
     fn get_material(&self) -> &Material;
     fn set_material(&mut self, m: Material);
-    fn normal_at(&self, world_point: Tuple) -> Tuple;
+    
+    fn normal_at(&self, world_point: Tuple) -> Tuple {
+        let object_point = self.get_transform().inverse().multup( &world_point );
+        let local_normal = self.local_normal_at( object_point );
+        let mut world_normal = self.get_transform()
+                                   .inverse()
+                                   .transpose()
+                                   .multup( &local_normal );
+        world_normal.w = 0.0;
+        world_normal.normal()
+    }
+    fn local_normal_at(&self, object_point: Tuple) -> Tuple;
     fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
 
     // text implements this as a mutable field on Shape,
@@ -59,6 +70,8 @@ pub trait Shape {
     fn saved_ray(&self, r: Ray) -> Ray {
         r.transform( self.get_transform().inverse() )
     }
+
+    
 }
 
 pub fn shape() -> Base {
@@ -72,10 +85,11 @@ pub fn shape() -> Base {
 mod tests {
     use crate::matrix::identity;
     use crate::shapes::{Shape, shape};
-    use crate::transform::{scaling, translation};
+    use crate::transform::{scaling, translation, rotation_z};
     use crate::materials::material;
     use crate::rays::ray;
     use crate::tuple::{point, vector};
+    use std::f64::consts::{PI, SQRT_2};
 
     #[test]
     fn shape_default_transformation(){
@@ -129,5 +143,23 @@ mod tests {
 
         assert!( local_ray.origin.equals( point(-5.0, 0.0, -5.0) ));
         assert!( local_ray.direction.equals( vector(0.0, 0.0, 1.0) ));
+    }
+
+    #[test]
+    fn computing_normal_on_translated_shape(){
+        let mut s = shape();
+        s.set_transform( translation(0.0, 1.0, 0.0) );
+
+        let n = s.normal_at( point(0.0, 1.70711, -0.70711) );
+        assert!( n.equals( vector(0.0, 0.70711, -0.70711) ));
+    }
+
+    #[test]
+    fn computing_normal_on_transformed_shape(){
+        let mut s = shape();
+        s.set_transform( scaling(1.0, 0.5, 1.0).mult( &rotation_z( PI / 5.0 ) ));
+
+        let n = s.normal_at( point(0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0) );
+        assert!( n.equals( vector(0.0, 0.97014, -0.24254) ));
     }
 }

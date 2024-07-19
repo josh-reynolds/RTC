@@ -27,15 +27,8 @@ impl Shape for Sphere {
         self.supe.set_material( m );
     }
 
-    fn normal_at(&self, world_point: Tuple) -> Tuple {
-        let object_point = self.get_transform().inverse().multup( &world_point );
-        let object_normal = object_point - origin();
-        let mut world_normal = self.get_transform()
-                                   .inverse()
-                                   .transpose()
-                                   .multup( &object_normal );
-        world_normal.w = 0.0;
-        world_normal.normal()
+    fn local_normal_at(&self, object_point: Tuple) -> Tuple {
+        object_point - origin()
     }
 
     fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
