@@ -37,6 +37,7 @@ impl Shape for Plane {
         vec!()
     }
 }
+
 pub fn plane() -> Plane {
     Plane { 
         supe: shape(),
@@ -48,6 +49,7 @@ mod tests {
     use crate::tuple::{point, vector};
     use crate::planes::plane;
     use crate::shapes::Shape;
+    use crate::rays::ray;
 
     #[test]
     fn normal_of_plane_is_constant_everywhere(){
@@ -59,5 +61,25 @@ mod tests {
         assert!( n1 == vector(0.0, 1.0, 0.0) );
         assert!( n2 == vector(0.0, 1.0, 0.0) );
         assert!( n3 == vector(0.0, 1.0, 0.0) );
+    }
+
+    #[test]
+    fn intersect_with_ray_parallel_to_plane(){
+        let p = plane();
+        let r = ray( point(0.0, 10.0, 0.0), vector(0.0, 0.0, 1.0) );
+
+        let xs = p.intersect( r );
+
+        assert!( xs.len() == 0 );
+    }
+
+    #[test]
+    fn intersect_with_coplanar_ray(){
+        let p = plane();
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+
+        let xs = p.intersect( r );
+
+        assert!( xs.len() == 0 );
     }
 }
