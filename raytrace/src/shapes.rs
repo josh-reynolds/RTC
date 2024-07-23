@@ -3,6 +3,7 @@ use crate::materials::{Material, material};
 use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::intersections::Intersection;
+use core::fmt::Debug;
 
 // Current concrete 'class' is Sphere:
 //   Sphere.transform         OK
@@ -72,6 +73,12 @@ pub trait Shape {
     }
 
     
+}
+
+impl Debug for dyn Shape {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Shape")
+    }
 }
 
 pub fn shape() -> Base {

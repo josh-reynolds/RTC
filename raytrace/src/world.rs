@@ -12,10 +12,12 @@ use crate::intersections::{Intersection, hit, Computations, prepare_computations
 pub struct World {
     pub light: Option<Light>,
     objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
-}                           // parent class and how to implement properly
+                            // parent class and how to implement properly
                             // we have a Shape trait, but traits are not 
                             // allowed in field types:
                             //    rustc --explain E0562
+    things: Vec<Box<dyn Shape>>,
+}
 
 impl World {
     pub fn intersect(&self, r: Ray) -> Vec<Intersection> {
@@ -95,7 +97,9 @@ impl World {
 pub fn world() -> World {
     World { 
         light: None,
-        objects: vec![] }
+        objects: vec![],
+        things: vec![],
+    }
 }
 
 pub fn default_world() -> World {
@@ -112,7 +116,9 @@ pub fn default_world() -> World {
 
     World { 
         light: Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0))),
-        objects: vec![s1,s2] }
+        objects: vec![s1,s2],
+        things: vec![],
+    }
 }
 
 #[cfg(test)]
