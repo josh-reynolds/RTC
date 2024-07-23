@@ -5,7 +5,7 @@ use crate::matrix::Matrix;
 use crate::shapes::{Base, Shape, shape};
 use crate::materials::Material;
 
-#[derive(Debug,PartialEq)]
+#[derive(Debug,PartialEq,Clone)]
 pub struct Sphere {
     supe: Base,
 }

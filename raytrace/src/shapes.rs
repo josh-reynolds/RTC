@@ -13,7 +13,7 @@ use core::fmt::Debug;
 //   Sphere.intersect()       OK
 //   sphere()
 
-#[derive(Debug,PartialEq)]
+#[derive(Debug,PartialEq,Clone)]
 pub struct Base {
     transform: Matrix,
     material: Material,

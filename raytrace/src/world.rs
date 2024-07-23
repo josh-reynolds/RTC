@@ -90,7 +90,8 @@ impl World {
     }
 
     pub fn add(&mut self, obj: Sphere){
-        self.objects.push( obj );
+        self.objects.push( obj.clone() );
+        self.things.push(Box::new( obj ));
     }
 }
 
