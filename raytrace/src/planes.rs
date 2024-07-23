@@ -5,6 +5,7 @@ use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
+use crate::equals::EPSILON;
 
 #[derive(Debug,PartialEq)]
 pub struct Plane {
@@ -33,7 +34,10 @@ impl Shape for Plane {
     }
 
     fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
-        let _r2 = self.saved_ray(r);
+        let r2 = self.saved_ray(r);
+        if r2.direction.y.abs() < EPSILON {
+            return vec!();
+        } 
         vec!()
     }
 }
