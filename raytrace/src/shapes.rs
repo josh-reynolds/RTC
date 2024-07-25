@@ -81,6 +81,12 @@ impl Debug for dyn Shape {
     }
 }
 
+impl PartialEq for dyn Shape {
+    fn eq(&self, _: &(dyn Shape + 'static)) -> bool {
+        true   // need to research right way to compare trait objects
+    }
+}
+
 pub fn shape() -> Base {
     Base {
         transform: identity(),

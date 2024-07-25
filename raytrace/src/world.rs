@@ -93,6 +93,10 @@ impl World {
         self.objects.push( obj.clone() );
         self.things.push(Box::new( obj ));
     }
+
+    pub fn add_thing(&mut self, thing: Box<dyn Shape>){
+        self.things.push( thing );
+    }
 }
 
 pub fn world() -> World {
@@ -135,6 +139,7 @@ mod tests {
     use crate::materials::material;
     use crate::rays::ray;
     use crate::intersections::{intersection, prepare_computations};
+    use crate::planes::plane;
 
     #[test]
     fn creating_a_world(){
@@ -317,5 +322,14 @@ mod tests {
 
         assert!( comps.over_point.z < -EPSILON/2.0 );
         assert!( comps.point.z > comps.over_point.z );
+    }
+
+    #[test]
+    fn can_add_plane_to_things(){
+        let mut w = world();
+        let p = plane();
+        w.add_thing( Box::new(p) );
+
+        //assert!( w.things.contains( &(p as Box<dyn Shape>) ));
     }
 }
