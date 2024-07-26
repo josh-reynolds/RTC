@@ -340,4 +340,20 @@ mod tests {
         assert!( *trans == identity() );
         assert!( *mat == material() );
     }
+
+    #[test]
+    fn can_add_sphere_to_things(){
+        let mut w = world();
+        let s = sphere();
+        w.add_thing( Box::new(s) );
+
+        assert!( w.things.len() == 1 );
+
+        let t = &w.things[0];  // later we merge collections and will have getter...
+        let trans = t.get_transform();
+        let mat = t.get_material();
+
+        assert!( *trans == identity() );
+        assert!( *mat == material() );
+    }
 }
