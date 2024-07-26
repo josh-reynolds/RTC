@@ -140,6 +140,7 @@ mod tests {
     use crate::rays::ray;
     use crate::intersections::{intersection, prepare_computations};
     use crate::planes::plane;
+    use crate::matrix::identity;
 
     #[test]
     fn creating_a_world(){
@@ -330,6 +331,13 @@ mod tests {
         let p = plane();
         w.add_thing( Box::new(p) );
 
-        //assert!( w.things.contains( &(p as Box<dyn Shape>) ));
+        assert!( w.things.len() == 1 );
+
+        let t = &w.things[0];  // later we merge collections and will have getter...
+        let trans = t.get_transform();
+        let mat = t.get_material();
+
+        assert!( *trans == identity() );
+        assert!( *mat == material() );
     }
 }
