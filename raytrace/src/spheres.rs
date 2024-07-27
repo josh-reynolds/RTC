@@ -44,16 +44,19 @@ impl Shape for Sphere {
         if discriminant < 0.0 {
             return vec!();
         } else {
+            let binding = Box::new(self.clone()) as Box<dyn Shape>;
+
             let t1 = (-b - discriminant.sqrt()) / ( 2.0 * a);
-            let i1 = intersection(t1, &self);
+            let i1 = intersection(t1, &binding);
 
             let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
-            let i2 = intersection(t2, &self);
+            let i2 = intersection(t2, &binding);
 
             return intersections(&[i1,i2]);
         }
     }
 }
+
 
 pub fn sphere() -> Sphere {
     Sphere { 
@@ -138,10 +141,12 @@ mod tests {
         let s = sphere();
         let r = ray( point( 0.0, 0.0, -5.0 ),
                      vector( 0.0, 0.0, 1.0 ));
-        let xs = s.intersect(r);
+        let clone = s.clone();
+        let xs = clone.intersect(r);
+        let binding = Box::new(s) as Box<dyn Shape>;
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0].object as *const _, &s as *const _);
-        assert_eq!( xs[1].object as *const _, &s as *const _);
+        assert_eq!( xs[0].object, &binding);
+        assert_eq!( xs[1].object, &binding);
     }
 
     #[test]

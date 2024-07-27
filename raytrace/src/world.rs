@@ -11,12 +11,17 @@ use crate::intersections::{Intersection, hit, Computations, prepare_computations
 #[derive(Debug)]
 pub struct World {
     pub light: Option<Light>,
-    objects: Vec<Sphere>,   // only have spheres, need to think about 'Object' 
-                            // parent class and how to implement properly
-                            // we have a Shape trait, but traits are not 
-                            // allowed in field types:
-                            //    rustc --explain E0562
+    objects: Vec<Box<dyn Shape>>,
     things: Vec<Box<dyn Shape>>,
+
+    // changing collection to <Box<dyn Shape>>, the following break:
+    //   OK  world 93 : self.objects.push( obj.clone() )
+    //   OK  world 124: objects: vec![s1,s2]
+    //   OK  world 175: assert!( w.objects.contains( &s1 ))
+    //   OK  world 177: assert!( w.objects.contains( &s2 ))
+    //   OK  world 199: let i = intersection(4.0, &s)
+    //   OK  world 212: let i = intersection(0.5, &s)
+    //   OK  world 308: let i = intersection(9.0, &s)
 }
 
 impl World {
@@ -90,7 +95,7 @@ impl World {
     }
 
     pub fn add(&mut self, obj: Sphere){
-        self.objects.push( obj.clone() );
+        self.objects.push( Box::new( obj.clone() ));
         self.things.push(Box::new( obj ));
     }
 
@@ -121,7 +126,7 @@ pub fn default_world() -> World {
 
     World { 
         light: Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0))),
-        objects: vec![s1,s2],
+        objects: vec![Box::new(s1), Box::new(s2)],
         things: vec![],
     }
 }
@@ -173,8 +178,8 @@ mod tests {
                    Some(lgt) => lgt.equals( l ),
                    None => false, 
         });
-        assert!( w.objects.contains( &s1 ));
-        assert!( w.objects.contains( &s2 ));
+        assert!( w.objects.contains( &(Box::new(s1) as Box<dyn Shape>) ));
+        assert!( w.objects.contains( &(Box::new(s2) as Box<dyn Shape>) ));
     }
 
     #[test]
@@ -318,7 +323,8 @@ mod tests {
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
         let mut s = sphere();
         s.set_transform( translation(0.0, 0.0, 1.0) );
-        let i = intersection(5.0, &s);
+        let binding = Box::new(s) as Box<dyn Shape>;
+        let i = intersection(5.0, &binding);
         let comps = prepare_computations(i, r);
 
         assert!( comps.over_point.z < -EPSILON/2.0 );
