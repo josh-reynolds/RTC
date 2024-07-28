@@ -1,5 +1,5 @@
 use crate::lights::{Light, point_light};
-use crate::spheres::{Sphere,sphere};
+use crate::spheres::sphere;
 use crate::shapes::Shape;
 use crate::tuple::{Tuple, point};
 use crate::color::{Color, color};
@@ -12,16 +12,6 @@ use crate::intersections::{Intersection, hit, Computations, prepare_computations
 pub struct World {
     pub light: Option<Light>,
     objects: Vec<Box<dyn Shape>>,
-    things: Vec<Box<dyn Shape>>,
-
-    // changing collection to <Box<dyn Shape>>, the following break:
-    //   OK  world 93 : self.objects.push( obj.clone() )
-    //   OK  world 124: objects: vec![s1,s2]
-    //   OK  world 175: assert!( w.objects.contains( &s1 ))
-    //   OK  world 177: assert!( w.objects.contains( &s2 ))
-    //   OK  world 199: let i = intersection(4.0, &s)
-    //   OK  world 212: let i = intersection(0.5, &s)
-    //   OK  world 308: let i = intersection(9.0, &s)
 }
 
 impl World {
@@ -94,13 +84,8 @@ impl World {
         result
     }
 
-    pub fn add(&mut self, obj: Sphere){
-        self.objects.push( Box::new( obj.clone() ));
-        self.things.push(Box::new( obj ));
-    }
-
-    pub fn add_thing(&mut self, thing: Box<dyn Shape>){
-        self.things.push( thing );
+    pub fn add(&mut self, obj: Box<dyn Shape>){
+        self.objects.push( obj );
     }
 }
 
@@ -108,7 +93,6 @@ pub fn world() -> World {
     World { 
         light: None,
         objects: vec![],
-        things: vec![],
     }
 }
 
@@ -127,7 +111,6 @@ pub fn default_world() -> World {
     World { 
         light: Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0))),
         objects: vec![Box::new(s1), Box::new(s2)],
-        things: vec![],
     }
 }
 
@@ -305,8 +288,8 @@ mod tests {
         let s1 = sphere();
         let mut s2 = sphere();
         s2.set_transform( translation(0.0, 0.0, 10.0) );
-        w.add(s1);
-        w.add(s2);
+        w.add(Box::new(s1));
+        w.add(Box::new(s2));
         
         let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
@@ -332,30 +315,14 @@ mod tests {
     }
 
     #[test]
-    fn can_add_plane_to_things(){
+    fn can_add_plane_to_objects(){
         let mut w = world();
         let p = plane();
-        w.add_thing( Box::new(p) );
+        w.add( Box::new(p) );
 
-        assert!( w.things.len() == 1 );
+        assert!( w.objects.len() == 1 );
 
-        let t = &w.things[0];  // later we merge collections and will have getter...
-        let trans = t.get_transform();
-        let mat = t.get_material();
-
-        assert!( *trans == identity() );
-        assert!( *mat == material() );
-    }
-
-    #[test]
-    fn can_add_sphere_to_things(){
-        let mut w = world();
-        let s = sphere();
-        w.add_thing( Box::new(s) );
-
-        assert!( w.things.len() == 1 );
-
-        let t = &w.things[0];  // later we merge collections and will have getter...
+        let t = &w.objects[0];  
         let trans = t.get_transform();
         let mat = t.get_material();
 
