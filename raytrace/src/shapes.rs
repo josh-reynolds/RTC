@@ -17,6 +17,7 @@ use core::fmt::Debug;
 pub struct Base {
     transform: Matrix,
     material: Material,
+    index: usize,
 }
 
 impl Shape for Base {
@@ -93,6 +94,7 @@ pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
+        index: 0,
     }
 }
 
