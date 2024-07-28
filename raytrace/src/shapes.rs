@@ -40,7 +40,8 @@ impl Shape for Base {
         vector(object_point.x, object_point.y, object_point.z)
     }
 
-    fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
+    //fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
+    fn intersect(&self, _r: Ray) -> Vec<Intersection> {
         vec!()
     }
 }
@@ -62,7 +63,8 @@ pub trait Shape {
         world_normal.normal()
     }
     fn local_normal_at(&self, object_point: Tuple) -> Tuple;
-    fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
+    //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
+    fn intersect(&self, r: Ray) -> Vec<Intersection>; 
 
     // text implements this as a mutable field on Shape,
     // but this causes mutability contagion across the entire

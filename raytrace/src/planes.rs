@@ -33,7 +33,8 @@ impl Shape for Plane {
         vector(0.0, 1.0, 0.0)
     }
 
-    fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
+    //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
+    fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         if r2.direction.y.abs() < EPSILON {
             return vec!();

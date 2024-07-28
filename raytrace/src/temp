@@ -1,0 +1,48 @@
+camera.render(world)
+  world.color_at( camera.ray_for_pixel(x,y) )
+    world.intersect( ray )           // collect all intersections from all objects
+      object.intersect( ray )        // return pair of intersections or none
+        Shape.intersect( ray ) 
+          intersection(t*, object ref)
+    prepare_computations(hit, ray)   // return Computation struct
+    world.shade_hit( comps )
+      world.is_shadowed( comps.over_point )
+      materials::lighting(comps.object.get_material(), world.light, comps.point, comps.eyev, comps.normalv, shadowed)           // return color at hit
+
+-------
+attempting to replace Sphere collection in World with Shape trait object collection
+-------
+Basics are in place, but one compiler error remains.
+In sphere.intersect(), the pointer to the sphere object (self) 
+is owned by the current function and can't be returned
+
+Some ideas to fix:
+- move the reference up (not sure if we get lifetime issues then)
+    no good, even if it is passed in as a parameter we get the same
+    'owned by current function' issue
+
+- switch from Boxes to integer indices into World.objects
+
+Going to play around with both ideas. Hopefully we won't have to overhaul
+too much other stuff...
+
+OK, the first one was a wash, no change to the root error after a bunch
+of modifications. The second may be promising - it has the nice side-effect
+of removing all the lifetime annotations introduced by the references stashed
+in Intersection.
+
+Down to just one last issue before it compiles: line 68 in intersections needs
+to compute the normal at the hit. Under the pointer model we can get the Shape
+directly, no problem - but if we shift to integer indices, we need the world for
+lookup, and currently Computation doesn't have that. Not sure I like the coupling
+this would introduce, going to see.
+
+(Also, FWIW, haven't put any solid thought into making sure the indices are
+accurate - i.e. reliably track back to the object - am using fake values in tests.
+Will need some review, and likely better tests. We may also want to persist the 
+value in the objects themselves as a convenient way to pass them around...)
+
+The last full commit was large and broken - don't want to repeat that bad behaviour,
+so I think this avenue should go into a side branch until I get it working. Challenge
+is I have a goal to check in to GitHub every day, let's see how that all works out.
+    

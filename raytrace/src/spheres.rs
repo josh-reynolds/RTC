@@ -31,7 +31,8 @@ impl Shape for Sphere {
         object_point - origin()
     }
 
-    fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
+    //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
+    fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         let sphere_to_ray = r2.origin - origin();
 
@@ -44,13 +45,15 @@ impl Shape for Sphere {
         if discriminant < 0.0 {
             return vec!();
         } else {
-            let binding = Box::new(self.clone()) as Box<dyn Shape>;
+            //let binding = Box::new(self.clone()) as Box<dyn Shape>;
 
             let t1 = (-b - discriminant.sqrt()) / ( 2.0 * a);
-            let i1 = intersection(t1, &binding);
+            //let i1 = intersection(t1, &binding);
+            let i1 = intersection(t1, 1);
 
             let t2 = (-b + discriminant.sqrt()) / ( 2.0 * a);
-            let i2 = intersection(t2, &binding);
+            //let i2 = intersection(t2, &binding);
+            let i2 = intersection(t2, 2);
 
             return intersections(&[i1,i2]);
         }
@@ -145,8 +148,10 @@ mod tests {
         let xs = clone.intersect(r);
         let binding = Box::new(s) as Box<dyn Shape>;
         assert_eq!( xs.len(), 2 );
-        assert_eq!( xs[0].object, &binding);
-        assert_eq!( xs[1].object, &binding);
+        //assert_eq!( xs[0].object, &binding);
+        //assert_eq!( xs[1].object, &binding);
+        assert_eq!( xs[0].object, 0);
+        assert_eq!( xs[1].object, 1);
     }
 
     #[test]

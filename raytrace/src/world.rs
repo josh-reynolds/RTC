@@ -48,7 +48,8 @@ impl World {
 
         let shadowed = self.is_shadowed(comps.over_point);
 
-        lighting(*comps.object.get_material(), &l, comps.point, comps.eyev, comps.normalv, shadowed)
+        //lighting(*comps.object.get_material(), &l, comps.point, comps.eyev, comps.normalv, shadowed)
+        lighting(*(self.objects[comps.object].get_material()), &l, comps.point, comps.eyev, comps.normalv, shadowed)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -201,7 +202,8 @@ mod tests {
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
         let s = &w.objects[0];
-        let i = intersection(4.0, &s);
+        //let i = intersection(4.0, &s);
+        let i = intersection(4.0, 1);
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
@@ -214,7 +216,8 @@ mod tests {
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
         let s = &w.objects[1];
-        let i = intersection(0.5, &s);
+        //let i = intersection(0.5, &s);
+        let i = intersection(0.5, 1);
         let comps = prepare_computations(i, r);
 
         let c = w.shade_hit(comps);
@@ -310,7 +313,8 @@ mod tests {
         
         let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
-        let i = intersection(9.0, &s);   // I think the book has a typo here
+        //let i = intersection(9.0, &s);   // I think the book has a typo here
+        let i = intersection(9.0, 1);   // I think the book has a typo here
         let comps = prepare_computations(i, r);
         
         let c = w.shade_hit(comps);
@@ -324,7 +328,8 @@ mod tests {
         let mut s = sphere();
         s.set_transform( translation(0.0, 0.0, 1.0) );
         let binding = Box::new(s) as Box<dyn Shape>;
-        let i = intersection(5.0, &binding);
+        //let i = intersection(5.0, &binding);
+        let i = intersection(5.0, 1);
         let comps = prepare_computations(i, r);
 
         assert!( comps.over_point.z < -EPSILON/2.0 );
