@@ -37,6 +37,14 @@ directly, no problem - but if we shift to integer indices, we need the world for
 lookup, and currently Computation doesn't have that. Not sure I like the coupling
 this would introduce, going to see.
 
+What if prepare_computations was in world? Rather than passing in self as a
+parameter, the method would have direct access. Maybe take this on as the next
+refactoring, let's see if we can get the naive/kludgy approach to work first...
+
+Got that working - well compiling at any rate. Several tests are failing, but 
+that's probably a good thing. Get those working and we may have a reasonable
+solution (with some ugliness to streamline later).
+
 (Also, FWIW, haven't put any solid thought into making sure the indices are
 accurate - i.e. reliably track back to the object - am using fake values in tests.
 Will need some review, and likely better tests. We may also want to persist the 

@@ -41,6 +41,10 @@ impl Shape for Plane {
         } 
         vec!()
     }
+
+    fn set_index(&mut self, index: usize){
+        self.supe.set_index(index);
+    }
 }
 
 pub fn plane() -> Plane {

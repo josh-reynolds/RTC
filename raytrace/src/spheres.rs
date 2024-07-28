@@ -58,6 +58,10 @@ impl Shape for Sphere {
             return intersections(&[i1,i2]);
         }
     }
+
+    fn set_index(&mut self, index: usize){
+        self.supe.set_index(index);
+    }
 }
 
 
@@ -146,7 +150,7 @@ mod tests {
                      vector( 0.0, 0.0, 1.0 ));
         let clone = s.clone();
         let xs = clone.intersect(r);
-        let binding = Box::new(s) as Box<dyn Shape>;
+        //let binding = Box::new(s) as Box<dyn Shape>;
         assert_eq!( xs.len(), 2 );
         //assert_eq!( xs[0].object, &binding);
         //assert_eq!( xs[1].object, &binding);

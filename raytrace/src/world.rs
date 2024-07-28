@@ -57,7 +57,7 @@ impl World {
                     }
                 }
             }
-            let comps = prepare_computations(hit, r);
+            let comps = prepare_computations(hit, r, self);
             self.shade_hit(comps)
         }
     }
@@ -85,8 +85,14 @@ impl World {
         result
     }
 
-    pub fn add(&mut self, obj: Box<dyn Shape>){
+    pub fn add(&mut self, mut obj: Box<dyn Shape>){
+        let current = self.objects.len();
+        obj.set_index( current as usize );
         self.objects.push( obj );
+    }
+
+    pub fn get_object(&self, index: usize) -> &Box<dyn Shape> {
+        &(self.objects[index])
     }
 }
 
@@ -184,10 +190,10 @@ mod tests {
     fn shading_an_intersection(){
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
-        let s = &w.objects[0];
+        //let s = &w.objects[0];
         //let i = intersection(4.0, &s);
         let i = intersection(4.0, 1);
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &w);
 
         let c = w.shade_hit(comps);
         assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
@@ -198,10 +204,10 @@ mod tests {
         let mut w = default_world();
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
-        let s = &w.objects[1];
+        //let s = &w.objects[1];
         //let i = intersection(0.5, &s);
         let i = intersection(0.5, 1);
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &w);
 
         let c = w.shade_hit(comps);
         assert!( c.equals( color(0.90498, 0.90498, 0.90498) ));
@@ -294,11 +300,11 @@ mod tests {
         w.add(Box::new(s1));
         w.add(Box::new(s2));
         
-        let s = &w.objects[1];
+        //let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
         //let i = intersection(9.0, &s);   // I think the book has a typo here
         let i = intersection(9.0, 1);   // I think the book has a typo here
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &w);
         
         let c = w.shade_hit(comps);
 
@@ -308,12 +314,12 @@ mod tests {
     #[test]
     fn hit_should_offset_point(){
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
-        let mut s = sphere();
-        s.set_transform( translation(0.0, 0.0, 1.0) );
-        let binding = Box::new(s) as Box<dyn Shape>;
+        //let mut s = sphere();
+        //s.set_transform( translation(0.0, 0.0, 1.0) );
+        //let binding = Box::new(s) as Box<dyn Shape>;
         //let i = intersection(5.0, &binding);
         let i = intersection(5.0, 1);
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &default_world());
 
         assert!( comps.over_point.z < -EPSILON/2.0 );
         assert!( comps.point.z > comps.over_point.z );

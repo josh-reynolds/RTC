@@ -45,6 +45,10 @@ impl Shape for Base {
     fn intersect(&self, _r: Ray) -> Vec<Intersection> {
         vec!()
     }
+
+    fn set_index(&mut self, index: usize){
+        self.index = index;
+    }
 }
 
 pub trait Shape {
@@ -66,6 +70,7 @@ pub trait Shape {
     fn local_normal_at(&self, object_point: Tuple) -> Tuple;
     //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
     fn intersect(&self, r: Ray) -> Vec<Intersection>; 
+    fn set_index(&mut self, index: usize);
 
     // text implements this as a mutable field on Shape,
     // but this causes mutability contagion across the entire

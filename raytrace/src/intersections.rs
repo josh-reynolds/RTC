@@ -1,6 +1,7 @@
 use crate::equals::EPSILON;
 use crate::rays::Ray;
 use crate::tuple::Tuple;
+use crate::world::World;
 //use crate::shapes::Shape;
 
 #[derive(Debug,Copy,Clone)]
@@ -63,9 +64,10 @@ pub struct Computations {
     pub inside: bool,
 }
 
-pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
+pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computations {
     let mut ins = false;
-    let mut n = i.object.normal_at( r.position(i.t) );
+    //let mut n = i.object.normal_at( r.position(i.t) );
+    let mut n = w.get_object(i.object).normal_at( r.position(i.t) );
     if n.dot( &-r.direction ) < 0.0 {
         n = -n;
         ins = true;
@@ -87,15 +89,16 @@ pub fn prepare_computations( i: Intersection, r: Ray ) -> Computations {
 mod tests {
     use crate::intersections::{intersection, intersections, 
                                hit, prepare_computations};
-    use crate::spheres::sphere;
+    //use crate::spheres::sphere;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
     use crate::equals::equals;
+    use crate::world::default_world;
     //use crate::shapes::Shape;
 
     #[test]
     fn intersection_creates_intersections(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i = intersection(3.5, &binding);
         let i = intersection(3.5, 1);
@@ -107,7 +110,7 @@ mod tests {
 
     #[test]
     fn aggregating_intersections(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i1 = intersection(1.0, &binding);
         //let i2 = intersection(2.0, &binding);
@@ -122,7 +125,7 @@ mod tests {
 
     #[test]
     fn hit_with_all_positive_intersections(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i1 = intersection(1.0, &binding);
         //let i2 = intersection(2.0, &binding);
@@ -137,7 +140,7 @@ mod tests {
 
     #[test]
     fn hit_when_some_intersections_are_negative(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i1 = intersection(-1.0, &binding);
         //let i2 = intersection(1.0, &binding);
@@ -152,7 +155,7 @@ mod tests {
 
     #[test]
     fn hit_when_all_intersections_are_negative(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i1 = intersection(-2.0, &binding);
         //let i2 = intersection(-1.0, &binding);
@@ -170,7 +173,7 @@ mod tests {
 
     #[test]
     fn hit_always_lowest_nonnegative_intersection(){
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i1 = intersection( 5.0, &binding);
         //let i2 = intersection( 7.0, &binding);
@@ -190,12 +193,12 @@ mod tests {
     #[test]
     fn precomputing_intersection_state(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s.clone()) as Box<dyn Shape>;
         //let i = intersection(4.0, &binding);
         let i = intersection(4.0, 1);
 
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &default_world());
 
         assert!( equals(comps.t, i.t) );
         //assert_eq!( comps.object, &(Box::new(s) as Box<dyn Shape>));
@@ -208,12 +211,12 @@ mod tests {
     #[test]
     fn intersection_on_outside(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i = intersection(4.0, &binding);
         let i = intersection(4.0, 1);
 
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &default_world());
 
         assert!( comps.inside == false );
     }
@@ -221,12 +224,12 @@ mod tests {
     #[test]
     fn intersection_on_inside(){
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
-        let s = sphere();
+        //let s = sphere();
         //let binding = Box::new(s) as Box<dyn Shape>;
         //let i = intersection(1.0, &binding);
         let i = intersection(1.0, 1);
 
-        let comps = prepare_computations(i, r);
+        let comps = prepare_computations(i, r, &default_world());
 
         assert!( comps.point.equals( point(0.0, 0.0, 1.0) ));
         assert!( comps.eyev.equals( vector(0.0, 0.0, -1.0) ));
