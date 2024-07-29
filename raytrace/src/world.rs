@@ -189,7 +189,7 @@ mod tests {
     fn shading_an_intersection(){
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
-        let i = intersection(4.0, 1);
+        let i = intersection(4.0, 0);
         let comps = prepare_computations(i, r, &w);
 
         let c = w.shade_hit(comps);
