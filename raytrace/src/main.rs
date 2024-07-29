@@ -78,7 +78,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("world_shadowed_render.ppm");
+    let _ = image.to_ppm("index_refactored.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);

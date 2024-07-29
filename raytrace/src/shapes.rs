@@ -5,14 +5,6 @@ use crate::rays::Ray;
 use crate::intersections::Intersection;
 use core::fmt::Debug;
 
-// Current concrete 'class' is Sphere:
-//   Sphere.transform         OK
-//   Sphere.material          OK
-//   Sphere.set_transform()   OK
-//   Sphere.normal_at()       OK
-//   Sphere.intersect()       OK
-//   sphere()
-
 #[derive(Debug,PartialEq,Clone)]
 pub struct Base {
     transform: Matrix,
@@ -41,9 +33,12 @@ impl Shape for Base {
         vector(object_point.x, object_point.y, object_point.z)
     }
 
-    //fn intersect<'a>(&'a self, _r: Ray) -> Vec<Intersection<'a>> {
     fn intersect(&self, _r: Ray) -> Vec<Intersection> {
         vec!()
+    }
+
+    fn get_index(&self) -> usize {
+        self.index
     }
 
     fn set_index(&mut self, index: usize){
@@ -68,8 +63,8 @@ pub trait Shape {
         world_normal.normal()
     }
     fn local_normal_at(&self, object_point: Tuple) -> Tuple;
-    //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>>; 
     fn intersect(&self, r: Ray) -> Vec<Intersection>; 
+    fn get_index(&self) -> usize;
     fn set_index(&mut self, index: usize);
 
     // text implements this as a mutable field on Shape,
@@ -79,8 +74,6 @@ pub trait Shape {
     fn saved_ray(&self, r: Ray) -> Ray {
         r.transform( self.get_transform().inverse() )
     }
-
-    
 }
 
 impl Debug for dyn Shape {

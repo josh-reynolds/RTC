@@ -38,7 +38,6 @@ impl World {
 
         let shadowed = self.is_shadowed(comps.over_point);
 
-        //lighting(*comps.object.get_material(), &l, comps.point, comps.eyev, comps.normalv, shadowed)
         lighting(*(self.objects[comps.object].get_material()), &l, comps.point, comps.eyev, comps.normalv, shadowed)
     }
 
@@ -190,8 +189,6 @@ mod tests {
     fn shading_an_intersection(){
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
-        //let s = &w.objects[0];
-        //let i = intersection(4.0, &s);
         let i = intersection(4.0, 1);
         let comps = prepare_computations(i, r, &w);
 
@@ -204,8 +201,6 @@ mod tests {
         let mut w = default_world();
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
-        //let s = &w.objects[1];
-        //let i = intersection(0.5, &s);
         let i = intersection(0.5, 1);
         let comps = prepare_computations(i, r, &w);
 
@@ -300,9 +295,7 @@ mod tests {
         w.add(Box::new(s1));
         w.add(Box::new(s2));
         
-        //let s = &w.objects[1];
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
-        //let i = intersection(9.0, &s);   // I think the book has a typo here
         let i = intersection(9.0, 1);   // I think the book has a typo here
         let comps = prepare_computations(i, r, &w);
         
@@ -314,10 +307,6 @@ mod tests {
     #[test]
     fn hit_should_offset_point(){
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
-        //let mut s = sphere();
-        //s.set_transform( translation(0.0, 0.0, 1.0) );
-        //let binding = Box::new(s) as Box<dyn Shape>;
-        //let i = intersection(5.0, &binding);
         let i = intersection(5.0, 1);
         let comps = prepare_computations(i, r, &default_world());
 

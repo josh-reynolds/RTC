@@ -54,3 +54,18 @@ The last full commit was large and broken - don't want to repeat that bad behavi
 so I think this avenue should go into a side branch until I get it working. Challenge
 is I have a goal to check in to GitHub every day, let's see how that all works out.
     
+For fun, now that this is compiling again I tried a render. It does actually produce
+output, though the result is all grayscale - just basic objects and shadowing, but
+no material colors or specular highlights. Obviously the indices aren't being
+plumbed through properly yet...
+
+OK! I had hard-coded index values in Sphere.intersect while I was plumbing through
+the value. Added some accessors to Shape and inserted those into the method, and
+it's working now! I got a colored render. Still two failing tests and I'm not
+confident about the indexes yet. They were implemented without much in the way of
+additional test coverage, so I will be going back and scrubbing. And some of the 
+implementation here is ugly as mentioned above. Still, this is progress.
+
+I commented out a bunch of code along the way as insurance. I think I'll clean that
+up and merge this back to main. Then we can get the failing tests ship-shape and do
+some additional scrubbing.

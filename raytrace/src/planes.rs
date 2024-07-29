@@ -1,5 +1,4 @@
 use crate::shapes::{Base, Shape, shape};
-//use crate::intersections::{Intersection, intersection, intersections};
 use crate::intersections::Intersection;
 use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
@@ -33,13 +32,16 @@ impl Shape for Plane {
         vector(0.0, 1.0, 0.0)
     }
 
-    //fn intersect<'a>(&'a self, r: Ray) -> Vec<Intersection<'a>> {
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         if r2.direction.y.abs() < EPSILON {
             return vec!();
         } 
         vec!()
+    }
+
+    fn get_index(&self) -> usize {
+        self.supe.get_index()
     }
 
     fn set_index(&mut self, index: usize){
