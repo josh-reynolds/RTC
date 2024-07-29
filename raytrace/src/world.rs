@@ -306,10 +306,15 @@ mod tests {
 
     #[test]
     fn hit_should_offset_point(){
-        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
-        let i = intersection(5.0, 1);
-        let comps = prepare_computations(i, r, &default_world());
+        let mut w = world();
+        let mut s = sphere();
+        s.set_transform( translation(0.0, 0.0, 1.0) );
+        w.add(Box::new(s));
 
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+        let i = intersection(5.0, 0);
+        let comps = prepare_computations(i, r, &w);
+    
         assert!( comps.over_point.z < -EPSILON/2.0 );
         assert!( comps.point.z > comps.over_point.z );
     }
