@@ -334,4 +334,38 @@ mod tests {
         assert!( *trans == identity() );
         assert!( *mat == material() );
     }
+
+    #[test]
+    fn adding_object_sets_index(){
+        let mut w = world();
+
+        let mut s1 = sphere();
+        let mut m1 = material();
+        m1.color = color(1.0, 0.0, 0.0);
+        s1.set_material(m1);
+        w.add(Box::new(s1));
+
+        let mut p = plane();
+        let mut m2 = material();
+        m2.color = color(0.0, 1.0, 0.0);
+        p.set_material(m2);
+        w.add(Box::new(p));
+        
+        let mut s2 = sphere();
+        let mut m3 = material();
+        m3.color = color(0.0, 0.0, 1.0);
+        s2.set_material(m3);
+        w.add(Box::new(s2));
+
+        assert!( w.objects.len() == 3 );
+        
+        assert!( w.get_object(0).get_index() == 0 );
+        assert!( w.get_object(0).get_material().color.equals( color(1.0, 0.0, 0.0) ));
+
+        assert!( w.get_object(1).get_index() == 1 );
+        assert!( w.get_object(1).get_material().color.equals( color(0.0, 1.0, 0.0) ));
+                 
+        assert!( w.get_object(2).get_index() == 2 );
+        assert!( w.get_object(2).get_material().color.equals( color(0.0, 0.0, 1.0) ));
+    }
 }
