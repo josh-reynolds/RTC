@@ -1,5 +1,5 @@
 use crate::shapes::{Base, Shape, shape};
-use crate::intersections::Intersection;
+use crate::intersections::{Intersection, intersection, intersections};
 use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
@@ -37,7 +37,11 @@ impl Shape for Plane {
         if r2.direction.y.abs() < EPSILON {
             return vec!();
         } 
-        vec!()
+
+        let t = -r2.origin.y / r2.direction.y;
+        let i = intersection(t, self.get_index());
+
+        return intersections(&[i]);
     }
 
     fn get_index(&self) -> usize {
@@ -92,5 +96,29 @@ mod tests {
         let xs = p.intersect( r );
 
         assert!( xs.len() == 0 );
+    }
+
+    #[test]
+    fn ray_intersecting_plane_from_above(){
+        let p = plane();
+        let r = ray( point(0.0, 1.0, 0.0), vector(0.0, -1.0, 0.0) );
+
+        let xs = p.intersect( r );
+
+        assert!( xs.len() == 1 );
+        assert!( xs[0].t == 1.0 );
+        assert!( xs[0].object == 0 );
+    }
+
+    #[test]
+    fn ray_intersecting_plane_from_below(){
+        let p = plane();
+        let r = ray( point(0.0, -1.0, 0.0), vector(0.0, 1.0, 0.0) );
+
+        let xs = p.intersect( r );
+
+        assert!( xs.len() == 1 );
+        assert!( xs[0].t == 1.0 );
+        assert!( xs[0].object == 0 );
     }
 }
