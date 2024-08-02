@@ -10,7 +10,7 @@ use crate::tuple::Tuple;
 // neither of the previous work as-is, need to 
 // research alternatives (like once_cell)
 
-#[derive(Debug)]
+#[derive(Debug,Clone,Copy,PartialEq)]
 pub struct Pattern {
     pub a: Color,
     pub b: Color,

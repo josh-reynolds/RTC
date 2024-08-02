@@ -2,6 +2,7 @@ use crate::color::{Color, color};
 use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
+use crate::patterns::Pattern;
 
 #[derive(Debug,Clone,Copy,PartialEq)]
 pub struct Material {
@@ -10,6 +11,7 @@ pub struct Material {
     pub diffuse: f64,      // typical range 0-1
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
+    pub pattern: Option<Pattern>,
 }
 
 impl Material {
@@ -18,7 +20,8 @@ impl Material {
         equals(self.ambient, m.ambient) &&
         equals(self.diffuse, m.diffuse) &&
         equals(self.specular, m.specular) &&
-        equals(self.shininess, m.shininess) 
+        equals(self.shininess, m.shininess) &&
+        self.pattern == m.pattern
     }
 }
 
@@ -29,6 +32,7 @@ pub fn material() -> Material {
         diffuse: 0.9,
         specular: 0.9,
         shininess: 200.0,
+        pattern: None,
     }
 }
 
@@ -39,7 +43,11 @@ pub fn lighting(m: Material,
                 normal: Tuple, 
                 in_shadow: bool
   ) -> Color {
-    let effective_color = m.color * l.intensity;
+    let true_color = match m.pattern {
+        Some(pattern) => pattern.stripe_at(p),
+        None          => m.color,
+    };
+    let effective_color = true_color * l.intensity;
     let lightv = (l.position - p).normal();
     let ambient = effective_color * m.ambient;
 
@@ -74,6 +82,7 @@ mod tests {
     use crate::tuple::{origin, point, vector};
     use crate::lights::point_light;
     use std::f64::consts::SQRT_2;
+    use crate::patterns::stripe_pattern;
 
     #[test]
     fn default_material(){
@@ -163,5 +172,25 @@ mod tests {
 
         let result = lighting(m, &light, p, eyev, normalv, in_shadow);
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
+    }
+
+    #[test]
+    fn lighting_with_pattern_applied(){
+        let mut m = material();
+        m.pattern = Some(stripe_pattern(color(1.0, 1.0, 1.0), color(0.0, 0.0, 0.0)));
+        m.ambient = 1.0;
+        m.diffuse = 0.0;
+        m.specular = 0.0;
+
+        let eyev = vector(0.0, 0.0, -1.0);
+        let normalv = vector(0.0, 0.0, -1.0);
+        let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
+        
+        let c1 = lighting(m, &light, point(0.9, 0.0, 0.0), eyev, normalv, false);
+        let c2 = lighting(m, &light, point(1.1, 0.0, 0.0), eyev, normalv, false);
+
+        assert_eq!(c1, color(1.0, 1.0, 1.0));
+        assert_eq!(c2, color(0.0, 0.0, 0.0));
+        
     }
 }
