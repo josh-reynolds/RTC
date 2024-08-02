@@ -14,6 +14,7 @@ pub mod world;
 pub mod camera;
 pub mod shapes;
 pub mod planes;
+pub mod patterns;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
