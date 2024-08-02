@@ -9,6 +9,7 @@ use raytrace::shapes::Shape;
 use raytrace::color::color;
 use raytrace::materials::material;
 use raytrace::lights::point_light;
+use raytrace::patterns::stripe_pattern;
 use std::time::Instant;
 
 fn main() {
@@ -19,12 +20,14 @@ fn main() {
 
     let mut floor = plane();
     let mut mat = material();
+    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
 
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
     let mut mat = material();
+    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -34,6 +37,7 @@ fn main() {
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
+    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
     mat.color = color(0.1, 0.9, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -43,6 +47,7 @@ fn main() {
     left.set_transform( translation(-1.5, 0.33, -0.75).mult(
                           &scaling(0.33, 0.33, 0.33)));
     let mut mat = material();
+    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
     mat.color = color(0.1, 0.1, 0.9);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -61,7 +66,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("planes.ppm");
+    let _ = image.to_ppm("patterns.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
