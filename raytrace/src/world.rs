@@ -38,7 +38,7 @@ impl World {
 
         let shadowed = self.is_shadowed(comps.over_point);
 
-        lighting(*(self.objects[comps.object].get_material()), &l, comps.point, comps.eyev, comps.normalv, shadowed)
+        lighting(self.objects[comps.object].get_material().clone(), &l, comps.point, comps.eyev, comps.normalv, shadowed)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {

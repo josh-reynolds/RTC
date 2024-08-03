@@ -265,7 +265,7 @@ mod tests {
         let mut s = sphere();
         let mut m = material();
         m.ambient = 1.0;
-        s.set_material( m );
+        s.set_material( m.clone() );
         assert!( !s.get_material().equals( material() ));
         assert!( s.get_material().equals( m ));
     }

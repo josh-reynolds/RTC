@@ -4,7 +4,7 @@ use crate::lights::Light;
 use crate::tuple::Tuple;
 use crate::patterns::Pattern;
 
-#[derive(Debug,Clone,Copy,PartialEq)]
+#[derive(Debug,Clone,PartialEq)]
 pub struct Material {
     pub color: Color,
     pub ambient: f64,      // typical range 0-1
@@ -186,8 +186,8 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
         
-        let c1 = lighting(m, &light, point(0.9, 0.0, 0.0), eyev, normalv, false);
-        let c2 = lighting(m, &light, point(1.1, 0.0, 0.0), eyev, normalv, false);
+        let c1 = lighting(m.clone(), &light, point(0.9, 0.0, 0.0), eyev, normalv, false);
+        let c2 = lighting(m.clone(), &light, point(1.1, 0.0, 0.0), eyev, normalv, false);
 
         assert_eq!(c1, color(1.0, 1.0, 1.0));
         assert_eq!(c2, color(0.0, 0.0, 0.0));
