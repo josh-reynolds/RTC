@@ -1,7 +1,7 @@
 use raytrace::tuple::{point, vector};
 use std::f64::consts::PI;
 use raytrace::camera::camera;
-use raytrace::transform::{view_transform, translation, scaling};
+use raytrace::transform::{view_transform, translation, scaling, rotation_z, rotation_y};
 use raytrace::world::world;
 use raytrace::spheres::sphere;
 use raytrace::planes::plane;
@@ -20,14 +20,18 @@ fn main() {
 
     let mut floor = plane();
     let mut mat = material();
-    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
+    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    pat.set_pattern_transform( rotation_y( PI / 3.0 ) );
+    mat.pattern = Some(pat);
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
 
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
     let mut mat = material();
-    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
+    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    pat.set_pattern_transform( rotation_z( PI / 5.0 ) );
+    mat.pattern = Some(pat);
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -37,7 +41,9 @@ fn main() {
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
-    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
+    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    pat.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
+    mat.pattern = Some(pat);
     mat.color = color(0.1, 0.9, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -66,7 +72,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("patterns.ppm");
+    let _ = image.to_ppm("pattern_space.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
