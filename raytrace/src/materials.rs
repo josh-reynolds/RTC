@@ -3,6 +3,7 @@ use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
 use crate::patterns::Pattern;
+use crate::shapes::Shape;
 
 #[derive(Debug,Clone,PartialEq)]
 pub struct Material {
@@ -37,6 +38,7 @@ pub fn material() -> Material {
 }
 
 pub fn lighting(m: Material, 
+                o: &Box<dyn Shape>,
                 l: &Light, 
                 p: Tuple, 
                 eye: Tuple, 
@@ -83,6 +85,8 @@ mod tests {
     use crate::lights::point_light;
     use std::f64::consts::SQRT_2;
     use crate::patterns::stripe_pattern;
+    use crate::spheres::sphere;
+    use crate::shapes::Shape;
 
     #[test]
     fn default_material(){
@@ -104,7 +108,13 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv, false);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, 
+                              eyev, 
+                              normalv, 
+                              false);
         assert!( result.equals(color(1.9, 1.9, 1.9)) );
     }
 
@@ -117,7 +127,13 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv, false);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, 
+                              eyev, 
+                              normalv, 
+                              false);
         assert!( result.equals(color(1.0, 1.0, 1.0)) );
     }
 
@@ -130,7 +146,12 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv, false);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, eyev, 
+                              normalv, 
+                              false);
         assert!( result.equals(color(0.7364, 0.7364, 0.7364)) );
     }
 
@@ -143,7 +164,13 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 10.0, -10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv, false);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, 
+                              eyev, 
+                              normalv, 
+                              false);
         assert!( result.equals(color(1.6364, 1.6364, 1.6364)) );
     }
 
@@ -156,7 +183,13 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, 10.0), color(1.0, 1.0, 1.0));
 
-        let result = lighting(m, &light, p, eyev, normalv, false);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, 
+                              eyev, 
+                              normalv, 
+                              false);
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 
@@ -170,7 +203,13 @@ mod tests {
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
         let in_shadow = true;
 
-        let result = lighting(m, &light, p, eyev, normalv, in_shadow);
+        let result = lighting(m, 
+                              &(Box::new(sphere()) as Box<dyn Shape>),
+                              &light, 
+                              p, 
+                              eyev, 
+                              normalv, 
+                              in_shadow);
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 
@@ -186,11 +225,22 @@ mod tests {
         let normalv = vector(0.0, 0.0, -1.0);
         let light = point_light(point(0.0, 0.0, -10.0), color(1.0, 1.0, 1.0));
         
-        let c1 = lighting(m.clone(), &light, point(0.9, 0.0, 0.0), eyev, normalv, false);
-        let c2 = lighting(m.clone(), &light, point(1.1, 0.0, 0.0), eyev, normalv, false);
+        let c1 = lighting(m.clone(), 
+                          &(Box::new(sphere()) as Box<dyn Shape>),
+                          &light, 
+                          point(0.9, 0.0, 0.0), 
+                          eyev, 
+                          normalv, 
+                          false);
+        let c2 = lighting(m.clone(), 
+                          &(Box::new(sphere()) as Box<dyn Shape>),
+                          &light, 
+                          point(1.1, 0.0, 0.0), 
+                          eyev, 
+                          normalv, 
+                          false);
 
         assert_eq!(c1, color(1.0, 1.0, 1.0));
         assert_eq!(c2, color(0.0, 0.0, 0.0));
-        
     }
 }
