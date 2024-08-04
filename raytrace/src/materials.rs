@@ -46,7 +46,7 @@ pub fn lighting(m: Material,
                 in_shadow: bool
   ) -> Color {
     let true_color = match m.pattern {
-        Some(pattern) => pattern.stripe_at(p),
+        Some(pattern) => pattern.stripe_at_object(o, p),
         None          => m.color,
     };
     let effective_color = true_color * l.intensity;

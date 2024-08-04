@@ -28,7 +28,7 @@ impl Pattern {
         }
     }
 
-    pub fn stripe_at_object(&self, o: Box<dyn Shape>, p: Tuple) -> Color {
+    pub fn stripe_at_object(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
         let object_point = o.get_transform().inverse().multup( &p );
         let pattern_point = self.transform.inverse().multup( &object_point );
         self.stripe_at( pattern_point )
@@ -106,7 +106,7 @@ mod tests {
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
 
-        let c = p.stripe_at_object( object, point(1.5, 0.0, 0.0) );
+        let c = p.stripe_at_object( &object, point(1.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
@@ -120,7 +120,7 @@ mod tests {
         let mut p = stripe_pattern(white, black);
         p.set_pattern_transform( scaling(2.0, 2.0, 2.0) );
 
-        let c = p.stripe_at_object( object, point(1.5, 0.0, 0.0) );
+        let c = p.stripe_at_object( &object, point(1.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
@@ -135,7 +135,7 @@ mod tests {
         let mut p = stripe_pattern(white, black);
         p.set_pattern_transform( translation(0.5, 0.0, 0.0) );
 
-        let c = p.stripe_at_object( object, point(2.5, 0.0, 0.0) );
+        let c = p.stripe_at_object( &object, point(2.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
