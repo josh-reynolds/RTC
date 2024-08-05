@@ -13,13 +13,13 @@ use crate::matrix::{Matrix, identity};
 // research alternatives (like once_cell)
 
 #[derive(Debug,Clone,PartialEq)]
-pub struct Pattern {
+pub struct Stripes {
     pub a: Color,
     pub b: Color,
     pub transform: Matrix,
 }
 
-impl Pattern {
+impl Stripes {
     pub fn stripe_at(&self, p: Tuple) -> Color {
         if p.x.floor() as i64 % 2 == 0 {
             self.a
@@ -30,17 +30,21 @@ impl Pattern {
 
     pub fn stripe_at_object(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
         let object_point = o.get_transform().inverse().multup( &p );
-        let pattern_point = self.transform.inverse().multup( &object_point );
+        let pattern_point = self.get_pattern_transform().inverse().multup( &object_point );
         self.stripe_at( pattern_point )
     }
-
+    
     pub fn set_pattern_transform(&mut self, t: Matrix){
         self.transform = t
     }
+
+    pub fn get_pattern_transform(&self) -> Matrix {
+        self.transform.clone()
+    }
 }
 
-pub fn stripe_pattern(a: Color, b: Color) -> Pattern {
-    Pattern { a, b, transform: identity() }
+pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
+    Stripes { a, b, transform: identity() }
 }
 
 #[cfg(test)]

@@ -63,7 +63,6 @@ impl Shape for Sphere {
     }
 }
 
-
 pub fn sphere() -> Sphere {
     Sphere { 
         supe: shape(),

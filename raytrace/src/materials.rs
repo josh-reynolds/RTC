@@ -2,7 +2,7 @@ use crate::color::{Color, color};
 use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
-use crate::patterns::Pattern;
+use crate::patterns::Stripes;
 use crate::shapes::Shape;
 
 #[derive(Debug,Clone,PartialEq)]
@@ -12,7 +12,7 @@ pub struct Material {
     pub diffuse: f64,      // typical range 0-1
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
-    pub pattern: Option<Pattern>,
+    pub pattern: Option<Stripes>,
 }
 
 impl Material {
