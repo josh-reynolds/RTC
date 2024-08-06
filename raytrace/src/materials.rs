@@ -2,7 +2,7 @@ use crate::color::{Color, color};
 use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
-use crate::patterns::Stripes;
+use crate::patterns::{Pattern, Stripes};
 use crate::shapes::Shape;
 
 #[derive(Debug,Clone,PartialEq)]

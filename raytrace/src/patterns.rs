@@ -19,8 +19,8 @@ pub struct Stripes {
     pub transform: Matrix,
 }
 
-impl Stripes {
-    pub fn stripe_at(&self, p: Tuple) -> Color {
+impl Pattern for Stripes {
+    fn stripe_at(&self, p: Tuple) -> Color {
         if p.x.floor() as i64 % 2 == 0 {
             self.a
         } else {
@@ -28,19 +28,26 @@ impl Stripes {
         }
     }
 
-    pub fn stripe_at_object(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
+    fn set_pattern_transform(&mut self, t: Matrix){
+        self.transform = t
+    }
+
+    fn get_pattern_transform(&self) -> Matrix {
+        self.transform.clone()
+    }
+}
+
+pub trait Pattern {
+    fn stripe_at(&self, p: Tuple) -> Color;
+
+    fn stripe_at_object(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
         let object_point = o.get_transform().inverse().multup( &p );
         let pattern_point = self.get_pattern_transform().inverse().multup( &object_point );
         self.stripe_at( pattern_point )
     }
     
-    pub fn set_pattern_transform(&mut self, t: Matrix){
-        self.transform = t
-    }
-
-    pub fn get_pattern_transform(&self) -> Matrix {
-        self.transform.clone()
-    }
+    fn set_pattern_transform(&mut self, t: Matrix);
+    fn get_pattern_transform(&self) -> Matrix;
 }
 
 pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
@@ -49,7 +56,7 @@ pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
 
 #[cfg(test)]
 mod tests {
-    use crate::patterns::stripe_pattern;
+    use crate::patterns::{Pattern, stripe_pattern};
     use crate::color::color;
     use crate::tuple::point;
     use crate::spheres::sphere;
