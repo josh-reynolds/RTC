@@ -13,19 +13,15 @@ use crate::matrix::{Matrix, identity};
 // research alternatives (like once_cell)
 
 #[derive(Debug,Clone,PartialEq)]
-pub struct Stripes {
-    pub a: Color,
-    pub b: Color,
-    pub transform: Matrix,
+struct Base {
+    a: Color,
+    b: Color,
+    transform: Matrix,
 }
 
-impl Pattern for Stripes {
-    fn stripe_at(&self, p: Tuple) -> Color {
-        if p.x.floor() as i64 % 2 == 0 {
-            self.a
-        } else {
-            self.b
-        }
+impl Pattern for Base {
+    fn stripe_at(&self, _p: Tuple) -> Color {
+        self.a
     }
 
     fn set_pattern_transform(&mut self, t: Matrix){
@@ -35,6 +31,53 @@ impl Pattern for Stripes {
     fn get_pattern_transform(&self) -> Matrix {
         self.transform.clone()
     }
+
+    fn get_color_a(&self) -> Color {
+        self.a
+    }
+
+    fn get_color_b(&self) -> Color {
+        self.b
+    }
+}
+
+fn pattern(a: Color, b: Color) -> Base {
+    Base { a, b, transform: identity() }
+}
+
+#[derive(Debug,Clone,PartialEq)]
+pub struct Stripes {
+    supe: Base,
+}
+
+impl Pattern for Stripes {
+    fn stripe_at(&self, p: Tuple) -> Color {
+        if p.x.floor() as i64 % 2 == 0 {
+            self.supe.a
+        } else {
+            self.supe.b
+        }
+    }
+
+    fn set_pattern_transform(&mut self, t: Matrix){
+        self.supe.set_pattern_transform( t )
+    }
+
+    fn get_pattern_transform(&self) -> Matrix {
+        self.supe.get_pattern_transform()
+    }
+
+    fn get_color_a(&self) -> Color {
+        self.supe.get_color_a()
+    }
+
+    fn get_color_b(&self) -> Color {
+        self.supe.get_color_b()
+    }
+}
+
+pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
+    Stripes { supe: pattern(a, b) }
 }
 
 pub trait Pattern {
@@ -48,10 +91,9 @@ pub trait Pattern {
     
     fn set_pattern_transform(&mut self, t: Matrix);
     fn get_pattern_transform(&self) -> Matrix;
-}
 
-pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
-    Stripes { a, b, transform: identity() }
+    fn get_color_a(&self) -> Color;
+    fn get_color_b(&self) -> Color;
 }
 
 #[cfg(test)]
@@ -68,8 +110,8 @@ mod tests {
         let white = color(1.0, 1.0, 1.0);
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
-        assert_eq!(p.a, white);
-        assert_eq!(p.b, black);
+        assert_eq!(p.get_color_a(), white);
+        assert_eq!(p.get_color_b(), black);
     }
 
     #[test]
