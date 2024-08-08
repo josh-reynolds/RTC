@@ -131,7 +131,7 @@ mod tests {
         let mut s = shape();
         let mut m = material();
         m.ambient = 1.0;
-        s.material = m.clone();
+        s.set_material( m.clone() );
         assert!( !s.get_material().equals( material() ));
         assert!( s.get_material().equals( m ));
     }

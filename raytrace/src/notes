@@ -1,0 +1,147 @@
+camera.render(world)
+  world.color_at( camera.ray_for_pixel(x,y) )
+    world.intersect( ray )           // collect all intersections from all objects
+      object.intersect( ray )        // return pair of intersections or none
+        Shape.intersect( ray ) 
+          intersection(t*, object ref)
+    prepare_computations(hit, ray)   // return Computation struct
+    world.shade_hit( comps )
+      world.is_shadowed( comps.over_point )
+      materials::lighting(comps.object.get_material(), world.light, comps.point, comps.eyev, comps.normalv, shadowed)           // return color at hit
+
+-------
+attempting to replace Sphere collection in World with Shape trait object collection
+-------
+Basics are in place, but one compiler error remains.
+In sphere.intersect(), the pointer to the sphere object (self) 
+is owned by the current function and can't be returned
+
+Some ideas to fix:
+- move the reference up (not sure if we get lifetime issues then)
+    no good, even if it is passed in as a parameter we get the same
+    'owned by current function' issue
+
+- switch from Boxes to integer indices into World.objects
+
+Going to play around with both ideas. Hopefully we won't have to overhaul
+too much other stuff...
+
+OK, the first one was a wash, no change to the root error after a bunch
+of modifications. The second may be promising - it has the nice side-effect
+of removing all the lifetime annotations introduced by the references stashed
+in Intersection.
+
+Down to just one last issue before it compiles: line 68 in intersections needs
+to compute the normal at the hit. Under the pointer model we can get the Shape
+directly, no problem - but if we shift to integer indices, we need the world for
+lookup, and currently Computation doesn't have that. Not sure I like the coupling
+this would introduce, going to see.
+
+What if prepare_computations was in world? Rather than passing in self as a
+parameter, the method would have direct access. Maybe take this on as the next
+refactoring, let's see if we can get the naive/kludgy approach to work first...
+
+Got that working - well compiling at any rate. Several tests are failing, but 
+that's probably a good thing. Get those working and we may have a reasonable
+solution (with some ugliness to streamline later).
+
+(Also, FWIW, haven't put any solid thought into making sure the indices are
+accurate - i.e. reliably track back to the object - am using fake values in tests.
+Will need some review, and likely better tests. We may also want to persist the 
+value in the objects themselves as a convenient way to pass them around...)
+
+The last full commit was large and broken - don't want to repeat that bad behaviour,
+so I think this avenue should go into a side branch until I get it working. Challenge
+is I have a goal to check in to GitHub every day, let's see how that all works out.
+    
+For fun, now that this is compiling again I tried a render. It does actually produce
+output, though the result is all grayscale - just basic objects and shadowing, but
+no material colors or specular highlights. Obviously the indices aren't being
+plumbed through properly yet...
+
+OK! I had hard-coded index values in Sphere.intersect while I was plumbing through
+the value. Added some accessors to Shape and inserted those into the method, and
+it's working now! I got a colored render. Still two failing tests and I'm not
+confident about the indexes yet. They were implemented without much in the way of
+additional test coverage, so I will be going back and scrubbing. And some of the 
+implementation here is ugly as mentioned above. Still, this is progress.
+
+I commented out a bunch of code along the way as insurance. I think I'll clean that
+up and merge this back to main. Then we can get the failing tests ship-shape and do
+some additional scrubbing.
+
+----------
+Was able to get Shapes working polymorphically. Now attempting to do the same for
+Pattern (after implementing the initial subtype - Stripes - and getting it working
+properly).
+
+Similar approach at first: create a trait for the interface, and a 'base class'
+struct for the member fields. Refactor concrete type to make use of those elements.
+Easy enough to this point.
+
+The tricky part is getting the rest of the application to use the type class (Box), 
+rather than the original concrete 'class.' I pushed this through once already, 
+fought a bunch of compiler issues, and then got stuck on an issue similar to the
+problem above in Shape. Backed that all out, and going to document the trail of
+decisions here. Feels like this will come up again and again.
+
+OK, we start by changing the field in Material to hold Option<Box<dyn Pattern>>. Slew
+of compiler errors from there. Easy ones involve wrapping every call to the concrete
+ctor (Pattern::stripe_pattern()) in a Box (and also needs Some since this is an 
+Option).
+
+But then, because Material has PartialEq and Clone, we need the same for all of its
+fields, including dyn Pattern. Easy enough to implement dummy traits for now (though
+I haven't figured out yet how to truly test for eq() when we just have the Box, and 
+similar for clone()), returning bogus hard-coded values. But the compiler next
+complains about Sized, which is needed for Clone, and is automatically created (or not),
+and AFAIK cannot be manually added.
+
+IIRC hitting this above on Shape, and I think the way forward is to have Material hold
+an Option to a *reference* to a Box, which will sidestep Clone - but will open up a 
+new can of worms with lifetimes. We'll get to that.
+
+(As an aside, I am starting to suspect my ultimate solution will be some kind of 
+index approach like above - possibly World becomes a holding pen for collections of 
+types, and the others just hold indexes in their fields. Composing types directly
+seems to run into these kinds of challenges. And for this application, I doubt we'll
+ever have more than a dozen or so of each category (Shape, Pattern, Material, etc.) 
+so it ought to work OK. Of course I may be getting into trouble because of 'bad 
+habits' brought over from OO and need to learn to be more Rusty. All in good time.)
+
+So... swap to a reference and see what happens...
+
+First, we obviously need to change any field setting to get a &Box, not a Box. (And
+missed above, we need to coerce the box into a type object with 'as'.)
+
+Second, also need to implement Debug for <dyn Pattern>.
+
+(And lots of tweaking of use statements as we go...)
+
+Third, add a lifetime to the Box reference and the parent struct (Material).
+
+Fourth, once that is added, we need to mark up the impl & ctor for Material with a
+lifetime, and then add a lifetime to Shapes::Base (which has a Material field).
+
+Fifth, that then spreads to the impl & ctors for Base, and also to the concrete
+Shape classes (Plane & Sphere). (And then on to their impl/ctors as well.)
+
+Then we start getting two groups of errors: 'lifetime may not live long enough' and
+'temporary value dropped while borrowed.' The latter is easy enough - the compiler 
+suggests an easy solution. But I've struggled with the former.
+
+It is thrown from shapes::Base.set_material() and states Material<'1> must outlive
+&mut shapes::Base<'2>. (The former is the argument to the fn, and the latter is 
+self). Does this change for the better if the method takes a reference to a Material?
+(Naturally this change would need to spread across the project, giving it a whirl.)
+
+Once all the calls are adjusted to take a reference, we need to mark up more lifetimes.
+And after all that we still get the 'lifetime may not live long enough' in the same
+method (worse, we get two dfferent versions of it from the same line) - and we get a
+new error from the shapes::Base ctor, because we are setting a reference to a temporary
+value.
+
+I think it's time to change approaches. Going to back all this out to the working 
+state, then try to figure out an index-based strategy.
+
+
