@@ -17,6 +17,7 @@ struct Base {
     a: Color,
     b: Color,
     transform: Matrix,
+    index: usize,
 }
 
 impl Pattern for Base {
@@ -39,10 +40,18 @@ impl Pattern for Base {
     fn get_color_b(&self) -> Color {
         self.b
     }
+
+    fn get_index(&self) -> usize {
+        self.index
+    }
+
+    fn set_index(&mut self, index: usize){
+        self.index = index;
+    }
 }
 
 fn pattern(a: Color, b: Color) -> Base {
-    Base { a, b, transform: identity() }
+    Base { a, b, transform: identity(), index: 0 }
 }
 
 #[derive(Debug,Clone,PartialEq)]
@@ -74,6 +83,14 @@ impl Pattern for Stripes {
     fn get_color_b(&self) -> Color {
         self.supe.get_color_b()
     }
+
+    fn get_index(&self) -> usize {
+        self.supe.get_index()
+    }
+
+    fn set_index(&mut self, index: usize){
+        self.supe.set_index(index);
+    }
 }
 
 pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
@@ -94,6 +111,8 @@ pub trait Pattern {
 
     fn get_color_a(&self) -> Color;
     fn get_color_b(&self) -> Color;
+    fn get_index(&self) -> usize;
+    fn set_index(&mut self, index: usize);
 }
 
 #[cfg(test)]
