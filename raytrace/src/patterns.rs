@@ -2,6 +2,7 @@ use crate::color::Color;
 use crate::tuple::Tuple;
 use crate::shapes::Shape;
 use crate::matrix::{Matrix, identity};
+use core::fmt::Debug;
 
 //pub const WHITE : Color = color(1.0, 1.0, 1.0);
 //pub const BLACK : Color = color(0.0, 0.0, 0.0);
@@ -113,6 +114,12 @@ pub trait Pattern {
     fn get_color_b(&self) -> Color;
     fn get_index(&self) -> usize;
     fn set_index(&mut self, index: usize);
+}
+
+impl Debug for dyn Pattern {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "Pattern")
+    }
 }
 
 #[cfg(test)]

@@ -7,11 +7,13 @@ use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::{Ray, ray};
 use crate::intersections::{Intersection, hit, Computations, prepare_computations};
+use crate::patterns::Pattern;
 
 #[derive(Debug)]
 pub struct World {
     pub light: Option<Light>,
     objects: Vec<Box<dyn Shape>>,
+    patterns: Vec<Box<dyn Pattern>>,
 }
 
 impl World {
@@ -105,6 +107,7 @@ pub fn world() -> World {
     World { 
         light: None,
         objects: vec![],
+        patterns: vec![],
     }
 }
 
@@ -123,6 +126,7 @@ pub fn default_world() -> World {
     World { 
         light: Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0))),
         objects: vec![Box::new(s1), Box::new(s2)],
+        patterns: vec![],
     }
 }
 
