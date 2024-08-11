@@ -59,10 +59,10 @@ fn main() {
     mat.specular = 0.3;
     left.set_material( mat );
     
-    w.add(Box::new(floor));
-    w.add(Box::new(middle));
-    w.add(Box::new(right));
-    w.add(Box::new(left));
+    w.add_object(Box::new(floor));
+    w.add_object(Box::new(middle));
+    w.add_object(Box::new(right));
+    w.add_object(Box::new(left));
     
     let mut c = camera(600, 300, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);

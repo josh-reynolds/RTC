@@ -92,7 +92,7 @@ impl World {
         result
     }
 
-    pub fn add(&mut self, mut obj: Box<dyn Shape>){
+    pub fn add_object(&mut self, mut obj: Box<dyn Shape>){
         let current = self.objects.len();
         obj.set_index( current as usize );
         self.objects.push( obj );
@@ -312,8 +312,8 @@ mod tests {
         let s1 = sphere();
         let mut s2 = sphere();
         s2.set_transform( translation(0.0, 0.0, 10.0) );
-        w.add(Box::new(s1));
-        w.add(Box::new(s2));
+        w.add_object(Box::new(s1));
+        w.add_object(Box::new(s2));
         
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
         let i = intersection(9.0, 1);   // I think the book has a typo here
@@ -329,7 +329,7 @@ mod tests {
         let mut w = world();
         let mut s = sphere();
         s.set_transform( translation(0.0, 0.0, 1.0) );
-        w.add(Box::new(s));
+        w.add_object(Box::new(s));
 
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
         let i = intersection(5.0, 0);
@@ -343,7 +343,7 @@ mod tests {
     fn can_add_plane_to_objects(){
         let mut w = world();
         let p = plane();
-        w.add( Box::new(p) );
+        w.add_object( Box::new(p) );
 
         assert!( w.objects.len() == 1 );
 
@@ -363,19 +363,19 @@ mod tests {
         let mut m1 = material();
         m1.color = color(1.0, 0.0, 0.0);
         s1.set_material(m1);
-        w.add(Box::new(s1));
+        w.add_object(Box::new(s1));
 
         let mut p = plane();
         let mut m2 = material();
         m2.color = color(0.0, 1.0, 0.0);
         p.set_material(m2);
-        w.add(Box::new(p));
+        w.add_object(Box::new(p));
         
         let mut s2 = sphere();
         let mut m3 = material();
         m3.color = color(0.0, 0.0, 1.0);
         s2.set_material(m3);
-        w.add(Box::new(s2));
+        w.add_object(Box::new(s2));
 
         assert!( w.objects.len() == 3 );
         
