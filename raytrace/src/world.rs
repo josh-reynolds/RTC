@@ -101,6 +101,16 @@ impl World {
     pub fn get_object(&self, index: usize) -> &Box<dyn Shape> {
         &(self.objects[index])
     }
+
+    pub fn add_pattern(&mut self, mut pat: Box<dyn Pattern>){
+        let current = self.patterns.len();
+        pat.set_index( current as usize );
+        self.patterns.push( pat );
+    }
+
+    pub fn get_pattern(&self, index: usize) -> &Box<dyn Pattern> {
+        &(self.patterns[index])
+    }
 }
 
 pub fn world() -> World {
