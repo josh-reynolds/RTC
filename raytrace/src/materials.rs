@@ -12,7 +12,7 @@ pub struct Material {
     pub diffuse: f64,      // typical range 0-1
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
-    pub pat: Option<usize>,
+    pub pattern: Option<usize>,
 }
 
 impl Material {
@@ -22,7 +22,7 @@ impl Material {
         equals(self.diffuse, m.diffuse) &&
         equals(self.specular, m.specular) &&
         equals(self.shininess, m.shininess) &&
-        self.pat == m.pat
+        self.pattern == m.pattern
     }
 }
 
@@ -33,7 +33,7 @@ pub fn material() -> Material {
         diffuse: 0.9,
         specular: 0.9,
         shininess: 200.0,
-        pat: None,
+        pattern: None,
     }
 }
 
@@ -46,7 +46,7 @@ pub fn lighting(m: Material,
                 in_shadow: bool,
                 world: &World,
   ) -> Color {
-    let true_color = match m.pat {
+    let true_color = match m.pattern {
         Some(pat) => world.get_pattern(pat).stripe_at_object(o, p),
         None      => m.color,
     };
@@ -229,7 +229,7 @@ mod tests {
         let p = stripe_pattern(color(1.0, 1.0, 1.0), color(0.0, 0.0, 0.0));
         w.add_pattern(Box::new(p.clone()));
         
-        m.pat = Some(p.get_index());
+        m.pattern = Some(p.get_index());
         m.ambient = 1.0;
         m.diffuse = 0.0;
         m.specular = 0.0;

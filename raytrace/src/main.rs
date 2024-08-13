@@ -23,7 +23,7 @@ fn main() {
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( rotation_y( PI / 3.0 ) );
     w.add_pattern( Box::new(pat.clone()) );
-    mat.pat = Some(pat.get_index());
+    mat.pattern = Some(pat.get_index());
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
     w.add_object(Box::new(floor));
@@ -34,7 +34,7 @@ fn main() {
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( rotation_z( PI / 5.0 ) );
     w.add_pattern( Box::new(pat.clone()) );
-    mat.pat = Some(pat.get_index());
+    mat.pattern = Some(pat.get_index());
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -48,7 +48,7 @@ fn main() {
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
     w.add_pattern( Box::new(pat.clone()) );
-    mat.pat = Some(pat.get_index());
+    mat.pattern = Some(pat.get_index());
     mat.color = color(0.1, 0.9, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -61,7 +61,7 @@ fn main() {
     let mut mat = material();
     let pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     w.add_pattern( Box::new(pat.clone()) );
-    mat.pat = Some(pat.get_index());
+    mat.pattern = Some(pat.get_index());
     mat.color = color(0.1, 0.1, 0.9);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
