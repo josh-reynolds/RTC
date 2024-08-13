@@ -2,7 +2,6 @@ use crate::color::{Color, color};
 use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
-use crate::patterns::Stripes;
 use crate::shapes::Shape;
 use crate::world::World;
 
@@ -13,7 +12,6 @@ pub struct Material {
     pub diffuse: f64,      // typical range 0-1
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
-    pub pattern: Option<Stripes>,
     pub pat: Option<usize>,
 }
 
@@ -24,7 +22,6 @@ impl Material {
         equals(self.diffuse, m.diffuse) &&
         equals(self.specular, m.specular) &&
         equals(self.shininess, m.shininess) &&
-        self.pattern == m.pattern &&
         self.pat == m.pat
     }
 }
@@ -36,7 +33,6 @@ pub fn material() -> Material {
         diffuse: 0.9,
         specular: 0.9,
         shininess: 200.0,
-        pattern: None,
         pat: None,
     }
 }
@@ -234,7 +230,6 @@ mod tests {
         w.add_pattern(Box::new(p.clone()));
         
         m.pat = Some(p.get_index());
-        m.pattern = Some(p);
         m.ambient = 1.0;
         m.diffuse = 0.0;
         m.specular = 0.0;

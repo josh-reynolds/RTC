@@ -22,7 +22,8 @@ fn main() {
     let mut mat = material();
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( rotation_y( PI / 3.0 ) );
-    mat.pattern = Some(pat);
+    w.add_pattern( Box::new(pat.clone()) );
+    mat.pat = Some(pat.get_index());
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
     w.add_object(Box::new(floor));
@@ -32,7 +33,8 @@ fn main() {
     let mut mat = material();
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( rotation_z( PI / 5.0 ) );
-    mat.pattern = Some(pat);
+    w.add_pattern( Box::new(pat.clone()) );
+    mat.pat = Some(pat.get_index());
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -45,7 +47,8 @@ fn main() {
     let mut mat = material();
     let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
     pat.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
-    mat.pattern = Some(pat);
+    w.add_pattern( Box::new(pat.clone()) );
+    mat.pat = Some(pat.get_index());
     mat.color = color(0.1, 0.9, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -56,14 +59,16 @@ fn main() {
     left.set_transform( translation(-1.5, 0.33, -0.75).mult(
                           &scaling(0.33, 0.33, 0.33)));
     let mut mat = material();
-    mat.pattern = Some(stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0)));
+    let pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    w.add_pattern( Box::new(pat.clone()) );
+    mat.pat = Some(pat.get_index());
     mat.color = color(0.1, 0.1, 0.9);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
     left.set_material( mat );
     w.add_object(Box::new(left));
     
-    let mut c = camera(600, 300, PI / 3.0);
+    let mut c = camera(200, 100, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
     let to = point(0.0, 1.0, 0.0);
     let up = vector(0.0, 1.0, 0.0);
@@ -71,7 +76,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("pattern_space.ppm");
+    let _ = image.to_ppm("poly_pattern.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
