@@ -25,6 +25,7 @@ fn main() {
     mat.pattern = Some(pat);
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
+    w.add_object(Box::new(floor));
 
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
@@ -36,6 +37,7 @@ fn main() {
     mat.diffuse = 0.7;
     mat.specular = 0.3;
     middle.set_material( mat );
+    w.add_object(Box::new(middle));
 
     let mut right = sphere();
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
@@ -48,6 +50,7 @@ fn main() {
     mat.diffuse = 0.7;
     mat.specular = 0.3;
     right.set_material( mat );
+    w.add_object(Box::new(right));
 
     let mut left = sphere();
     left.set_transform( translation(-1.5, 0.33, -0.75).mult(
@@ -58,10 +61,6 @@ fn main() {
     mat.diffuse = 0.7;
     mat.specular = 0.3;
     left.set_material( mat );
-    
-    w.add_object(Box::new(floor));
-    w.add_object(Box::new(middle));
-    w.add_object(Box::new(right));
     w.add_object(Box::new(left));
     
     let mut c = camera(600, 300, PI / 3.0);
