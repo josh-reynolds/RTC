@@ -2,8 +2,9 @@ use crate::color::{Color, color};
 use crate::equals::equals;
 use crate::lights::Light;
 use crate::tuple::Tuple;
-use crate::patterns::{Pattern, Stripes};
+use crate::patterns::Stripes;
 use crate::shapes::Shape;
+use crate::world::World;
 
 #[derive(Debug,Clone,PartialEq)]
 pub struct Material {
@@ -13,6 +14,7 @@ pub struct Material {
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
     pub pattern: Option<Stripes>,
+    pub pat: Option<usize>,
 }
 
 impl Material {
@@ -22,7 +24,8 @@ impl Material {
         equals(self.diffuse, m.diffuse) &&
         equals(self.specular, m.specular) &&
         equals(self.shininess, m.shininess) &&
-        self.pattern == m.pattern
+        self.pattern == m.pattern &&
+        self.pat == m.pat
     }
 }
 
@@ -34,6 +37,7 @@ pub fn material() -> Material {
         specular: 0.9,
         shininess: 200.0,
         pattern: None,
+        pat: None,
     }
 }
 
@@ -43,11 +47,12 @@ pub fn lighting(m: Material,
                 p: Tuple, 
                 eye: Tuple, 
                 normal: Tuple, 
-                in_shadow: bool
+                in_shadow: bool,
+                world: &World,
   ) -> Color {
-    let true_color = match m.pattern {
-        Some(pattern) => pattern.stripe_at_object(o, p),
-        None          => m.color,
+    let true_color = match m.pat {
+        Some(pat) => world.get_pattern(pat).stripe_at_object(o, p),
+        None      => m.color,
     };
     let effective_color = true_color * l.intensity;
     let lightv = (l.position - p).normal();
@@ -84,9 +89,10 @@ mod tests {
     use crate::tuple::{origin, point, vector};
     use crate::lights::point_light;
     use std::f64::consts::SQRT_2;
-    use crate::patterns::stripe_pattern;
+    use crate::patterns::{Pattern, stripe_pattern};
     use crate::spheres::sphere;
     use crate::shapes::Shape;
+    use crate::world::world;
 
     #[test]
     fn default_material(){
@@ -114,7 +120,8 @@ mod tests {
                               p, 
                               eyev, 
                               normalv, 
-                              false);
+                              false,
+                              &world());
         assert!( result.equals(color(1.9, 1.9, 1.9)) );
     }
 
@@ -133,7 +140,8 @@ mod tests {
                               p, 
                               eyev, 
                               normalv, 
-                              false);
+                              false,
+                              &world());
         assert!( result.equals(color(1.0, 1.0, 1.0)) );
     }
 
@@ -151,7 +159,8 @@ mod tests {
                               &light, 
                               p, eyev, 
                               normalv, 
-                              false);
+                              false,
+                              &world());
         assert!( result.equals(color(0.7364, 0.7364, 0.7364)) );
     }
 
@@ -170,7 +179,8 @@ mod tests {
                               p, 
                               eyev, 
                               normalv, 
-                              false);
+                              false,
+                              &world());
         assert!( result.equals(color(1.6364, 1.6364, 1.6364)) );
     }
 
@@ -189,7 +199,8 @@ mod tests {
                               p, 
                               eyev, 
                               normalv, 
-                              false);
+                              false,
+                              &world());
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 
@@ -209,14 +220,21 @@ mod tests {
                               p, 
                               eyev, 
                               normalv, 
-                              in_shadow);
+                              in_shadow,
+                              &world());
         assert!( result.equals(color(0.1, 0.1, 0.1)) );
     }
 
     #[test]
     fn lighting_with_pattern_applied(){
+        let mut w = world();
         let mut m = material();
-        m.pattern = Some(stripe_pattern(color(1.0, 1.0, 1.0), color(0.0, 0.0, 0.0)));
+
+        let p = stripe_pattern(color(1.0, 1.0, 1.0), color(0.0, 0.0, 0.0));
+        w.add_pattern(Box::new(p.clone()));
+        
+        m.pat = Some(p.get_index());
+        m.pattern = Some(p);
         m.ambient = 1.0;
         m.diffuse = 0.0;
         m.specular = 0.0;
@@ -231,14 +249,16 @@ mod tests {
                           point(0.9, 0.0, 0.0), 
                           eyev, 
                           normalv, 
-                          false);
+                          false,
+                          &w);
         let c2 = lighting(m.clone(), 
                           &(Box::new(sphere()) as Box<dyn Shape>),
                           &light, 
                           point(1.1, 0.0, 0.0), 
                           eyev, 
                           normalv, 
-                          false);
+                          false,
+                          &w);
 
         assert_eq!(c1, color(1.0, 1.0, 1.0));
         assert_eq!(c2, color(0.0, 0.0, 0.0));

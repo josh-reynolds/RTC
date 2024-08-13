@@ -46,7 +46,8 @@ impl World {
                  comps.point, 
                  comps.eyev, 
                  comps.normalv, 
-                 shadowed)
+                 shadowed,
+                 &self)
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
