@@ -118,7 +118,7 @@ pub trait Pattern {
 
 impl Debug for dyn Pattern {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Pattern")
+        write!(f, "Pattern {}", self.get_index())
     }
 }
 

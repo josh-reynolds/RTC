@@ -78,7 +78,7 @@ pub trait Shape {
 
 impl Debug for dyn Shape {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        write!(f, "Shape")
+        write!(f, "Shape {}", self.get_index())
     }
 }
 

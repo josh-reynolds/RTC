@@ -20,10 +20,12 @@ fn main() {
 
     let mut floor = plane();
     let mut mat = material();
-    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
-    pat.set_pattern_transform( rotation_y( PI / 3.0 ) );
-    w.add_pattern( Box::new(pat.clone()) );
-    mat.pattern = Some(pat.get_index());
+    let mut p1 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    p1.set_pattern_transform( rotation_y( PI / 3.0 ) );
+    let current = w.get_patterns_len();
+    w.add_pattern( Box::new(p1.clone()) );
+    p1.set_index(current);
+    mat.pattern = Some(p1.get_index());
     mat.color = color(1.0, 0.0, 1.0);
     floor.set_material( mat );
     w.add_object(Box::new(floor));
@@ -31,10 +33,12 @@ fn main() {
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
     let mut mat = material();
-    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
-    pat.set_pattern_transform( rotation_z( PI / 5.0 ) );
-    w.add_pattern( Box::new(pat.clone()) );
-    mat.pattern = Some(pat.get_index());
+    let mut p2 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    p2.set_pattern_transform( rotation_z( PI / 5.0 ) );
+    let current = w.get_patterns_len();
+    w.add_pattern( Box::new(p2.clone()) );
+    p2.set_index(current);
+    mat.pattern = Some(p2.get_index());
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -45,10 +49,12 @@ fn main() {
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
-    let mut pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
-    pat.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
-    w.add_pattern( Box::new(pat.clone()) );
-    mat.pattern = Some(pat.get_index());
+    let mut p3 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    p3.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
+    let current = w.get_patterns_len();
+    w.add_pattern( Box::new(p3.clone()) );
+    p3.set_index(current);
+    mat.pattern = Some(p3.get_index());
     mat.color = color(0.1, 0.9, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -59,9 +65,11 @@ fn main() {
     left.set_transform( translation(-1.5, 0.33, -0.75).mult(
                           &scaling(0.33, 0.33, 0.33)));
     let mut mat = material();
-    let pat = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
-    w.add_pattern( Box::new(pat.clone()) );
-    mat.pattern = Some(pat.get_index());
+    let mut p4 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    let current = w.get_patterns_len();
+    w.add_pattern( Box::new(p4.clone()) );
+    p4.set_index(current);
+    mat.pattern = Some(p4.get_index());
     mat.color = color(0.1, 0.1, 0.9);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -76,7 +84,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("poly_pattern.ppm");
+    let _ = image.to_ppm("poly_pattern_debug.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);

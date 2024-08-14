@@ -112,6 +112,10 @@ impl World {
     pub fn get_pattern(&self, index: usize) -> &Box<dyn Pattern> {
         &(self.patterns[index])
     }
+
+    pub fn get_patterns_len(&self) -> usize {
+        self.patterns.len()
+    }
 }
 
 pub fn world() -> World {
