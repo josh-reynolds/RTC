@@ -124,12 +124,13 @@ impl Debug for dyn Pattern {
 
 #[cfg(test)]
 mod tests {
-    use crate::patterns::{Pattern, stripe_pattern};
+    use crate::patterns::{Pattern, stripe_pattern, pattern};
     use crate::color::color;
     use crate::tuple::point;
     use crate::spheres::sphere;
     use crate::shapes::Shape;
     use crate::transform::{scaling, translation};
+    use crate::matrix::identity;
 
     #[test]
     fn creating_a_stripe_pattern(){
@@ -217,5 +218,25 @@ mod tests {
         let c = p.stripe_at_object( &object, point(2.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
+    }
+
+    #[test]
+    fn default_pattern_transform(){
+        let white = color(1.0, 1.0, 1.0);
+        let black = color(0.0, 0.0, 0.0);
+        let p = pattern(white, black);
+
+        assert_eq!( p.get_pattern_transform(), identity() );
+    }
+
+    #[test]
+    fn pattern_transform_can_be_set(){
+        let white = color(1.0, 1.0, 1.0);
+        let black = color(0.0, 0.0, 0.0);
+        let mut p = pattern(white, black);
+
+        p.set_pattern_transform( translation(1.0, 2.0, 3.0) );
+
+        assert_eq!( p.get_pattern_transform(), translation(1.0, 2.0, 3.0) );
     }
 }
