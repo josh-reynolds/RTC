@@ -85,7 +85,8 @@ mod tests {
     use crate::tuple::{origin, point, vector};
     use crate::lights::point_light;
     use std::f64::consts::SQRT_2;
-    use crate::patterns::{Pattern, stripe_pattern};
+    use crate::patterns::Pattern;
+    use crate::stripes::stripe_pattern;
     use crate::spheres::sphere;
     use crate::shapes::Shape;
     use crate::world::world;

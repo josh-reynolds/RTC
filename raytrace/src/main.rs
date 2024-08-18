@@ -9,7 +9,8 @@ use raytrace::shapes::Shape;
 use raytrace::color::color;
 use raytrace::materials::material;
 use raytrace::lights::point_light;
-use raytrace::patterns::{Pattern, stripe_pattern};
+use raytrace::patterns::Pattern;
+use raytrace::stripes::stripe_pattern;
 use std::time::Instant;
 
 fn main() {
