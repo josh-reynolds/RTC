@@ -47,7 +47,7 @@ pub fn lighting(m: Material,
                 world: &World,
   ) -> Color {
     let true_color = match m.pattern {
-        Some(pat) => world.get_pattern(pat).stripe_at_object(o, p),
+        Some(pat) => world.get_pattern(pat).pattern_at_shape(o, p),
         None      => m.color,
     };
     let effective_color = true_color * l.intensity;

@@ -1,4 +1,4 @@
-use crate::color::Color;
+use crate::color::{Color, color};
 use crate::tuple::Tuple;
 use crate::shapes::Shape;
 use crate::matrix::{Matrix, identity};
@@ -22,8 +22,8 @@ pub struct Base {
 }
 
 impl Pattern for Base {
-    fn stripe_at(&self, _p: Tuple) -> Color {
-        self.a
+    fn pattern_at(&self, p: Tuple) -> Color {
+        color(p.x, p.y, p.z)
     }
 
     fn set_pattern_transform(&mut self, t: Matrix){
@@ -56,14 +56,14 @@ pub fn pattern(a: Color, b: Color) -> Base {
 }
 
 pub trait Pattern {
-    fn stripe_at(&self, p: Tuple) -> Color;
+    fn pattern_at(&self, p: Tuple) -> Color;
 
-    fn stripe_at_object(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
+    fn pattern_at_shape(&self, o: &Box<dyn Shape>, p: Tuple) -> Color {
         let object_point = o.get_transform().inverse().multup( &p );
         let pattern_point = self.get_pattern_transform().inverse().multup( &object_point );
-        self.stripe_at( pattern_point )
+        self.pattern_at( pattern_point )
     }
-    
+
     fn set_pattern_transform(&mut self, t: Matrix);
     fn get_pattern_transform(&self) -> Matrix;
 
@@ -83,8 +83,11 @@ impl Debug for dyn Pattern {
 mod tests {
     use crate::patterns::{Pattern, pattern};
     use crate::color::color;
-    use crate::transform::translation;
+    use crate::transform::{translation, scaling};
     use crate::matrix::identity;
+    use crate::tuple::point;
+    use crate::spheres::sphere;
+    use crate::shapes::Shape;
 
     #[test]
     fn default_pattern_transform(){
@@ -104,5 +107,19 @@ mod tests {
         p.set_pattern_transform( translation(1.0, 2.0, 3.0) );
 
         assert_eq!( p.get_pattern_transform(), translation(1.0, 2.0, 3.0) );
+    }
+
+    #[test]
+    fn pattern_with_object_transform(){
+        let mut s = Box::new(sphere()) as Box<dyn Shape>;
+        s.set_transform( scaling(2.0, 2.0, 2.0) );
+        
+        let white = color(1.0, 1.0, 1.0);
+        let black = color(0.0, 0.0, 0.0);
+        let p = pattern(white, black);
+
+        let c = p.pattern_at_shape( &s, point(2.0, 3.0, 4.0) );
+
+        assert_eq!(c, color(1.0, 1.5, 2.0));
     }
 }

@@ -9,7 +9,7 @@ pub struct Stripes {
 }
 
 impl Pattern for Stripes {
-    fn stripe_at(&self, p: Tuple) -> Color {
+    fn pattern_at(&self, p: Tuple) -> Color {
         if p.x.floor() as i64 % 2 == 0 {
             self.supe.get_color_a()
         } else {
@@ -72,9 +72,9 @@ mod tests {
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
 
-        assert_eq!(p.stripe_at( point(0.0, 0.0, 0.0) ), white);
-        assert_eq!(p.stripe_at( point(0.0, 1.0, 0.0) ), white);
-        assert_eq!(p.stripe_at( point(0.0, 2.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 0.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 1.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 2.0, 0.0) ), white);
     }
     
     #[test]
@@ -83,9 +83,9 @@ mod tests {
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
 
-        assert_eq!(p.stripe_at( point(0.0, 0.0, 0.0) ), white);
-        assert_eq!(p.stripe_at( point(0.0, 0.0, 1.0) ), white);
-        assert_eq!(p.stripe_at( point(0.0, 0.0, 2.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 0.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 0.0, 1.0) ), white);
+        assert_eq!(p.pattern_at( point(0.0, 0.0, 2.0) ), white);
     }
 
     #[test]
@@ -94,12 +94,12 @@ mod tests {
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
 
-        assert_eq!(p.stripe_at( point( 0.0, 0.0, 0.0) ), white);
-        assert_eq!(p.stripe_at( point( 0.9, 0.0, 0.0) ), white);
-        assert_eq!(p.stripe_at( point( 1.0, 0.0, 0.0) ), black);
-        assert_eq!(p.stripe_at( point(-0.1, 0.0, 0.0) ), black);
-        assert_eq!(p.stripe_at( point(-1.0, 0.0, 0.0) ), black);
-        assert_eq!(p.stripe_at( point(-1.1, 0.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point( 0.0, 0.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point( 0.9, 0.0, 0.0) ), white);
+        assert_eq!(p.pattern_at( point( 1.0, 0.0, 0.0) ), black);
+        assert_eq!(p.pattern_at( point(-0.1, 0.0, 0.0) ), black);
+        assert_eq!(p.pattern_at( point(-1.0, 0.0, 0.0) ), black);
+        assert_eq!(p.pattern_at( point(-1.1, 0.0, 0.0) ), white);
     }
 
     #[test]
@@ -111,7 +111,7 @@ mod tests {
         let black = color(0.0, 0.0, 0.0);
         let p = stripe_pattern(white, black);
 
-        let c = p.stripe_at_object( &object, point(1.5, 0.0, 0.0) );
+        let c = p.pattern_at_shape( &object, point(1.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
@@ -125,7 +125,7 @@ mod tests {
         let mut p = stripe_pattern(white, black);
         p.set_pattern_transform( scaling(2.0, 2.0, 2.0) );
 
-        let c = p.stripe_at_object( &object, point(1.5, 0.0, 0.0) );
+        let c = p.pattern_at_shape( &object, point(1.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
@@ -140,7 +140,7 @@ mod tests {
         let mut p = stripe_pattern(white, black);
         p.set_pattern_transform( translation(0.5, 0.0, 0.0) );
 
-        let c = p.stripe_at_object( &object, point(2.5, 0.0, 0.0) );
+        let c = p.pattern_at_shape( &object, point(2.5, 0.0, 0.0) );
 
         assert_eq!(c, white);
     }
