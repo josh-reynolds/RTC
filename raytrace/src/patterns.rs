@@ -122,4 +122,33 @@ mod tests {
 
         assert_eq!(c, color(1.0, 1.5, 2.0));
     }
+
+    #[test]
+    fn pattern_with_pattern_transform(){
+        let s = Box::new(sphere()) as Box<dyn Shape>;
+        
+        let white = color(1.0, 1.0, 1.0);
+        let black = color(0.0, 0.0, 0.0);
+        let mut p = pattern(white, black);
+        p.set_pattern_transform( scaling(2.0, 2.0, 2.0) );
+
+        let c = p.pattern_at_shape( &s, point(2.0, 3.0, 4.0) );
+
+        assert_eq!(c, color(1.0, 1.5, 2.0));
+    }
+
+    #[test]
+    fn pattern_with_pattern_and_object_transforms(){
+        let mut s = Box::new(sphere()) as Box<dyn Shape>;
+        s.set_transform( scaling(2.0, 2.0, 2.0) );
+        
+        let white = color(1.0, 1.0, 1.0);
+        let black = color(0.0, 0.0, 0.0);
+        let mut p = pattern(white, black);
+        p.set_pattern_transform( translation(0.5, 1.0, 1.5) );
+
+        let c = p.pattern_at_shape( &s, point(2.5, 3.0, 3.5) );
+
+        assert_eq!(c, color(0.75, 0.5, 0.25));
+    }
 }
