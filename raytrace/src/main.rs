@@ -11,6 +11,7 @@ use raytrace::materials::material;
 use raytrace::lights::point_light;
 use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
+use raytrace::gradients::gradient_pattern;
 use std::time::Instant;
 
 fn main() {
@@ -32,7 +33,7 @@ fn main() {
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
     let mut mat = material();
-    let mut p2 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    let mut p2 = gradient_pattern(color(1.0, 0.0, 1.0), color(0.0, 1.0, 0.5));
     p2.set_pattern_transform( rotation_z( PI / 5.0 ) );
     let current = w.add_pattern( Box::new(p2) );
     mat.pattern = Some(current);
@@ -77,7 +78,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("poly_pattern_2.ppm");
+    let _ = image.to_ppm("poly_pattern_with_gradients.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
