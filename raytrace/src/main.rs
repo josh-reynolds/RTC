@@ -12,6 +12,7 @@ use raytrace::lights::point_light;
 use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
 use raytrace::gradients::gradient_pattern;
+use raytrace::rings::ring_pattern;
 use std::time::Instant;
 
 fn main() {
@@ -22,7 +23,7 @@ fn main() {
 
     let mut floor = plane();
     let mut mat = material();
-    let mut p1 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    let mut p1 = ring_pattern(color(0.0, 1.0, 0.0), color(0.5, 0.0, 0.7));
     p1.set_pattern_transform( rotation_y( PI / 3.0 ) );
     let current = w.add_pattern( Box::new(p1) );
     mat.pattern = Some(current);
@@ -78,7 +79,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("poly_pattern_with_gradients.ppm");
+    let _ = image.to_ppm("poly_pattern_with_rings.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
