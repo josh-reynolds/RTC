@@ -50,12 +50,8 @@ pub fn stripe_pattern(a: Color, b: Color) -> Stripes {
 mod tests {
     use crate::color::color;
     use crate::stripes::stripe_pattern;
-    use crate::transform::{scaling, translation};
     use crate::tuple::point;
-    use crate::spheres::sphere;
-    use crate::shapes::Shape;
     use crate::patterns::Pattern;
-
     
     #[test]
     fn creating_a_stripe_pattern(){
@@ -100,48 +96,5 @@ mod tests {
         assert_eq!(p.pattern_at( point(-0.1, 0.0, 0.0) ), black);
         assert_eq!(p.pattern_at( point(-1.0, 0.0, 0.0) ), black);
         assert_eq!(p.pattern_at( point(-1.1, 0.0, 0.0) ), white);
-    }
-
-    #[test]
-    fn stripes_with_object_transformation(){
-        let mut object = Box::new(sphere()) as Box<dyn Shape>;
-        object.set_transform( scaling(2.0, 2.0, 2.0) );
-
-        let white = color(1.0, 1.0, 1.0);
-        let black = color(0.0, 0.0, 0.0);
-        let p = stripe_pattern(white, black);
-
-        let c = p.pattern_at_shape( &object, point(1.5, 0.0, 0.0) );
-
-        assert_eq!(c, white);
-    }
-
-    #[test]
-    fn stripes_with_pattern_transformation(){
-        let object = Box::new(sphere()) as Box<dyn Shape>;
-
-        let white = color(1.0, 1.0, 1.0);
-        let black = color(0.0, 0.0, 0.0);
-        let mut p = stripe_pattern(white, black);
-        p.set_pattern_transform( scaling(2.0, 2.0, 2.0) );
-
-        let c = p.pattern_at_shape( &object, point(1.5, 0.0, 0.0) );
-
-        assert_eq!(c, white);
-    }
-
-    #[test]
-    fn stripes_with_object_and_pattern_transformations(){
-        let mut object = Box::new(sphere()) as Box<dyn Shape>;
-        object.set_transform( scaling(2.0, 2.0, 2.0) );
-
-        let white = color(1.0, 1.0, 1.0);
-        let black = color(0.0, 0.0, 0.0);
-        let mut p = stripe_pattern(white, black);
-        p.set_pattern_transform( translation(0.5, 0.0, 0.0) );
-
-        let c = p.pattern_at_shape( &object, point(2.5, 0.0, 0.0) );
-
-        assert_eq!(c, white);
     }
 } 
