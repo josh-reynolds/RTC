@@ -19,6 +19,7 @@ pub mod stripes;
 pub mod gradients;
 pub mod rings;
 pub mod checkers;
+pub mod radial_gradients;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
