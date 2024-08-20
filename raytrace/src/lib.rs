@@ -18,6 +18,7 @@ pub mod patterns;
 pub mod stripes;
 pub mod gradients;
 pub mod rings;
+pub mod checkers;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
