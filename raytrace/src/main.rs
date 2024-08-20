@@ -13,6 +13,7 @@ use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
 use raytrace::gradients::gradient_pattern;
 use raytrace::rings::ring_pattern;
+use raytrace::checkers::checker_pattern;
 use std::time::Instant;
 
 fn main() {
@@ -48,7 +49,7 @@ fn main() {
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
-    let mut p3 = stripe_pattern(color(1.0, 0.0, 0.0), color(0.0, 1.0, 0.0));
+    let mut p3 = checker_pattern(color(1.0, 1.0, 1.0), color(0.3, 0.3, 0.0));
     p3.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
     let current = w.add_pattern( Box::new(p3) );
     mat.pattern = Some(current);
@@ -79,7 +80,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("poly_pattern_with_rings.ppm");
+    let _ = image.to_ppm("poly_pattern_with_checkers.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
