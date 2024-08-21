@@ -13,6 +13,7 @@ pub struct Material {
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
     pub pattern: Option<usize>,
+    pub reflective: f64,
 }
 
 impl Material {
@@ -22,7 +23,8 @@ impl Material {
         equals(self.diffuse, m.diffuse) &&
         equals(self.specular, m.specular) &&
         equals(self.shininess, m.shininess) &&
-        self.pattern == m.pattern
+        self.pattern == m.pattern &&
+        equals(self.reflective, m.reflective)
     }
 }
 
@@ -34,6 +36,7 @@ pub fn material() -> Material {
         specular: 0.9,
         shininess: 200.0,
         pattern: None,
+        reflective: 0.0,
     }
 }
 
@@ -258,5 +261,11 @@ mod tests {
 
         assert_eq!(c1, color(1.0, 1.0, 1.0));
         assert_eq!(c2, color(0.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn default_reflectivity(){
+        let m = material();
+        assert_eq!(m.reflective, 0.0);
     }
 }
