@@ -13,7 +13,7 @@ pub struct Material {
     pub specular: f64,     // typical range 0-1
     pub shininess: f64,    // typical range 10-200
     pub pattern: Option<usize>,
-    pub reflective: f64,
+    pub reflective: f64,   // typical range 0-1
 }
 
 impl Material {

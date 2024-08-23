@@ -52,6 +52,7 @@ pub struct Computations {
     pub eyev: Tuple,
     pub normalv: Tuple,
     pub inside: bool,
+    pub reflectv: Tuple,
 }
 
 pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computations {
@@ -62,6 +63,7 @@ pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computation
         ins = true;
     }
     let op = r.position(i.t) + n * EPSILON;
+    let rv = r.direction.reflect(&n);
 
     Computations { 
         t: i.t,
@@ -71,6 +73,7 @@ pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computation
         eyev: -r.direction,
         normalv: n,
         inside: ins,
+        reflectv: rv,
     }
 }
 
@@ -81,7 +84,9 @@ mod tests {
     use crate::tuple::{point, vector};
     use crate::rays::ray;
     use crate::equals::equals;
-    use crate::world::default_world;
+    use crate::world::{world, default_world};
+    use crate::planes::plane;
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn intersection_creates_intersections(){
@@ -186,5 +191,18 @@ mod tests {
         assert!( comps.eyev.equals( vector(0.0, 0.0, -1.0) ));
         assert!( comps.normalv.equals( vector(0.0, 0.0, -1.0) ));
         assert!( comps.inside == true );
+    }
+
+    #[test]
+    fn precomputing_reflection_vector(){
+        let mut w = world();
+        let p = plane();
+        w.add_object(Box::new(p));
+        let r = ray( point(0.0, 1.0, -1.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0) );
+        let i = intersection(SQRT_2, 0);
+
+        let comps = prepare_computations(i, r, &w);
+
+        assert!{ comps.reflectv.equals( vector(0.0, SQRT_2 / 2.0, SQRT_2 / 2.0) )};
     }
 }
