@@ -93,6 +93,14 @@ impl World {
         result
     }
 
+    pub fn reflected_color(&self, comps: Computations) -> Color {
+        if self.get_object(comps.object).get_material().reflective == 0.0 {
+            color(0.0, 0.0, 0.0)
+        } else {
+            color(1.0, 1.0, 1.0)
+        }
+    }
+
     pub fn add_object(&mut self, mut obj: Box<dyn Shape>){
         let current = self.objects.len();
         obj.set_index( current as usize );
@@ -393,5 +401,26 @@ mod tests {
                  
         assert!( w.get_object(2).get_index() == 2 );
         assert!( w.get_object(2).get_material().color.equals( color(0.0, 0.0, 1.0) ));
+    }
+
+    #[test]
+    fn reflected_color_of_nonreflective_surface(){
+        let mut w = world();
+        w.light = Some(point_light( point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0) ));
+
+        let mut s = sphere();
+        s.set_transform( scaling(0.5, 0.5, 0.5) );
+        let mut mat = material();
+        mat.ambient = 1.0;
+        s.set_material(mat);
+        w.add_object(Box::new(s));
+
+        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0));
+        let i = intersection(1.0, 0);
+
+        let comps = prepare_computations(i, r, &w);
+        let col = w.reflected_color(comps);
+
+        assert!( col.equals(color(0.0, 0.0, 0.0)) );
     }
 }
