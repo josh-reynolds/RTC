@@ -509,4 +509,27 @@ mod tests {
         // expected, until count field was added to Ray & Computation
         // No asserts needed for this one.
     }
+
+    #[test]
+    fn maximum_recursion_depth_for_reflections(){
+        let mut w = default_world();
+        
+        let mut p = plane();
+        p.set_transform( translation(0.0, -1.0, 0.0) );
+        let mut mat = material();
+        mat.reflective = 0.5;
+        p.set_material(mat);
+        w.add_object(Box::new(p));
+
+        // My solution diverges from the text - reflected rays
+        // increment a count, and reflected_color() bails out at
+        // the threshold (5)
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 5);
+        let i = intersection(SQRT_2, 2);
+
+        let comps = prepare_computations(i, r, &w);
+        let col = w.reflected_color(comps);
+
+        assert!( col.equals( color(0.0, 0.0, 0.0) ));
+    }
 }
