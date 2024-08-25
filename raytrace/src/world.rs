@@ -78,7 +78,7 @@ impl World {
         let distance = v.mag();
         let direction = v.normal();
 
-        let r = ray(p, direction);
+        let r = ray(p, direction, 0);
         let xs = self.intersect(r);
 
         let mut result = false;
@@ -98,10 +98,13 @@ impl World {
 
     pub fn reflected_color(&self, comps: Computations) -> Color {
         let reflect_value = self.get_object(comps.object).get_material().reflective;
-        if  reflect_value == 0.0 {
+
+        //NOTE: hardcoded bounce limit to prevent stack overflow
+        // conceivably could make this configurable, 4 is entirely arbitrary
+        if  reflect_value == 0.0 || comps.count > 4 {
             color(0.0, 0.0, 0.0)
         } else {
-            let reflect_ray = ray(comps.over_point, comps.reflectv);
+            let reflect_ray = ray(comps.over_point, comps.reflectv, comps.count+1);
             let col = self.color_at(reflect_ray);
 
             col * reflect_value
@@ -216,7 +219,7 @@ mod tests {
     #[test]
     fn intersect_world_with_ray(){
         let w = default_world();
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
 
         let xs = w.intersect( r );
 
@@ -230,7 +233,7 @@ mod tests {
     #[test]
     fn shading_an_intersection(){
         let w = default_world();
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 0);
         let comps = prepare_computations(i, r, &w);
 
@@ -242,7 +245,7 @@ mod tests {
     fn shading_an_intersection_from_inside(){
         let mut w = default_world();
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
-        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(0.5, 1);
         let comps = prepare_computations(i, r, &w);
 
@@ -253,7 +256,7 @@ mod tests {
     #[test]
     fn color_when_ray_misses(){
         let w = default_world();
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 1.0, 0.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 1.0, 0.0), 0 );
 
         let c = w.color_at(r);
         assert!( c.equals( color(0.0, 0.0, 0.0) ));
@@ -262,7 +265,7 @@ mod tests {
     #[test]
     fn color_when_ray_hits(){
         let w = default_world();
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
 
         let c = w.color_at(r);
         assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
@@ -280,7 +283,7 @@ mod tests {
         mat.ambient = 1.0;
         w.objects[1].set_material( mat );
 
-        let r = ray( point(0.0, 0.0, 0.75), vector(0.0, 0.0, -1.0) );
+        let r = ray( point(0.0, 0.0, 0.75), vector(0.0, 0.0, -1.0), 0 );
 
         let c = w.color_at(r);
         assert!( c.equals( w.objects[1].get_material().color ));
@@ -289,7 +292,7 @@ mod tests {
     #[test]
     fn color_with_all_intersections_behind_ray(){
         let w = default_world();
-        let r = ray( point(0.0, 0.0, 10.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, 10.0), vector(0.0, 0.0, 1.0), 0 );
 
         let c = w.color_at(r);
         assert!( c.equals( color(0.0, 0.0, 0.0) ));
@@ -337,7 +340,7 @@ mod tests {
         w.add_object(Box::new(s1));
         w.add_object(Box::new(s2));
         
-        let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0));
+        let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(9.0, 1);   // I think the book has a typo here
         let comps = prepare_computations(i, r, &w);
         
@@ -353,7 +356,7 @@ mod tests {
         s.set_transform( translation(0.0, 0.0, 1.0) );
         w.add_object(Box::new(s));
 
-        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0));
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(5.0, 0);
         let comps = prepare_computations(i, r, &w);
     
@@ -423,7 +426,7 @@ mod tests {
         s.set_material(mat);
         w.add_object(Box::new(s));
 
-        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0));
+        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(1.0, 0);
 
         let comps = prepare_computations(i, r, &w);
@@ -443,7 +446,7 @@ mod tests {
         p.set_material(mat);
         w.add_object(Box::new(p));
 
-        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0));
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0);
         let i = intersection(SQRT_2, 2);
 
         let comps = prepare_computations(i, r, &w);
@@ -466,7 +469,7 @@ mod tests {
         p.set_material(mat);
         w.add_object(Box::new(p));
 
-        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0));
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0);
         let i = intersection(SQRT_2, 2);
 
         let comps = prepare_computations(i, r, &w);
@@ -476,5 +479,34 @@ mod tests {
         // NOTE: like the previous test, the values I am generating are 
         // a tiny bit different from the text - it has 
         // (0.8677, 0.92436, 0.82918) - so overriding again.
+    }
+
+    #[test]
+    fn mutually_reflective_surfaces(){
+        let mut w = world();
+        w.light = Some(point_light( point(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0) ));
+
+        let mut lower = plane();
+        lower.set_transform( translation(0.0, -1.0, 0.0) );
+        let mut mat = material();
+        mat.reflective = 1.0;
+        lower.set_material(mat);
+        w.add_object(Box::new(lower));
+
+        let mut upper = plane();
+        upper.set_transform( translation(0.0, 1.0, 0.0) );
+        let mut mat = material();
+        mat.reflective = 1.0;
+        upper.set_material(mat);
+        w.add_object(Box::new(upper));
+
+        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 1.0, 0.0), 0);
+        let _col = w.color_at(r);
+
+        // NOTE: this test is designed to expose the initial recursion
+        // issue in shade_hit() -> reflected_color() -> color_at() -> shade_hit()...
+        // which resulted in a stack overflow. Test initially failed as
+        // expected, until count field was added to Ray & Computation
+        // No asserts needed for this one.
     }
 }

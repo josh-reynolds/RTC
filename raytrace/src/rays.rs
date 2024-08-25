@@ -5,6 +5,7 @@ use crate::matrix::Matrix;
 pub struct Ray {
     pub origin: Tuple,
     pub direction: Tuple,
+    pub count: usize,
 }
 
 impl Ray {
@@ -14,12 +15,13 @@ impl Ray {
 
     pub fn transform(&self, t: Matrix) -> Self {
         ray( t.multup( &self.origin ),
-             t.multup( &self.direction ))
+             t.multup( &self.direction ),
+             self.count)
     }
 }
 
-pub fn ray(origin: Tuple, direction: Tuple) -> Ray {
-    Ray { origin, direction }
+pub fn ray(origin: Tuple, direction: Tuple, count: usize) -> Ray {
+    Ray { origin, direction, count }
 }
 
 #[cfg(test)]
@@ -33,7 +35,7 @@ mod tests {
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 4.0, 5.0, 6.0);
 
-        let r = ray(o, d);
+        let r = ray(o, d, 0);
         assert!( r.origin.equals(point( 1.0, 2.0, 3.0))) ;
         assert!( r.direction.equals(vector( 4.0, 5.0, 6.0))) ;
     }
@@ -43,7 +45,7 @@ mod tests {
         let o = point( 2.0, 3.0, 4.0);
         let d = vector( 1.0, 0.0, 0.0);
 
-        let r = ray(o, d);
+        let r = ray(o, d, 0);
         assert!( r.position(0.0).equals(point( 2.0, 3.0, 4.0))) ;
         assert!( r.position(1.0).equals(point( 3.0, 3.0, 4.0))) ;
         assert!( r.position(-1.0).equals(point( 1.0, 3.0, 4.0))) ;
@@ -55,7 +57,7 @@ mod tests {
     fn translating_a_ray(){
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 0.0, 1.0, 0.0);
-        let r = ray(o, d);
+        let r = ray(o, d, 0);
 
         let m = translation(3.0, 4.0, 5.0);
         let r2 = r.transform(m);
@@ -68,7 +70,7 @@ mod tests {
     fn scaling_a_ray(){
         let o = point( 1.0, 2.0, 3.0);
         let d = vector( 0.0, 1.0, 0.0);
-        let r = ray(o, d);
+        let r = ray(o, d, 0);
 
         let m = scaling(2.0, 3.0, 4.0);
         let r2 = r.transform(m);

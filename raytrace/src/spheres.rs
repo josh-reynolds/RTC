@@ -92,7 +92,8 @@ mod tests {
     fn ray_intersects_sphere_at_two_points(){
         let s = sphere();
         let r = ray( point( 0.0, 0.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 4.0 );
@@ -103,7 +104,8 @@ mod tests {
     fn ray_intersects_sphere_at_tangent(){
         let s = sphere();
         let r = ray( point( 0.0, 1.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, 5.0 );
@@ -114,7 +116,8 @@ mod tests {
     fn ray_misses_sphere(){
         let s = sphere();
         let r = ray( point( 0.0, 2.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 0 );
     }
@@ -123,7 +126,8 @@ mod tests {
     fn ray_originates_inside_sphere(){
         let s = sphere();
         let r = ray( origin(),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -1.0 );
@@ -134,7 +138,8 @@ mod tests {
     fn sphere_is_behind_ray(){
         let s = sphere();
         let r = ray( point( 0.0, 0.0, 5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].t, -6.0 );
@@ -145,7 +150,8 @@ mod tests {
     fn intersect_sets_object_on_intersections(){
         let s = sphere();
         let r = ray( point( 0.0, 0.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
         assert_eq!( xs.len(), 2 );
         assert_eq!( xs[0].object, 0);
@@ -172,7 +178,8 @@ mod tests {
         s.set_transform( scaling( 2.0, 2.0, 2.0 ));
 
         let r = ray( point( 0.0, 0.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 2 );
@@ -186,7 +193,8 @@ mod tests {
         s.set_transform( translation( 5.0, 0.0, 0.0 ));
 
         let r = ray( point( 0.0, 0.0, -5.0 ),
-                     vector( 0.0, 0.0, 1.0 ));
+                     vector( 0.0, 0.0, 1.0 ), 
+                     0);
         let xs = s.intersect(r);
 
         assert_eq!( xs.len(), 0 );

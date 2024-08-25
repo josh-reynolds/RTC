@@ -53,6 +53,7 @@ pub struct Computations {
     pub normalv: Tuple,
     pub inside: bool,
     pub reflectv: Tuple,
+    pub count: usize,
 }
 
 pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computations {
@@ -74,6 +75,7 @@ pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computation
         normalv: n,
         inside: ins,
         reflectv: rv,
+        count: r.count,
     }
 }
 
@@ -158,7 +160,7 @@ mod tests {
 
     #[test]
     fn precomputing_intersection_state(){
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 1);
 
         let comps = prepare_computations(i, r, &default_world());
@@ -172,7 +174,7 @@ mod tests {
 
     #[test]
     fn intersection_on_outside(){
-        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 1);
 
         let comps = prepare_computations(i, r, &default_world());
@@ -182,7 +184,7 @@ mod tests {
 
     #[test]
     fn intersection_on_inside(){
-        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(1.0, 1);
 
         let comps = prepare_computations(i, r, &default_world());
@@ -198,7 +200,7 @@ mod tests {
         let mut w = world();
         let p = plane();
         w.add_object(Box::new(p));
-        let r = ray( point(0.0, 1.0, -1.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0) );
+        let r = ray( point(0.0, 1.0, -1.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0 );
         let i = intersection(SQRT_2, 0);
 
         let comps = prepare_computations(i, r, &w);

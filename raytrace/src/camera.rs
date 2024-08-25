@@ -27,7 +27,7 @@ impl Camera {
         let origin = self.transform.inverse().multup( &origin() );
         let direction = (pixel - origin).normal();
 
-        ray( origin, direction )
+        ray( origin, direction, 0 )
     }
 
     pub fn render(&self, w: World) -> Canvas {

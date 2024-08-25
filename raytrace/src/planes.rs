@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn intersect_with_ray_parallel_to_plane(){
         let p = plane();
-        let r = ray( point(0.0, 10.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 10.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
 
         let xs = p.intersect( r );
 
@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn intersect_with_coplanar_ray(){
         let p = plane();
-        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0) );
+        let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
 
         let xs = p.intersect( r );
 
@@ -101,7 +101,7 @@ mod tests {
     #[test]
     fn ray_intersecting_plane_from_above(){
         let p = plane();
-        let r = ray( point(0.0, 1.0, 0.0), vector(0.0, -1.0, 0.0) );
+        let r = ray( point(0.0, 1.0, 0.0), vector(0.0, -1.0, 0.0), 0 );
 
         let xs = p.intersect( r );
 
@@ -113,7 +113,7 @@ mod tests {
     #[test]
     fn ray_intersecting_plane_from_below(){
         let p = plane();
-        let r = ray( point(0.0, -1.0, 0.0), vector(0.0, 1.0, 0.0) );
+        let r = ray( point(0.0, -1.0, 0.0), vector(0.0, 1.0, 0.0), 0 );
 
         let xs = p.intersect( r );
 
