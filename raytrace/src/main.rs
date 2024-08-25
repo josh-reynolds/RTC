@@ -1,7 +1,7 @@
 use raytrace::tuple::{point, vector};
 use std::f64::consts::PI;
 use raytrace::camera::camera;
-use raytrace::transform::{view_transform, translation, scaling, rotation_z, rotation_y};
+use raytrace::transform::{view_transform, translation, scaling, rotation_y};
 use raytrace::world::world;
 use raytrace::spheres::sphere;
 use raytrace::planes::plane;
@@ -11,7 +11,7 @@ use raytrace::materials::material;
 use raytrace::lights::point_light;
 use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
-use raytrace::gradients::gradient_pattern;
+//use raytrace::gradients::gradient_pattern;
 //use raytrace::rings::ring_pattern;
 use raytrace::checkers::checker_pattern;
 use raytrace::radial_gradients::radial_gradient_pattern;
@@ -36,10 +36,7 @@ fn main() {
     let mut middle = sphere();
     middle.set_transform( translation(-0.5, 1.0, 0.5) );
     let mut mat = material();
-    let mut p2 = gradient_pattern(color(1.0, 0.0, 1.0), color(0.0, 1.0, 0.5));
-    p2.set_pattern_transform( rotation_z( PI / 5.0 ) );
-    let current = w.add_pattern( Box::new(p2) );
-    mat.pattern = Some(current);
+    mat.reflective = 0.8;
     mat.color = color(0.9, 0.1, 0.1);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
@@ -81,7 +78,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("poly_pattern_with_radial_gradient.ppm");
+    let _ = image.to_ppm("reflections.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
