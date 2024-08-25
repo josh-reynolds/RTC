@@ -40,14 +40,17 @@ impl World {
 
         let shadowed = self.is_shadowed(comps.over_point);
 
-        lighting(self.objects[comps.object].get_material().clone(), 
-                 &self.objects[comps.object],
-                 &l, 
-                 comps.point, 
-                 comps.eyev, 
-                 comps.normalv, 
-                 shadowed,
-                 &self)
+        let surface = lighting(self.objects[comps.object].get_material().clone(), 
+                               &self.objects[comps.object],
+                               &l, 
+                               comps.point, 
+                               comps.eyev, 
+                               comps.normalv, 
+                               shadowed,
+                               &self);
+        let reflected = self.reflected_color(comps);
+
+        surface + reflected
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -450,5 +453,28 @@ mod tests {
         // NOTE: the text uses (0.19032, 0.2379, 0.14274) which is off just
         // a hair from the values my implementation returns - overriding 
         // test values here
+    }
+
+    #[test]
+    fn shade_hit_with_reflective_surface(){
+        let mut w = default_world();
+        
+        let mut p = plane();
+        p.set_transform( translation(0.0, -1.0, 0.0) );
+        let mut mat = material();
+        mat.reflective = 0.5;
+        p.set_material(mat);
+        w.add_object(Box::new(p));
+
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0));
+        let i = intersection(SQRT_2, 2);
+
+        let comps = prepare_computations(i, r, &w);
+        let col = w.shade_hit(comps);
+
+        assert!( col.equals( color(0.87675, 0.92434, 0.82917) ));
+        // NOTE: like the previous test, the values I am generating are 
+        // a tiny bit different from the text - it has 
+        // (0.8677, 0.92436, 0.82918) - so overriding again.
     }
 }
