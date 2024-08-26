@@ -3,7 +3,7 @@ use crate::tuple::{Tuple, origin};
 use crate::intersections::{Intersection, intersection, intersections};
 use crate::matrix::Matrix;
 use crate::shapes::{Base, Shape, shape};
-use crate::materials::Material;
+use crate::materials::{Material, material};
 
 #[derive(Debug,PartialEq,Clone)]
 pub struct Sphere {
@@ -69,15 +69,27 @@ pub fn sphere() -> Sphere {
     }
 }
 
+pub fn glass_sphere() -> Sphere {
+    let mut s = Sphere {
+        supe: shape(),
+    };
+    let mut mat = material();
+    mat.transparency = 1.0;
+    mat.refractive_index = 1.5;
+    s.set_material(mat);
+    s
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::spheres::sphere;
+    use crate::spheres::{sphere, glass_sphere};
     use crate::shapes::Shape;
     use crate::tuple::{point, vector, origin};
     use crate::rays::ray;
     use crate::matrix::identity;
     use crate::transform::{translation, scaling, rotation_z};
     use crate::materials::material;
+    use crate::equals::equals;
     use std::f64::consts::{PI, SQRT_2};
     //use std::f64::consts::SQRT_3;  // unfortunately still in experimental branch...
     
@@ -275,5 +287,13 @@ mod tests {
         s.set_material( m.clone() );
         assert!( !s.get_material().equals( material() ));
         assert!( s.get_material().equals( m ));
+    }
+
+    #[test]
+    fn glassy_sphere_helper_ctor(){
+        let s = glass_sphere();
+        assert!(s.get_transform().equals(identity()));
+        assert!(equals(s.get_material().transparency, 1.0)); 
+        assert!(equals(s.get_material().refractive_index, 1.5)); 
     }
 }
