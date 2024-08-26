@@ -8,13 +8,22 @@ use crate::world::World;
 #[derive(Debug,Clone,PartialEq)]
 pub struct Material {
     pub color: Color,
-    pub ambient: f64,      // typical range 0-1
-    pub diffuse: f64,      // typical range 0-1
-    pub specular: f64,     // typical range 0-1
-    pub shininess: f64,    // typical range 10-200
+    pub ambient: f64,           // typical range 0-1
+    pub diffuse: f64,           // typical range 0-1
+    pub specular: f64,          // typical range 0-1
+    pub shininess: f64,         // typical range 10-200
     pub pattern: Option<usize>,
-    pub reflective: f64,   // typical range 0-1
+    pub reflective: f64,        // typical range 0-1
+    pub transparency: f64,      // typical range 0-1
+    pub refractive_index: f64,  // typical range 1-3
 }
+
+// refractive indices for reference (RTC p. 150):
+// vacuum  1.0
+// air     1.00029
+// water   1.333
+// glass   1.52
+// diamond 2.417
 
 impl Material {
     pub fn equals(&self, m: Material) -> bool {
@@ -24,7 +33,9 @@ impl Material {
         equals(self.specular, m.specular) &&
         equals(self.shininess, m.shininess) &&
         self.pattern == m.pattern &&
-        equals(self.reflective, m.reflective)
+        equals(self.reflective, m.reflective) &&
+        equals(self.transparency, m.transparency) &&
+        equals(self.refractive_index, m.refractive_index)
     }
 }
 
@@ -37,6 +48,8 @@ pub fn material() -> Material {
         shininess: 200.0,
         pattern: None,
         reflective: 0.0,
+        transparency: 0.0,
+        refractive_index: 1.0,
     }
 }
 
@@ -267,5 +280,12 @@ mod tests {
     fn default_reflectivity(){
         let m = material();
         assert_eq!(m.reflective, 0.0);
+    }
+
+    #[test]
+    fn default_transparency_and_refraction(){
+        let m = material();
+        assert!(equals(m.transparency, 0.0));
+        assert!(equals(m.refractive_index, 1.0));
     }
 }
