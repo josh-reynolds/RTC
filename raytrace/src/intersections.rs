@@ -54,6 +54,8 @@ pub struct Computations {
     pub inside: bool,
     pub reflectv: Tuple,
     pub count: usize,
+    pub n1: f64,
+    pub n2: f64,
 }
 
 pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computations {
@@ -76,6 +78,8 @@ pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computation
         inside: ins,
         reflectv: rv,
         count: r.count,
+        n1: 1.0,      // naive value to get this to compile
+        n2: 1.5,
     }
 }
 
@@ -88,6 +92,10 @@ mod tests {
     use crate::equals::equals;
     use crate::world::{world, default_world};
     use crate::planes::plane;
+    use crate::spheres::glass_sphere;
+    use crate::shapes::Shape;
+    use crate::transform::{scaling, translation};
+    use crate::materials::material;
     use std::f64::consts::SQRT_2;
 
     #[test]
@@ -206,5 +214,46 @@ mod tests {
         let comps = prepare_computations(i, r, &w);
 
         assert!{ comps.reflectv.equals( vector(0.0, SQRT_2 / 2.0, SQRT_2 / 2.0) )};
+    }
+
+    #[test]
+    fn finding_n1_and_n2_at_various_intersections(){
+        let mut w = world();
+
+        let mut a = glass_sphere();
+        a.set_transform(scaling(2.0, 2.0, 2.0));
+        let mut mat = material();
+        mat.refractive_index = 1.5;
+        a.set_material(mat);
+        w.add_object(Box::new(a));
+
+        let mut b = glass_sphere();
+        b.set_transform(translation(0.0, 0.0, -0.25));
+        let mut mat = material();
+        mat.refractive_index = 2.0;
+        b.set_material(mat);
+        w.add_object(Box::new(b));
+
+        let mut c = glass_sphere();
+        c.set_transform(translation(0.0, 0.0, 0.25));
+        let mut mat = material();
+        mat.refractive_index = 2.5;
+        c.set_material(mat);
+        w.add_object(Box::new(c));
+        
+        let r = ray(point(0.0, 0.0, -4.0), vector(0.0, 0.0, 1.0), 0);
+
+        let i1 = intersection(2.00, 0); // more 'correct' to use a.get_index()
+        let i2 = intersection(2.75, 1); // here, but that will cause a borrowing
+        let i3 = intersection(3.25, 2); // issue and require clone() above, 
+        let i4 = intersection(4.75, 1); // simpler to have this index hardcoded
+        let i5 = intersection(5.25, 2); // for the purposes of this test
+        let i6 = intersection(6.00, 0);
+        let xs = intersections(&[i1, i2, i3, i4, i5, i6]);
+
+        let comps = prepare_computations(xs[0], r, &w);
+        assert_eq!(comps.n1, 1.0);
+        assert_eq!(comps.n2, 1.5);
+        
     }
 }
