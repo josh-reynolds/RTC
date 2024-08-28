@@ -54,11 +54,14 @@ pub struct Computations {
     pub inside: bool,
     pub reflectv: Tuple,
     pub count: usize,
-    pub n1: f64,
-    pub n2: f64,
+    pub n1: f64,   // refractive index coming FROM
+    pub n2: f64,   // refractive index going TO
 }
 
-pub fn prepare_computations( i: Intersection, r: Ray, w: &World ) -> Computations {
+pub fn prepare_computations( i: Intersection, 
+                             r: Ray, 
+                             w: &World, 
+                             xs: &Vec<Intersection> ) -> Computations {
     let mut ins = false;
     let mut n = w.get_object(i.object).normal_at( r.position(i.t) );
     if n.dot( &-r.direction ) < 0.0 {
@@ -170,8 +173,9 @@ mod tests {
     fn precomputing_intersection_state(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 1);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &default_world());
+        let comps = prepare_computations(i, r, &default_world(), &xs);
 
         assert!( equals(comps.t, i.t) );
         assert_eq!( comps.object, 1);
@@ -184,8 +188,9 @@ mod tests {
     fn intersection_on_outside(){
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 1);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &default_world());
+        let comps = prepare_computations(i, r, &default_world(), &xs);
 
         assert!( comps.inside == false );
     }
@@ -194,8 +199,9 @@ mod tests {
     fn intersection_on_inside(){
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(1.0, 1);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &default_world());
+        let comps = prepare_computations(i, r, &default_world(), &xs);
 
         assert!( comps.point.equals( point(0.0, 0.0, 1.0) ));
         assert!( comps.eyev.equals( vector(0.0, 0.0, -1.0) ));
@@ -210,8 +216,9 @@ mod tests {
         w.add_object(Box::new(p));
         let r = ray( point(0.0, 1.0, -1.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0 );
         let i = intersection(SQRT_2, 0);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &w);
+        let comps = prepare_computations(i, r, &w, &xs);
 
         assert!{ comps.reflectv.equals( vector(0.0, SQRT_2 / 2.0, SQRT_2 / 2.0) )};
     }
@@ -251,9 +258,12 @@ mod tests {
         let i6 = intersection(6.00, 0);
         let xs = intersections(&[i1, i2, i3, i4, i5, i6]);
 
-        let comps = prepare_computations(xs[0], r, &w);
+        let comps = prepare_computations(xs[0], r, &w, &xs);
         assert_eq!(comps.n1, 1.0);
         assert_eq!(comps.n2, 1.5);
         
+        let comps = prepare_computations(xs[1], r, &w, &xs);
+        assert_eq!(comps.n1, 1.5);
+        assert_eq!(comps.n2, 2.0);
     }
 }

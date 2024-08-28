@@ -6,7 +6,8 @@ use crate::color::{Color, color};
 use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::{Ray, ray};
-use crate::intersections::{Intersection, hit, Computations, prepare_computations};
+use crate::intersections::{Intersection, hit, Computations, 
+                           prepare_computations};
 use crate::patterns::Pattern;
 
 #[derive(Debug)]
@@ -61,14 +62,14 @@ impl World {
         } else {
             let mut hit = xs[0];
             if hit.t < 0.0 {
-                for i in xs {
+                for i in &xs {
                     if i.t >= 0.0 {
-                        hit = i;
+                        hit = *i;
                         break;
                     }
                 }
             }
-            let comps = prepare_computations(hit, r, self);
+            let comps = prepare_computations(hit, r, self, &xs);
             self.shade_hit(comps)
         }
     }
@@ -176,7 +177,7 @@ mod tests {
     use crate::lights::point_light;
     use crate::materials::material;
     use crate::rays::ray;
-    use crate::intersections::{intersection, prepare_computations};
+    use crate::intersections::{intersection, prepare_computations, intersections};
     use crate::planes::plane;
     use crate::matrix::identity;
     use std::f64::consts::SQRT_2;
@@ -235,7 +236,8 @@ mod tests {
         let w = default_world();
         let r = ray( point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(4.0, 0);
-        let comps = prepare_computations(i, r, &w);
+        let xs = intersections(&[i]);
+        let comps = prepare_computations(i, r, &w, &xs);
 
         let c = w.shade_hit(comps);
         assert!( c.equals( color(0.38066, 0.47583, 0.2855) ));
@@ -247,7 +249,8 @@ mod tests {
         w.light = Some(point_light( point(0.0, 0.25, 0.0), color(1.0, 1.0, 1.0) ));
         let r = ray( point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0 );
         let i = intersection(0.5, 1);
-        let comps = prepare_computations(i, r, &w);
+        let xs = intersections(&[i]);
+        let comps = prepare_computations(i, r, &w, &xs);
 
         let c = w.shade_hit(comps);
         assert!( c.equals( color(0.90498, 0.90498, 0.90498) ));
@@ -342,7 +345,8 @@ mod tests {
         
         let r = ray(point(0.0, 0.0, 5.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(9.0, 1);   // I think the book has a typo here
-        let comps = prepare_computations(i, r, &w);
+        let xs = intersections(&[i]);
+        let comps = prepare_computations(i, r, &w, &xs);
         
         let c = w.shade_hit(comps);
 
@@ -358,7 +362,8 @@ mod tests {
 
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(5.0, 0);
-        let comps = prepare_computations(i, r, &w);
+        let xs = intersections(&[i]);
+        let comps = prepare_computations(i, r, &w, &xs);
     
         assert!( comps.over_point.z < -EPSILON/2.0 );
         assert!( comps.point.z > comps.over_point.z );
@@ -428,8 +433,9 @@ mod tests {
 
         let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0);
         let i = intersection(1.0, 0);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &w);
+        let comps = prepare_computations(i, r, &w, &xs);
         let col = w.reflected_color(comps);
 
         assert!( col.equals(color(0.0, 0.0, 0.0)) );
@@ -448,8 +454,9 @@ mod tests {
 
         let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0);
         let i = intersection(SQRT_2, 2);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &w);
+        let comps = prepare_computations(i, r, &w, &xs);
         let col = w.reflected_color(comps);
 
         assert!( col.equals( color(0.19033, 0.23791, 0.14274) ));
@@ -471,8 +478,9 @@ mod tests {
 
         let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 0);
         let i = intersection(SQRT_2, 2);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &w);
+        let comps = prepare_computations(i, r, &w, &xs);
         let col = w.shade_hit(comps);
 
         assert!( col.equals( color(0.87675, 0.92434, 0.82917) ));
@@ -526,8 +534,9 @@ mod tests {
         // the threshold (5)
         let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2 / 2.0, SQRT_2 / 2.0), 5);
         let i = intersection(SQRT_2, 2);
+        let xs = intersections(&[i]);
 
-        let comps = prepare_computations(i, r, &w);
+        let comps = prepare_computations(i, r, &w, &xs);
         let col = w.reflected_color(comps);
 
         assert!( col.equals( color(0.0, 0.0, 0.0) ));
