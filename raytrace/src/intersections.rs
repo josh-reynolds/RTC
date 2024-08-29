@@ -295,5 +295,21 @@ mod tests {
         let comps = prepare_computations(xs[1], r, &w, &xs);
         assert_eq!(comps.n1, 1.5);
         assert_eq!(comps.n2, 2.0);
+
+        let comps = prepare_computations(xs[2], r, &w, &xs);
+        assert_eq!(comps.n1, 2.0);
+        assert_eq!(comps.n2, 2.5);
+
+        let comps = prepare_computations(xs[3], r, &w, &xs);
+        assert_eq!(comps.n1, 2.5);
+        assert_eq!(comps.n2, 2.5);
+
+        //let comps = prepare_computations(xs[4], r, &w, &xs);
+        //assert_eq!(comps.n1, 2.5);
+        //assert_eq!(comps.n2, 1.5);
+
+        //let comps = prepare_computations(xs[5], r, &w, &xs);
+        //assert_eq!(comps.n1, 1.5);
+        //assert_eq!(comps.n2, 1.0);
     }
 }
