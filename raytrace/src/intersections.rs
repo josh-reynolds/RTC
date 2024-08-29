@@ -12,8 +12,7 @@ pub struct Intersection {
 impl Intersection {
     pub fn equals( &self, other: Intersection ) -> bool {
         self.t == other.t && 
-            //self.object as *const _ == other.object as *const _
-            self.object == other.object
+        self.object == other.object
     }
 }
 
@@ -58,31 +57,62 @@ pub struct Computations {
     pub n2: f64,   // refractive index going TO
 }
 
-pub fn prepare_computations( i: Intersection, 
+pub fn prepare_computations( hit: Intersection, 
                              r: Ray, 
                              w: &World, 
                              xs: &Vec<Intersection> ) -> Computations {
     let mut ins = false;
-    let mut n = w.get_object(i.object).normal_at( r.position(i.t) );
+    let mut n = w.get_object(hit.object).normal_at( r.position(hit.t) );
     if n.dot( &-r.direction ) < 0.0 {
         n = -n;
         ins = true;
     }
-    let op = r.position(i.t) + n * EPSILON;
+    let op = r.position(hit.t) + n * EPSILON;
     let rv = r.direction.reflect(&n);
 
+    let mut containers: Vec<usize> = vec!();
+    let mut n1 = 1.0;
+    let mut n2 = 1.0;
+
+    for i in xs {
+        if i.equals(hit) {
+            if containers.len() == 0 {
+                n1 = 1.0;
+            } else {
+                let last = containers[containers.len()-1];
+                n1 = w.get_object(last).get_material().refractive_index;
+            }
+        }
+
+        if containers.contains(&i.object) {
+            containers.remove(i.object);
+        } else {
+            containers.push(i.object);
+        }
+
+        if i.equals(hit) {
+            if containers.len() == 0 {
+                n2 = 1.0;
+            } else {
+                let last = containers[containers.len()-1];
+                n2 = w.get_object(last).get_material().refractive_index;
+            }
+            break;
+        }
+    }
+
     Computations { 
-        t: i.t,
-        object: i.object,
-        point: r.position( i.t ),
+        t: hit.t,
+        object: hit.object,
+        point: r.position( hit.t ),
         over_point: op,
         eyev: -r.direction,
         normalv: n,
         inside: ins,
         reflectv: rv,
         count: r.count,
-        n1: 1.0,      // naive value to get this to compile
-        n2: 1.5,
+        n1: n1,
+        n2: n2,
     }
 }
 
