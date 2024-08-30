@@ -85,7 +85,7 @@ pub fn prepare_computations( hit: Intersection,
         }
 
         if containers.contains(&i.object) {
-            containers.remove(i.object);
+            containers.retain(|x| *x != i.object);
         } else {
             containers.push(i.object);
         }
@@ -304,12 +304,12 @@ mod tests {
         assert_eq!(comps.n1, 2.5);
         assert_eq!(comps.n2, 2.5);
 
-        //let comps = prepare_computations(xs[4], r, &w, &xs);
-        //assert_eq!(comps.n1, 2.5);
-        //assert_eq!(comps.n2, 1.5);
+        let comps = prepare_computations(xs[4], r, &w, &xs);
+        assert_eq!(comps.n1, 2.5);
+        assert_eq!(comps.n2, 1.5);
 
-        //let comps = prepare_computations(xs[5], r, &w, &xs);
-        //assert_eq!(comps.n1, 1.5);
-        //assert_eq!(comps.n2, 1.0);
+        let comps = prepare_computations(xs[5], r, &w, &xs);
+        assert_eq!(comps.n1, 1.5);
+        assert_eq!(comps.n2, 1.0);
     }
 }
