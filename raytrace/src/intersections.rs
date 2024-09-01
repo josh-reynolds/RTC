@@ -48,6 +48,7 @@ pub struct Computations {
     pub object: usize,
     pub point: Tuple,
     pub over_point: Tuple,
+    pub under_point: Tuple,
     pub eyev: Tuple,
     pub normalv: Tuple,
     pub inside: bool,
@@ -68,6 +69,7 @@ pub fn prepare_computations( hit: Intersection,
         ins = true;
     }
     let op = r.position(hit.t) + n * EPSILON;
+    let up = r.position(hit.t) - n * EPSILON;
     let rv = r.direction.reflect(&n);
 
     let mut containers: Vec<usize> = vec!();
@@ -106,6 +108,7 @@ pub fn prepare_computations( hit: Intersection,
         object: hit.object,
         point: r.position( hit.t ),
         over_point: op,
+        under_point: up,
         eyev: -r.direction,
         normalv: n,
         inside: ins,
@@ -129,6 +132,7 @@ mod tests {
     use crate::shapes::Shape;
     use crate::transform::{scaling, translation};
     use crate::materials::material;
+    use crate::equals::EPSILON;
     use std::f64::consts::SQRT_2;
 
     #[test]
@@ -311,5 +315,23 @@ mod tests {
         let comps = prepare_computations(xs[5], r, &w, &xs);
         assert_eq!(comps.n1, 1.5);
         assert_eq!(comps.n2, 1.0);
+    }
+
+    #[test]
+    fn under_point_offset_below_surface(){
+        let mut w = world();
+        
+        let mut shape = glass_sphere();
+        shape.set_transform(translation(0.0, 0.0, 1.0));
+        w.add_object(Box::new(shape));
+
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
+        let i = intersection(5.0, 0); 
+        let xs = intersections(&[i]);
+
+        let comps = prepare_computations(i, r, &w, &xs);
+
+        assert!(comps.under_point.z > EPSILON/2.0);
+        assert!(comps.point.z < comps.under_point.z);
     }
 }
