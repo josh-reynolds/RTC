@@ -112,6 +112,15 @@ impl World {
         }
     }
 
+    pub fn refracted_color(&self, comps: Computations) -> Color {
+        let transparency = self.get_object(comps.object).get_material().transparency;
+
+        if transparency == 0.0 {
+            return color(0.0, 0.0, 0.0);
+        }
+        color(1.0, 1.0, 1.0)
+    }
+
     pub fn add_object(&mut self, mut obj: Box<dyn Shape>){
         let current = self.objects.len();
         obj.set_index( current as usize );
@@ -540,5 +549,18 @@ mod tests {
         let col = w.reflected_color(comps);
 
         assert!( col.equals( color(0.0, 0.0, 0.0) ));
+    }
+
+    #[test]
+    fn refracted_color_opaque_surface(){
+        let w = default_world();
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
+        let xs = intersections(&[intersection(4.0, 0), intersection(6.0, 0)]);
+
+        let comps = prepare_computations(xs[0], r, &w, &xs);
+        let col = w.refracted_color(comps);
+
+        assert!(col.equals(color(0.0, 0.0, 0.0)));
+
     }
 }
