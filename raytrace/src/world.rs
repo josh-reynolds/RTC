@@ -115,7 +115,8 @@ impl World {
     pub fn refracted_color(&self, comps: Computations) -> Color {
         let transparency = self.get_object(comps.object).get_material().transparency;
 
-        if transparency == 0.0 {
+        // NOTE: same recursive depth approach as above in reflected_color
+        if transparency == 0.0 || comps.count > 4 {
             return color(0.0, 0.0, 0.0);
         }
         color(1.0, 1.0, 1.0)
@@ -561,6 +562,31 @@ mod tests {
         let col = w.refracted_color(comps);
 
         assert!(col.equals(color(0.0, 0.0, 0.0)));
+    }
 
+    #[test]
+    fn refracted_color_at_max_recursion_depth(){
+        let mut w = world();
+
+        let mut s = sphere();
+        let mut m = material();
+        m.color = color(0.8, 1.0, 0.6);
+        m.diffuse = 0.7;
+        m.specular = 0.2;
+        m.transparency = 1.0;
+        m.refractive_index = 1.5;
+        s.set_material(m);
+        w.add_object(Box::new(s));
+
+        // taking the same approach as reflected_color - ray
+        // will maintain a recursion count, and we will bail
+        // out at the hardcoded max value (5)
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 5);
+        let xs = intersections(&[intersection(4.0, 0), intersection(6.0, 0)]);
+
+        let comps = prepare_computations(xs[0], r, &w, &xs);
+        let col = w.refracted_color(comps);
+
+        assert!(col.equals(color(0.0, 0.0, 0.0)));
     }
 }
