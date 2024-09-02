@@ -119,6 +119,15 @@ impl World {
         if transparency == 0.0 || comps.count > 4 {
             return color(0.0, 0.0, 0.0);
         }
+
+        // test for total internal reflection
+        let n_ratio = comps.n1 / comps.n2;
+        let cos_i = comps.eyev.dot(&comps.normalv);
+        let sin2_t = n_ratio.powf(2.0) * (1.0 - cos_i.powf(2.0));
+        if sin2_t > 1.0 {
+            return color(0.0, 0.0, 0.0);
+        }
+
         color(1.0, 1.0, 1.0)
     }
 
@@ -567,6 +576,7 @@ mod tests {
     #[test]
     fn refracted_color_at_max_recursion_depth(){
         let mut w = world();
+        w.light = Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0)));
 
         let mut s = sphere();
         let mut m = material();
@@ -585,6 +595,38 @@ mod tests {
         let xs = intersections(&[intersection(4.0, 0), intersection(6.0, 0)]);
 
         let comps = prepare_computations(xs[0], r, &w, &xs);
+        let col = w.refracted_color(comps);
+
+        assert!(col.equals(color(0.0, 0.0, 0.0)));
+    }
+
+    #[test]
+    fn refracted_color_under_total_internal_reflection(){
+        let mut w = world();
+        w.light = Some( point_light(point(-10.0, 10.0, -10.0), color(1.0, 1.0, 1.0)));
+
+        let mut s1 = sphere();
+        let mut m = material();
+        m.color = color(0.8, 1.0, 0.6);
+        m.diffuse = 0.7;
+        m.specular = 0.2;
+        m.transparency = 1.0;
+        m.refractive_index = 1.5;
+        s1.set_material(m);
+        w.add_object(Box::new(s1));
+
+        let mut s2 = sphere();
+        s2.set_transform(scaling(0.5, 0.5, 0.5));
+        w.add_object(Box::new(s2));
+
+        let r = ray(point(0.0, 0.0, SQRT_2/2.0), vector(0.0, 1.0, 0.0), 0);
+        let i1 = intersection(-SQRT_2/2.0, 0);
+        let i2 = intersection( SQRT_2/2.0, 0);
+        let xs = intersections(&[i1, i2]);
+
+        // this test is from POV inside the sphere, so
+        // we need to look at the second intersection: xs[1]
+        let comps = prepare_computations(xs[1], r, &w, &xs);
         let col = w.refracted_color(comps);
 
         assert!(col.equals(color(0.0, 0.0, 0.0)));
