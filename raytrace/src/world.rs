@@ -49,9 +49,10 @@ impl World {
                                comps.normalv, 
                                shadowed,
                                &self);
-        let reflected = self.reflected_color(comps);
+        let reflected = self.reflected_color(&comps);
+        let refracted = self.refracted_color(&comps);
 
-        surface + reflected
+        surface + reflected + refracted
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -97,7 +98,7 @@ impl World {
         result
     }
 
-    pub fn reflected_color(&self, comps: Computations) -> Color {
+    pub fn reflected_color(&self, comps: &Computations) -> Color {
         let reflect_value = self.get_object(comps.object).get_material().reflective;
 
         //NOTE: hardcoded bounce limit to prevent stack overflow
@@ -112,7 +113,7 @@ impl World {
         }
     }
 
-    pub fn refracted_color(&self, comps: Computations) -> Color {
+    pub fn refracted_color(&self, comps: &Computations) -> Color {
         let transparency = self.get_object(comps.object).get_material().transparency;
 
         // NOTE: same recursive depth approach as above in reflected_color
@@ -462,7 +463,7 @@ mod tests {
         let xs = intersections(&[i]);
 
         let comps = prepare_computations(i, r, &w, &xs);
-        let col = w.reflected_color(comps);
+        let col = w.reflected_color(&comps);
 
         assert!( col.equals(color(0.0, 0.0, 0.0)) );
     }
@@ -483,7 +484,7 @@ mod tests {
         let xs = intersections(&[i]);
 
         let comps = prepare_computations(i, r, &w, &xs);
-        let col = w.reflected_color(comps);
+        let col = w.reflected_color(&comps);
 
         assert!( col.equals( color(0.19033, 0.23791, 0.14274) ));
         // NOTE: the text uses (0.19032, 0.2379, 0.14274) which is off just
@@ -563,7 +564,7 @@ mod tests {
         let xs = intersections(&[i]);
 
         let comps = prepare_computations(i, r, &w, &xs);
-        let col = w.reflected_color(comps);
+        let col = w.reflected_color(&comps);
 
         assert!( col.equals( color(0.0, 0.0, 0.0) ));
     }
@@ -575,7 +576,7 @@ mod tests {
         let xs = intersections(&[intersection(4.0, 0), intersection(6.0, 0)]);
 
         let comps = prepare_computations(xs[0], r, &w, &xs);
-        let col = w.refracted_color(comps);
+        let col = w.refracted_color(&comps);
 
         assert!(col.equals(color(0.0, 0.0, 0.0)));
     }
@@ -602,7 +603,7 @@ mod tests {
         let xs = intersections(&[intersection(4.0, 0), intersection(6.0, 0)]);
 
         let comps = prepare_computations(xs[0], r, &w, &xs);
-        let col = w.refracted_color(comps);
+        let col = w.refracted_color(&comps);
 
         assert!(col.equals(color(0.0, 0.0, 0.0)));
     }
@@ -634,7 +635,7 @@ mod tests {
         // this test is from POV inside the sphere, so
         // we need to look at the second intersection: xs[1]
         let comps = prepare_computations(xs[1], r, &w, &xs);
-        let col = w.refracted_color(comps);
+        let col = w.refracted_color(&comps);
 
         assert!(col.equals(color(0.0, 0.0, 0.0)));
     }
@@ -672,11 +673,41 @@ mod tests {
         let xs = intersections(&[i1, i2, i3, i4]);
 
         let comps = prepare_computations(xs[2], r, &w, &xs);
-        let col = w.refracted_color(comps);
+        let col = w.refracted_color(&comps);
 
         // text has slightly different values (0.0, 0.99888, 0.04725)
         // my implementation is very close, but not exact
         // using values that pass
         assert!(col.equals(color(0.0, 0.99888, 0.04722)));
+    }
+
+    #[test]
+    fn shade_hit_with_transparent_material(){
+        let mut w = default_world();
+
+        let mut floor = plane();
+        let mut m1 = material();
+        m1.transparency = 0.5;
+        m1.refractive_index = 1.5;
+        floor.set_material(m1);
+        floor.set_transform(translation(0.0, -1.0, 0.0));
+        w.add_object(Box::new(floor));
+
+        let mut ball = sphere();
+        let mut m2 = material();
+        m2.color = color(1.0, 0.0, 0.0);
+        m2.ambient = 0.5;
+        ball.set_material(m2);
+        ball.set_transform(translation(0.0, -3.5, -0.5));
+        w.add_object(Box::new(ball));
+
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2/2.0, SQRT_2/2.0), 0);
+        let i1 = intersection(SQRT_2, 2);
+        let xs = intersections(&[i1]);
+
+        let comps = prepare_computations(xs[0], r, &w, &xs);
+        let col = w.shade_hit(comps);
+
+        assert!(col.equals(color(0.93642, 0.68642, 0.68642)));
     }
 }
