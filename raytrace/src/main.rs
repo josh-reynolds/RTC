@@ -13,7 +13,7 @@ use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
 //use raytrace::gradients::gradient_pattern;
 //use raytrace::rings::ring_pattern;
-use raytrace::checkers::checker_pattern;
+//use raytrace::checkers::checker_pattern;
 use raytrace::radial_gradients::radial_gradient_pattern;
 use std::time::Instant;
 
@@ -47,13 +47,13 @@ fn main() {
     right.set_transform( translation(1.5, 0.5, -0.5).mult(
                           &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
-    let mut p3 = checker_pattern(color(1.0, 1.0, 1.0), color(0.3, 0.3, 0.0));
-    p3.set_pattern_transform( scaling(0.1, 0.1, 0.1) );
-    let current = w.add_pattern( Box::new(p3) );
-    mat.pattern = Some(current);
-    mat.color = color(0.1, 0.9, 0.1);
-    mat.diffuse = 0.7;
-    mat.specular = 0.3;
+    mat.color = color(0.0, 0.0, 0.0);
+    mat.diffuse = 0.1;
+    mat.specular = 1.0;
+    mat.shininess = 300.0;
+    mat.transparency = 0.8;
+    mat.refractive_index = 1.5;
+    mat.reflective = 0.9;
     right.set_material( mat );
     w.add_object(Box::new(right));
 
@@ -78,7 +78,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("reflections.ppm");
+    let _ = image.to_ppm("transparency.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
