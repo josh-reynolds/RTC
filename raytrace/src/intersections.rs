@@ -43,7 +43,7 @@ pub fn hit( xs: Vec<Intersection> ) -> Option<Intersection> {
 }
 
 pub fn schlick(comps: Computations) -> f64 {
-    let cos = comps.eyev.dot(&comps.normalv);
+    let mut cos = comps.eyev.dot(&comps.normalv);
 
     // total internal reflection case
     if comps.n1 > comps.n2 {
@@ -52,9 +52,12 @@ pub fn schlick(comps: Computations) -> f64 {
         if sin2_t > 1.0 {
             return 1.0 
         }
+
+        cos = (1.0 - sin2_t).sqrt();
     }
 
-    0.0
+    let r0 = ((comps.n1 - comps.n2) / (comps.n1 + comps.n2)).powf(2.0);
+    r0 + (1.0 - r0) * (1.0 - cos).powf(5.0)
 }
 
 #[derive(Debug)]
@@ -366,5 +369,40 @@ mod tests {
         let reflectance = schlick(comps);
 
         assert!(reflectance == 1.0);
+    }
+
+    #[test]
+    fn schlick_with_perpendicular_view_angle(){
+        let mut w = world();
+
+        let shape = glass_sphere();
+        w.add_object(Box::new(shape));
+
+        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 1.0, 0.0), 0);
+        let i1 = intersection(-1.0, 0); 
+        let i2 = intersection( 1.0, 0); 
+        let xs = intersections(&[i1, i2]);
+        let comps = prepare_computations(xs[1], r, &w, &xs);
+
+        let reflectance = schlick(comps);
+
+        assert!(equals(reflectance, 0.04));
+    }
+
+    #[test]
+    fn schlick_with_small_view_angle(){
+        let mut w = world();
+
+        let shape = glass_sphere();
+        w.add_object(Box::new(shape));
+
+        let r = ray(point(0.0, 0.99, -2.0), vector(0.0, 0.0, 1.0), 0);
+        let i1 = intersection(1.8589, 0); 
+        let xs = intersections(&[i1]);
+        let comps = prepare_computations(xs[0], r, &w, &xs);
+
+        let reflectance = schlick(comps);
+
+        assert!(equals(reflectance, 0.48873));
     }
 }
