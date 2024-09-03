@@ -42,6 +42,21 @@ pub fn hit( xs: Vec<Intersection> ) -> Option<Intersection> {
     }
 }
 
+pub fn schlick(comps: Computations) -> f64 {
+    let cos = comps.eyev.dot(&comps.normalv);
+
+    // total internal reflection case
+    if comps.n1 > comps.n2 {
+        let n = comps.n1 / comps.n2;
+        let sin2_t = n.powf(2.0) * (1.0 - cos.powf(2.0));
+        if sin2_t > 1.0 {
+            return 1.0 
+        }
+    }
+
+    0.0
+}
+
 #[derive(Debug)]
 pub struct Computations {
     pub t: f64,
@@ -122,7 +137,7 @@ pub fn prepare_computations( hit: Intersection,
 #[cfg(test)]
 mod tests {
     use crate::intersections::{intersection, intersections, 
-                               hit, prepare_computations};
+                               hit, prepare_computations, schlick};
     use crate::tuple::{point, vector};
     use crate::rays::ray;
     use crate::equals::equals;
@@ -333,5 +348,23 @@ mod tests {
 
         assert!(comps.under_point.z > EPSILON/2.0);
         assert!(comps.point.z < comps.under_point.z);
+    }
+
+    #[test]
+    fn schlick_under_total_internal_reflection(){
+        let mut w = world();
+
+        let shape = glass_sphere();
+        w.add_object(Box::new(shape));
+
+        let r = ray(point(0.0, 0.0, SQRT_2/2.0), vector(0.0, 1.0, 0.0), 0);
+        let i1 = intersection(-SQRT_2/2.0, 0); 
+        let i2 = intersection( SQRT_2/2.0, 0); 
+        let xs = intersections(&[i1, i2]);
+        let comps = prepare_computations(xs[1], r, &w, &xs);
+
+        let reflectance = schlick(comps);
+
+        assert!(reflectance == 1.0);
     }
 }
