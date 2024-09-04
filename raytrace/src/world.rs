@@ -7,7 +7,7 @@ use crate::materials::{material, lighting};
 use crate::transform::scaling;
 use crate::rays::{Ray, ray};
 use crate::intersections::{Intersection, hit, Computations, 
-                           prepare_computations};
+                           prepare_computations, schlick};
 use crate::patterns::Pattern;
 
 #[derive(Debug)]
@@ -52,7 +52,15 @@ impl World {
         let reflected = self.reflected_color(&comps);
         let refracted = self.refracted_color(&comps);
 
-        surface + reflected + refracted
+        let material = self.objects[comps.object].get_material();
+        if material.reflective > 0.0 && material.transparency > 0.0 {
+            let reflectance = schlick(comps);
+            return surface + 
+                   reflected * reflectance + 
+                   refracted * (1.0 - reflectance);
+        } else {
+            return surface + reflected + refracted;
+        }
     }
 
     pub fn color_at(&self, r: Ray) -> Color {
@@ -709,5 +717,36 @@ mod tests {
         let col = w.shade_hit(comps);
 
         assert!(col.equals(color(0.93642, 0.68642, 0.68642)));
+    }
+    
+    #[test]
+    fn shade_hit_with_reflective_transparent_material(){
+        let mut w = default_world();
+
+        let mut floor = plane();
+        let mut m1 = material();
+        m1.reflective = 0.5;
+        m1.transparency = 0.5;
+        m1.refractive_index = 1.5;
+        floor.set_material(m1);
+        floor.set_transform(translation(0.0, -1.0, 0.0));
+        w.add_object(Box::new(floor));
+
+        let mut ball = sphere();
+        let mut m2 = material();
+        m2.color = color(1.0, 0.0, 0.0);
+        m2.ambient = 0.5;
+        ball.set_material(m2);
+        ball.set_transform(translation(0.0, -3.5, -0.5));
+        w.add_object(Box::new(ball));
+
+        let r = ray(point(0.0, 0.0, -3.0), vector(0.0, -SQRT_2/2.0, SQRT_2/2.0), 0);
+        let i1 = intersection(SQRT_2, 2);
+        let xs = intersections(&[i1]);
+
+        let comps = prepare_computations(xs[0], r, &w, &xs);
+        let col = w.shade_hit(comps);
+
+        assert!(col.equals(color(0.93391, 0.69643, 0.69243)));
     }
 }
