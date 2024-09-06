@@ -41,9 +41,11 @@ impl Shape for Cube {
     }
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
-        let xvals = self.check_axis(r.origin.x, r.direction.x);
-        let yvals = self.check_axis(r.origin.y, r.direction.y);
-        let zvals = self.check_axis(r.origin.z, r.direction.z);
+        let r2 = self.saved_ray(r);
+        
+        let xvals = self.check_axis(r2.origin.x, r2.direction.x);
+        let yvals = self.check_axis(r2.origin.y, r2.direction.y);
+        let zvals = self.check_axis(r2.origin.z, r2.direction.z);
 
         let mins = [xvals.0, yvals.0, zvals.0];
         let maxs = [xvals.1, yvals.1, zvals.1];
