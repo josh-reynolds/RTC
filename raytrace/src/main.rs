@@ -1,7 +1,8 @@
 use raytrace::tuple::{point, vector};
 use std::f64::consts::PI;
 use raytrace::camera::camera;
-use raytrace::transform::{view_transform, translation, scaling, rotation_x};
+use raytrace::transform::{view_transform, translation, scaling, 
+                          rotation_x, rotation_y};
 use raytrace::world::world;
 use raytrace::spheres::sphere;
 use raytrace::planes::plane;
@@ -11,6 +12,7 @@ use raytrace::materials::material;
 use raytrace::lights::point_light;
 use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
+use raytrace::cubes::cube;
 use std::time::Instant;
 
 fn main() {
@@ -72,6 +74,17 @@ fn main() {
     left.set_material( mat );
     w.add_object(Box::new(left));
     
+    let mut cu = cube();
+    cu.set_transform(translation(2.0, 2.0, 2.0).mult(
+                     &scaling(0.5, 0.5, 0.5).mult(
+                     &rotation_x(PI/2.0).mult(
+                     &rotation_y(PI/3.0)))));
+    let mut mat = material();
+    mat.color = color(0.5, 0.0, 0.5);
+    mat.reflective = 0.5;
+    cu.set_material(mat);
+    w.add_object(Box::new(cu));
+
     let mut c = camera(600, 300, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
     let to = point(0.0, 1.0, 0.0);
@@ -80,7 +93,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("transparency_final_2.ppm");
+    let _ = image.to_ppm("cube.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
