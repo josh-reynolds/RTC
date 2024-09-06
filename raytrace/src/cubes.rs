@@ -1,5 +1,5 @@
 use crate::rays::Ray;
-use crate::tuple::{Tuple, origin};
+use crate::tuple::{Tuple, vector};
 use crate::intersections::{Intersection, intersection, intersections};
 use crate::matrix::Matrix;
 use crate::shapes::{Base, Shape, shape};
@@ -29,7 +29,15 @@ impl Shape for Cube {
     }
 
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
-        object_point - origin()
+        let maxs = [object_point.x.abs(), object_point.y.abs(), object_point.z.abs()];
+        let maxc = maxs.iter().max_by(|a,b| a.total_cmp(b)).unwrap();
+
+        if *maxc == object_point.x.abs() {
+            return vector(object_point.x, 0.0, 0.0);
+        } else if *maxc == object_point.y.abs() {
+            return vector(0.0, object_point.y, 0.0);
+        }
+        return vector(0.0, 0.0, object_point.z);
     }
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
@@ -181,5 +189,42 @@ mod tests {
         let r = ray(point(2.0, 2.0, 0.0), vector(-1.0, 0.0, 0.0), 0);
         let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
+    }
+
+    #[test]
+    fn normal_on_surface_of_cube(){
+        let c = cube();
+
+        let p = point(1.0, 0.5, -0.8);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(1.0, 0.0, 0.0)));
+
+        let p = point(-1.0, -0.2, 0.9);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(-1.0, 0.0, 0.0)));
+
+        let p = point(-0.4, 1.0, -0.1);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(0.0, 1.0, 0.0)));
+
+        let p = point(0.3, -1.0, -0.7);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(0.0, -1.0, 0.0)));
+
+        let p = point(-0.6, 0.3, 1.0);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(0.0, 0.0, 1.0)));
+
+        let p = point(0.4, 0.4, -1.0);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(0.0, 0.0, -1.0)));
+
+        let p = point(1.0, 1.0, 1.0);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(1.0, 0.0, 0.0)));
+
+        let p = point(-1.0, -1.0, -1.0);
+        let normal = c.local_normal_at(p);
+        assert!(normal.equals(vector(-1.0, 0.0, 0.0)));
     }
 }
