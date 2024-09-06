@@ -43,6 +43,10 @@ impl Shape for Cube {
         let tmin = mins.iter().max_by(|a,b| a.total_cmp(b)).unwrap();
         let tmax = maxs.iter().min_by(|a,b| a.total_cmp(b)).unwrap();
 
+        if tmin > tmax {
+            return intersections(&[]);
+        }
+
         let i1 = intersection(*tmin, self.get_index());
         let i2 = intersection(*tmax, self.get_index());
         return intersections(&[i1, i2]);
@@ -148,5 +152,34 @@ mod tests {
         assert_eq!(xs.len(), 2);
         assert_eq!(xs[0].t, -1.0);
         assert_eq!(xs[1].t, 1.0);
+    }
+
+    #[test]
+    fn a_ray_misses_a_cube(){
+        let c = cube();
+
+        let r = ray(point(-2.0, 0.0, 0.0), vector(0.2673, 0.5345, 0.8018), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let r = ray(point(0.0, -2.0, 0.0), vector(0.8018, 0.2673, 0.5345), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let r = ray(point(0.0, 0.0, -2.0), vector(0.5345, 0.8018, 0.2673), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let r = ray(point(2.0, 0.0, 2.0), vector(0.0, 0.0, -1.0), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let r = ray(point(0.0, 2.0, 2.0), vector(0.0, -1.0, 0.0), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let r = ray(point(2.0, 2.0, 0.0), vector(-1.0, 0.0, 0.0), 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 0);
     }
 }
