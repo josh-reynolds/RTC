@@ -21,6 +21,7 @@ pub mod rings;
 pub mod checkers;
 pub mod radial_gradients;
 pub mod cubes;
+pub mod cylinders;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
