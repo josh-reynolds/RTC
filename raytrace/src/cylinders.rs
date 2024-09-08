@@ -28,15 +28,7 @@ impl Shape for Cylinder {
     }
 
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
-        let maxs = [object_point.x.abs(), object_point.y.abs(), object_point.z.abs()];
-        let maxc = maxs.iter().max_by(|a,b| a.total_cmp(b)).unwrap();
-
-        if *maxc == object_point.x.abs() {
-            return vector(object_point.x, 0.0, 0.0);
-        } else if *maxc == object_point.y.abs() {
-            return vector(0.0, object_point.y, 0.0);
-        }
-        return vector(0.0, 0.0, object_point.z);
+        return vector(object_point.x, 0.0, object_point.z);
     }
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
@@ -134,6 +126,24 @@ mod tests {
         assert_eq!(xs.len(), 2);
         assert!(equals(xs[0].t, 6.80798));
         assert!(equals(xs[1].t, 7.08872));
+    }
+
+    #[test]
+    fn normal_vector_on_a_cylinder(){
+        let cyl = cylinder();
+
+        let n = cyl.local_normal_at(point(1.0, 0.0, 0.0));
+        assert_eq!(n, vector(1.0, 0.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.0, 5.0, -1.0));
+        assert_eq!(n, vector(0.0, 0.0, -1.0));
+
+        let n = cyl.local_normal_at(point(0.0, -2.0, 1.0));
+        assert_eq!(n, vector(0.0, 0.0, 1.0));
+
+        let n = cyl.local_normal_at(point(-1.0, 1.0, 0.0));
+        assert_eq!(n, vector(-1.0, 0.0, 0.0));
+
     }
 }
 
