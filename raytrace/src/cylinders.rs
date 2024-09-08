@@ -4,6 +4,7 @@ use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
+use crate::equals::equals;
 
 pub struct Cylinder {
     supe: Base,
@@ -41,7 +42,26 @@ impl Shape for Cylinder {
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         
-        return intersections(&[]);
+        let a = r2.direction.x.powf(2.0) + r2.direction.z.powf(2.0);
+
+        // ray is parallel to y axis
+        if equals(a, 0.0) {
+            return intersections(&[]);
+        }
+
+        let b = 2.0 * r2.origin.x * r2.direction.x +
+                2.0 * r2.origin.z * r2.direction.z;
+        let c = r2.origin.x.powf(2.0) + r2.origin.z.powf(2.0) - 1.0;
+
+        let disc = b.powf(2.0) - 4.0 * a.powf(2.0) * c.powf(2.0);
+
+        // no intersection
+        if disc < 0.0 {
+            return intersections(&[]);
+        }
+
+        // placeholder
+        return intersections(&[intersection(1.0, 0)]);
     }
 
     fn get_index(&self) -> usize {
