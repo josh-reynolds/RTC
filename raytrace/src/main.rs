@@ -13,6 +13,7 @@ use raytrace::lights::point_light;
 use raytrace::patterns::Pattern;
 use raytrace::stripes::stripe_pattern;
 use raytrace::cubes::cube;
+use raytrace::cylinders::cylinder;
 use std::time::Instant;
 
 fn main() {
@@ -85,6 +86,16 @@ fn main() {
     cu.set_material(mat);
     w.add_object(Box::new(cu));
 
+    let mut cyl = cylinder();
+    cyl.set_transform(translation(-2.0, 0.0, 0.0).mult(
+                      &scaling(0.5, 0.5, 0.5)));
+    let mut mat = material();
+    mat.color = color(0.8, 0.8, 0.0);
+    mat.shininess = 200.0;
+    mat.reflective = 0.2;
+    cyl.set_material(mat);
+    w.add_object(Box::new(cyl));
+
     let mut c = camera(600, 300, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
     let to = point(0.0, 1.0, 0.0);
@@ -93,7 +104,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("cube.ppm");
+    let _ = image.to_ppm("cylinder.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
