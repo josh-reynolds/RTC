@@ -53,15 +53,18 @@ impl Shape for Cylinder {
                 2.0 * r2.origin.z * r2.direction.z;
         let c = r2.origin.x.powf(2.0) + r2.origin.z.powf(2.0) - 1.0;
 
-        let disc = b.powf(2.0) - 4.0 * a.powf(2.0) * c.powf(2.0);
+        let disc = b.powf(2.0) - 4.0 * a * c;
 
         // no intersection
         if disc < 0.0 {
             return intersections(&[]);
         }
 
-        // placeholder
-        return intersections(&[intersection(1.0, 0)]);
+        let t0 = (-b - disc.sqrt()) / (2.0 * a);
+        let t1 = (-b + disc.sqrt()) / (2.0 * a);
+
+        return intersections(&[intersection(t0, self.get_index()),
+                               intersection(t1, self.get_index())]);
     }
 
     fn get_index(&self) -> usize {
@@ -85,6 +88,7 @@ mod tests {
     use crate::tuple::{point, vector};
     use crate::rays::ray;
     use crate::shapes::Shape;
+    use crate::equals::equals;
 
     #[test]
     fn a_ray_misses_a_cylinder(){
@@ -104,6 +108,32 @@ mod tests {
         let r = ray(point(0.0, 0.0, -5.0), direction, 0);
         let xs = cyl.intersect(r);
         assert_eq!(xs.len(), 0);
+    }
+
+    #[test]
+    fn a_ray_hits_a_cylinder(){
+        let cyl = cylinder();
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(1.0, 0.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+        assert!(equals(xs[0].t, 5.0));
+        assert!(equals(xs[1].t, 5.0));
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 0.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+        assert!(equals(xs[0].t, 4.0));
+        assert!(equals(xs[1].t, 6.0));
+
+        let direction = vector(0.1, 1.0, 1.0).normal();
+        let r = ray(point(0.5, 0.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+        assert!(equals(xs[0].t, 6.80798));
+        assert!(equals(xs[1].t, 7.08872));
     }
 }
 
