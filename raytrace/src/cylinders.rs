@@ -9,8 +9,8 @@ use std::f64::INFINITY;
 
 pub struct Cylinder {
     supe: Base,
-    minimum: f64,
-    maximum: f64,
+    pub minimum: f64,
+    pub maximum: f64,
 }
 
 impl Shape for Cylinder {
@@ -36,12 +36,13 @@ impl Shape for Cylinder {
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
+        let mut xs = intersections(&[]);
         
         let a = r2.direction.x.powf(2.0) + r2.direction.z.powf(2.0);
 
         // ray is parallel to y axis
         if equals(a, 0.0) {
-            return intersections(&[]);
+            return xs;
         }
 
         let b = 2.0 * r2.origin.x * r2.direction.x +
@@ -52,14 +53,28 @@ impl Shape for Cylinder {
 
         // no intersection
         if disc < 0.0 {
-            return intersections(&[]);
+            return xs;
         }
 
-        let t0 = (-b - disc.sqrt()) / (2.0 * a);
-        let t1 = (-b + disc.sqrt()) / (2.0 * a);
+        let mut t0 = (-b - disc.sqrt()) / (2.0 * a);
+        let mut t1 = (-b + disc.sqrt()) / (2.0 * a);
+        if t0 > t1 {
+            let temp = t1;
+            t1 = t0;
+            t0 = temp;
+        }
 
-        return intersections(&[intersection(t0, self.get_index()),
-                               intersection(t1, self.get_index())]);
+        let y0 = r2.origin.y + t0 * r2.direction.y;
+        if self.minimum < y0 && y0 < self.maximum {
+            xs.push(intersection(t0, self.get_index()));
+        }
+
+        let y1 = r2.origin.y + t1 * r2.direction.y;
+        if self.minimum < y1 && y1 < self.maximum {
+            xs.push(intersection(t1, self.get_index()));
+        }
+        
+        return xs;
     }
 
     fn get_index(&self) -> usize {
@@ -157,6 +172,43 @@ mod tests {
 
         assert_eq!(cyl.minimum, -INFINITY);
         assert_eq!(cyl.maximum,  INFINITY);
+    }
+
+    #[test]
+    fn intersecting_a_truncated_cylinder(){
+        let mut cyl = cylinder();
+        cyl.minimum = 1.0;
+        cyl.maximum = 2.0;
+
+        let direction = vector(0.1, 1.0, 0.0).normal();
+        let r = ray(point(0.0, 1.5, 0.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 3.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 0.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 2.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 1.0, -5.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 0);
+
+        let direction = vector(0.0, 0.0, 1.0).normal();
+        let r = ray(point(0.0, 1.5, -2.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
     }
 }
 
