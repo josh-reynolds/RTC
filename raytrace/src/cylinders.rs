@@ -11,6 +11,7 @@ pub struct Cylinder {
     supe: Base,
     pub minimum: f64,
     pub maximum: f64,
+    pub closed: bool,
 }
 
 impl Shape for Cylinder {
@@ -91,6 +92,7 @@ pub fn cylinder() -> Cylinder {
         supe: shape(),
         minimum: -INFINITY,
         maximum:  INFINITY,
+        closed: false,
     }
 }
 
@@ -209,6 +211,13 @@ mod tests {
         let r = ray(point(0.0, 1.5, -2.0), direction, 0);
         let xs = cyl.intersect(r);
         assert_eq!(xs.len(), 2);
+    }
+
+    #[test]
+    fn default_closed_value_for_cylinders(){
+        let cyl= cylinder();
+
+        assert_eq!(cyl.closed, false);
     }
 }
 
