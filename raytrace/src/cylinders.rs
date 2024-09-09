@@ -5,9 +5,12 @@ use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
 use crate::equals::equals;
+use std::f64::INFINITY;
 
 pub struct Cylinder {
     supe: Base,
+    minimum: f64,
+    maximum: f64,
 }
 
 impl Shape for Cylinder {
@@ -71,6 +74,8 @@ impl Shape for Cylinder {
 pub fn cylinder() -> Cylinder {
     Cylinder {
         supe: shape(),
+        minimum: -INFINITY,
+        maximum:  INFINITY,
     }
 }
 
@@ -81,6 +86,7 @@ mod tests {
     use crate::rays::ray;
     use crate::shapes::Shape;
     use crate::equals::equals;
+    use std::f64::INFINITY;
 
     #[test]
     fn a_ray_misses_a_cylinder(){
@@ -143,7 +149,14 @@ mod tests {
 
         let n = cyl.local_normal_at(point(-1.0, 1.0, 0.0));
         assert_eq!(n, vector(-1.0, 0.0, 0.0));
+    }
 
+    #[test]
+    fn default_min_max_for_cylinder(){
+        let cyl = cylinder();
+
+        assert_eq!(cyl.minimum, -INFINITY);
+        assert_eq!(cyl.maximum,  INFINITY);
     }
 }
 
