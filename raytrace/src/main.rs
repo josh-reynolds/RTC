@@ -87,6 +87,8 @@ fn main() {
     w.add_object(Box::new(cu));
 
     let mut cyl = cylinder();
+    cyl.minimum = 1.0;
+    cyl.maximum = 2.0;
     cyl.set_transform(translation(-2.0, 0.0, 0.0).mult(
                       &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
@@ -104,7 +106,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("cylinder.ppm");
+    let _ = image.to_ppm("cylinder_truncated.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
