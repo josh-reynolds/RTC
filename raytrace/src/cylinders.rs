@@ -5,6 +5,7 @@ use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
 use crate::equals::equals;
+use crate::equals::EPSILON;
 use std::f64::INFINITY;
 
 pub struct Cylinder {
@@ -32,7 +33,15 @@ impl Shape for Cylinder {
     }
 
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
-        return vector(object_point.x, 0.0, object_point.z);
+        let dist = object_point.x.powf(2.0) + object_point.z.powf(2.0);
+
+        if dist < 1.0 && object_point.y >= self.maximum - EPSILON {
+            return vector(0.0, 1.0, 0.0);
+        } else if dist < 1.0 && object_point.y <= self.minimum + EPSILON {
+            return vector(0.0, -1.0, 0.0);
+        } else {
+            return vector(object_point.x, 0.0, object_point.z);
+        }
     }
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
@@ -281,6 +290,32 @@ mod tests {
         let r = ray(point(0.0, -1.0, -2.0), direction, 0);
         let xs = cyl.intersect(r);
         assert_eq!(xs.len(), 2);
+    }
+
+    #[test]
+    fn normal_vector_on_cylinder_end_caps(){
+        let mut cyl = cylinder();
+        cyl.minimum = 1.0;
+        cyl.maximum = 2.0;
+        cyl.closed = true;
+
+        let n = cyl.local_normal_at(point(0.0, 1.0, 0.0));
+        assert!(n == vector(0.0, -1.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.5, 1.0, 0.0));
+        assert!(n == vector(0.0, -1.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.0, 1.0, 0.5));
+        assert!(n == vector(0.0, -1.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.0, 2.0, 0.0));
+        assert!(n == vector(0.0, 1.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.5, 2.0, 0.0));
+        assert!(n == vector(0.0, 1.0, 0.0));
+
+        let n = cyl.local_normal_at(point(0.0, 2.0, 0.5));
+        assert!(n == vector(0.0, 1.0, 0.0));
     }
 }
 
