@@ -43,6 +43,7 @@ impl Shape for Cylinder {
 
         // ray is parallel to y axis
         if equals(a, 0.0) {
+            xs = self.intersect_caps(r2, xs);
             return xs;
         }
 
@@ -75,6 +76,7 @@ impl Shape for Cylinder {
             xs.push(intersection(t1, self.get_index()));
         }
         
+        xs = self.intersect_caps(r2, xs);
         return xs;
     }
 
@@ -84,6 +86,34 @@ impl Shape for Cylinder {
 
     fn set_index(&mut self, index: usize){
         self.supe.set_index(index);
+    }
+}
+
+impl Cylinder {
+    fn intersect_caps(&self, r: Ray, mut xs: Vec<Intersection>) -> Vec<Intersection> {
+        if !self.closed || equals(r.direction.y, 0.0) {
+            return xs
+        }
+
+        // check lower end cap
+        let t = (self.minimum - r.origin.y) / r.direction.y;
+        if self.check_cap(r, t){
+            xs.push(intersection(t, self.get_index()));
+        }
+
+        // check upper end cap
+        let t = (self.maximum - r.origin.y) / r.direction.y;
+        if self.check_cap(r, t){
+            xs.push(intersection(t, self.get_index()));
+        }
+
+        return xs
+    }
+
+    fn check_cap(&self, r: Ray, t: f64) -> bool {
+        let x = r.origin.x + t * r.direction.x;
+        let z = r.origin.z + t * r.direction.z;
+        (x.powf(2.0) + z.powf(2.0)) <= 1.0
     }
 }
 
@@ -218,6 +248,39 @@ mod tests {
         let cyl= cylinder();
 
         assert_eq!(cyl.closed, false);
+    }
+
+    #[test]
+    fn intersecting_caps_of_closed_cylinder(){
+        let mut cyl = cylinder();
+        cyl.minimum = 1.0;
+        cyl.maximum = 2.0;
+        cyl.closed = true;
+
+        let direction = vector(0.0, -1.0, 0.0).normal();
+        let r = ray(point(0.0, 3.0, 0.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+
+        let direction = vector(0.0, -1.0, 2.0).normal();
+        let r = ray(point(0.0, 3.0, -2.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+
+        let direction = vector(0.0, -1.0, 1.0).normal();
+        let r = ray(point(0.0, 4.0, -2.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+
+        let direction = vector(0.0, 1.0, 2.0).normal();
+        let r = ray(point(0.0, 0.0, -2.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
+
+        let direction = vector(0.0, 1.0, 1.0).normal();
+        let r = ray(point(0.0, -1.0, -2.0), direction, 0);
+        let xs = cyl.intersect(r);
+        assert_eq!(xs.len(), 2);
     }
 }
 
