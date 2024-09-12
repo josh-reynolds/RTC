@@ -195,6 +195,17 @@ mod tests {
         assert!(equals(xs[1].t, 49.44994));
     }
 
+    #[test]
+    fn ray_parallel_to_side_hits_a_cone(){
+        let c = cone();
+
+        let direction = vector(0.0, 1.0, 1.0).normal();
+        let r = ray(point(0.0, 0.0, -1.0), direction, 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 1);
+        assert!(equals(xs[0].t, 0.35355));
+    }
+
     // needs update
     #[test]
     fn normal_vector_on_a_cone(){
