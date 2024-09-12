@@ -50,17 +50,34 @@ impl Shape for Cone {
         let r2 = self.saved_ray(r);
         let mut xs = intersections(&[]);
         
-        let a = r2.direction.x.powf(2.0) + r2.direction.z.powf(2.0);
+        // formulae from (RTC p. 189)
+        
+        let a = r2.direction.x.powf(2.0) - 
+                r2.direction.y.powf(2.0) + 
+                r2.direction.z.powf(2.0);
 
-        // ray is parallel to y axis
-        if equals(a, 0.0) {
-            xs = self.intersect_caps(r2, xs);
-            return xs;
-        }
-
-        let b = 2.0 * r2.origin.x * r2.direction.x +
+        let b = 2.0 * r2.origin.x * r2.direction.x -
+                2.0 * r2.origin.y * r2.direction.y +
                 2.0 * r2.origin.z * r2.direction.z;
-        let c = r2.origin.x.powf(2.0) + r2.origin.z.powf(2.0) - 1.0;
+        
+        let c = r2.origin.x.powf(2.0) -
+                r2.origin.y.powf(2.0) + 
+                r2.origin.z.powf(2.0);
+
+        // ray is parallel to side of cone
+        if equals(a, 0.0) {
+            if equals(b, 0.0) {
+              // misses side
+              xs = self.intersect_caps(r2, xs); 
+              return xs;
+            } else {
+              // hits other half
+              let t = -c / (2.0 * b);
+              xs.push(intersection(t, self.get_index()));
+              xs = self.intersect_caps(r2, xs); 
+              return xs;
+            }
+        }
 
         let disc = b.powf(2.0) - 4.0 * a * c;
 
@@ -224,7 +241,6 @@ mod tests {
         assert_eq!(n, vector(-1.0, 0.0, 0.0));
     }
 
-    // needs update
     #[test]
     fn default_min_max_for_cone(){
         let c = cone();
@@ -271,7 +287,6 @@ mod tests {
         assert_eq!(xs.len(), 2);
     }
 
-    // needs update
     #[test]
     fn default_closed_value_for_cones(){
         let c= cone();
