@@ -32,6 +32,7 @@ impl Shape for Cone {
         self.supe.set_material( m );
     }
 
+    // needs update
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
         let dist = object_point.x.powf(2.0) + object_point.z.powf(2.0);
 
@@ -44,6 +45,7 @@ impl Shape for Cone {
         }
     }
 
+    // needs update
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         let mut xs = intersections(&[]);
@@ -99,6 +101,7 @@ impl Shape for Cone {
 }
 
 impl Cone {
+    // needs update
     fn intersect_caps(&self, r: Ray, mut xs: Vec<Intersection>) -> Vec<Intersection> {
         if !self.closed || equals(r.direction.y, 0.0) {
             return xs
@@ -119,6 +122,7 @@ impl Cone {
         return xs
     }
 
+    // needs update
     fn check_cap(&self, r: Ray, t: f64) -> bool {
         let x = r.origin.x + t * r.direction.x;
         let z = r.origin.z + t * r.direction.z;
@@ -144,177 +148,184 @@ mod tests {
     use crate::equals::equals;
     use std::f64::INFINITY;
 
+    // needs update
     #[test]
     fn a_ray_misses_a_cone(){
-        let cyl = cone();
+        let c = cone();
 
         let direction = vector(0.0, 1.0, 0.0).normal();
         let r = ray(point(1.0, 0.0, 0.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 1.0, 0.0).normal();
         let r = ray(point(0.0, 0.0, 0.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(1.0, 1.0, 1.0).normal();
         let r = ray(point(0.0, 0.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
     }
 
     #[test]
     fn a_ray_hits_a_cone(){
-        let cyl = cone();
+        let c = cone();
 
         let direction = vector(0.0, 0.0, 1.0).normal();
-        let r = ray(point(1.0, 0.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let r = ray(point(0.0, 0.0, -5.0), direction, 0);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
         assert!(equals(xs[0].t, 5.0));
         assert!(equals(xs[1].t, 5.0));
 
-        let direction = vector(0.0, 0.0, 1.0).normal();
+        let direction = vector(1.0, 1.0, 1.0).normal();
         let r = ray(point(0.0, 0.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
-        assert!(equals(xs[0].t, 4.0));
-        assert!(equals(xs[1].t, 6.0));
+        assert!(equals(xs[0].t, 8.66025));
+        assert!(equals(xs[1].t, 8.66025));
 
-        let direction = vector(0.1, 1.0, 1.0).normal();
-        let r = ray(point(0.5, 0.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let direction = vector(-0.5, -1.0, 1.0).normal();
+        let r = ray(point(1.0, 1.0, -5.0), direction, 0);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
-        assert!(equals(xs[0].t, 6.80798));
-        assert!(equals(xs[1].t, 7.08872));
+        assert!(equals(xs[0].t,  4.55006));
+        assert!(equals(xs[1].t, 49.44994));
     }
 
+    // needs update
     #[test]
     fn normal_vector_on_a_cone(){
-        let cyl = cone();
+        let c = cone();
 
-        let n = cyl.local_normal_at(point(1.0, 0.0, 0.0));
+        let n = c.local_normal_at(point(1.0, 0.0, 0.0));
         assert_eq!(n, vector(1.0, 0.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.0, 5.0, -1.0));
+        let n = c.local_normal_at(point(0.0, 5.0, -1.0));
         assert_eq!(n, vector(0.0, 0.0, -1.0));
 
-        let n = cyl.local_normal_at(point(0.0, -2.0, 1.0));
+        let n = c.local_normal_at(point(0.0, -2.0, 1.0));
         assert_eq!(n, vector(0.0, 0.0, 1.0));
 
-        let n = cyl.local_normal_at(point(-1.0, 1.0, 0.0));
+        let n = c.local_normal_at(point(-1.0, 1.0, 0.0));
         assert_eq!(n, vector(-1.0, 0.0, 0.0));
     }
 
+    // needs update
     #[test]
     fn default_min_max_for_cone(){
-        let cyl = cone();
+        let c = cone();
 
-        assert_eq!(cyl.minimum, -INFINITY);
-        assert_eq!(cyl.maximum,  INFINITY);
+        assert_eq!(c.minimum, -INFINITY);
+        assert_eq!(c.maximum,  INFINITY);
     }
 
+    // needs update
     #[test]
     fn intersecting_a_truncated_cone(){
-        let mut cyl = cone();
-        cyl.minimum = 1.0;
-        cyl.maximum = 2.0;
+        let mut c = cone();
+        c.minimum = 1.0;
+        c.maximum = 2.0;
 
         let direction = vector(0.1, 1.0, 0.0).normal();
         let r = ray(point(0.0, 1.5, 0.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 0.0, 1.0).normal();
         let r = ray(point(0.0, 3.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 0.0, 1.0).normal();
         let r = ray(point(0.0, 0.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 0.0, 1.0).normal();
         let r = ray(point(0.0, 2.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 0.0, 1.0).normal();
         let r = ray(point(0.0, 1.0, -5.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 0.0, 1.0).normal();
         let r = ray(point(0.0, 1.5, -2.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
     }
 
+    // needs update
     #[test]
     fn default_closed_value_for_cones(){
-        let cyl= cone();
+        let c= cone();
 
-        assert_eq!(cyl.closed, false);
+        assert_eq!(c.closed, false);
     }
 
+    // needs update
     #[test]
     fn intersecting_caps_of_closed_cone(){
-        let mut cyl = cone();
-        cyl.minimum = 1.0;
-        cyl.maximum = 2.0;
-        cyl.closed = true;
+        let mut c = cone();
+        c.minimum = 1.0;
+        c.maximum = 2.0;
+        c.closed = true;
 
         let direction = vector(0.0, -1.0, 0.0).normal();
         let r = ray(point(0.0, 3.0, 0.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
 
         let direction = vector(0.0, -1.0, 2.0).normal();
         let r = ray(point(0.0, 3.0, -2.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
 
         let direction = vector(0.0, -1.0, 1.0).normal();
         let r = ray(point(0.0, 4.0, -2.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
 
         let direction = vector(0.0, 1.0, 2.0).normal();
         let r = ray(point(0.0, 0.0, -2.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
 
         let direction = vector(0.0, 1.0, 1.0).normal();
         let r = ray(point(0.0, -1.0, -2.0), direction, 0);
-        let xs = cyl.intersect(r);
+        let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
     }
 
+    // needs update
     #[test]
     fn normal_vector_on_cone_end_caps(){
-        let mut cyl = cone();
-        cyl.minimum = 1.0;
-        cyl.maximum = 2.0;
-        cyl.closed = true;
+        let mut c = cone();
+        c.minimum = 1.0;
+        c.maximum = 2.0;
+        c.closed = true;
 
-        let n = cyl.local_normal_at(point(0.0, 1.0, 0.0));
+        let n = c.local_normal_at(point(0.0, 1.0, 0.0));
         assert!(n == vector(0.0, -1.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.5, 1.0, 0.0));
+        let n = c.local_normal_at(point(0.5, 1.0, 0.0));
         assert!(n == vector(0.0, -1.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.0, 1.0, 0.5));
+        let n = c.local_normal_at(point(0.0, 1.0, 0.5));
         assert!(n == vector(0.0, -1.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.0, 2.0, 0.0));
+        let n = c.local_normal_at(point(0.0, 2.0, 0.0));
         assert!(n == vector(0.0, 1.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.5, 2.0, 0.0));
+        let n = c.local_normal_at(point(0.5, 2.0, 0.0));
         assert!(n == vector(0.0, 1.0, 0.0));
 
-        let n = cyl.local_normal_at(point(0.0, 2.0, 0.5));
+        let n = c.local_normal_at(point(0.0, 2.0, 0.5));
         assert!(n == vector(0.0, 1.0, 0.0));
     }
 }
