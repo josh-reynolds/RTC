@@ -165,23 +165,12 @@ mod tests {
     use crate::equals::equals;
     use std::f64::INFINITY;
 
-    // needs update
     #[test]
     fn a_ray_misses_a_cone(){
         let c = cone();
-
-        let direction = vector(0.0, 1.0, 0.0).normal();
-        let r = ray(point(1.0, 0.0, 0.0), direction, 0);
-        let xs = c.intersect(r);
-        assert_eq!(xs.len(), 0);
-
-        let direction = vector(0.0, 1.0, 0.0).normal();
-        let r = ray(point(0.0, 0.0, 0.0), direction, 0);
-        let xs = c.intersect(r);
-        assert_eq!(xs.len(), 0);
-
-        let direction = vector(1.0, 1.0, 1.0).normal();
-        let r = ray(point(0.0, 0.0, -5.0), direction, 0);
+        
+        let direction = vector(1.0, 0.0, 0.0).normal();
+        let r = ray(point(1.0, 0.0, 1.0), direction, 0);
         let xs = c.intersect(r);
         assert_eq!(xs.len(), 0);
     }
