@@ -45,7 +45,6 @@ impl Shape for Cone {
         }
     }
 
-    // needs update
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
         let r2 = self.saved_ray(r);
         let mut xs = intersections(&[]);
@@ -118,7 +117,6 @@ impl Shape for Cone {
 }
 
 impl Cone {
-    // needs update
     fn intersect_caps(&self, r: Ray, mut xs: Vec<Intersection>) -> Vec<Intersection> {
         if !self.closed || equals(r.direction.y, 0.0) {
             return xs
@@ -126,24 +124,23 @@ impl Cone {
 
         // check lower end cap
         let t = (self.minimum - r.origin.y) / r.direction.y;
-        if self.check_cap(r, t){
+        if self.check_cap(r, t, self.minimum){
             xs.push(intersection(t, self.get_index()));
         }
 
         // check upper end cap
         let t = (self.maximum - r.origin.y) / r.direction.y;
-        if self.check_cap(r, t){
+        if self.check_cap(r, t, self.maximum){
             xs.push(intersection(t, self.get_index()));
         }
 
         return xs
     }
 
-    // needs update
-    fn check_cap(&self, r: Ray, t: f64) -> bool {
+    fn check_cap(&self, r: Ray, t: f64, radius: f64) -> bool {
         let x = r.origin.x + t * r.direction.x;
         let z = r.origin.z + t * r.direction.z;
-        (x.powf(2.0) + z.powf(2.0)) <= 1.0
+        (x.powf(2.0) + z.powf(2.0)) <= radius.abs()
     }
 }
 
@@ -283,38 +280,27 @@ mod tests {
         assert_eq!(c.closed, false);
     }
 
-    // needs update
     #[test]
     fn intersecting_caps_of_closed_cone(){
         let mut c = cone();
-        c.minimum = 1.0;
-        c.maximum = 2.0;
+        c.minimum = -0.5;
+        c.maximum =  0.5;
         c.closed = true;
 
-        let direction = vector(0.0, -1.0, 0.0).normal();
-        let r = ray(point(0.0, 3.0, 0.0), direction, 0);
+        let direction = vector(0.0, 1.0, 0.0).normal();
+        let r = ray(point(0.0, 0.0, -5.0), direction, 0);
         let xs = c.intersect(r);
-        assert_eq!(xs.len(), 2);
-
-        let direction = vector(0.0, -1.0, 2.0).normal();
-        let r = ray(point(0.0, 3.0, -2.0), direction, 0);
-        let xs = c.intersect(r);
-        assert_eq!(xs.len(), 2);
-
-        let direction = vector(0.0, -1.0, 1.0).normal();
-        let r = ray(point(0.0, 4.0, -2.0), direction, 0);
-        let xs = c.intersect(r);
-        assert_eq!(xs.len(), 2);
-
-        let direction = vector(0.0, 1.0, 2.0).normal();
-        let r = ray(point(0.0, 0.0, -2.0), direction, 0);
-        let xs = c.intersect(r);
-        assert_eq!(xs.len(), 2);
+        assert_eq!(xs.len(), 0);
 
         let direction = vector(0.0, 1.0, 1.0).normal();
-        let r = ray(point(0.0, -1.0, -2.0), direction, 0);
+        let r = ray(point(0.0, 0.0, -0.25), direction, 0);
         let xs = c.intersect(r);
         assert_eq!(xs.len(), 2);
+
+        let direction = vector(0.0, 1.0, 0.0).normal();
+        let r = ray(point(0.0, 0.0, -0.25), direction, 0);
+        let xs = c.intersect(r);
+        assert_eq!(xs.len(), 4);
     }
 
     // needs update
