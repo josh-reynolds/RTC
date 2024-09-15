@@ -35,13 +35,17 @@ impl Shape for Cone {
     // needs update
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
         let dist = object_point.x.powf(2.0) + object_point.z.powf(2.0);
+        let mut y = dist.sqrt();
+        if object_point.y > 0.0 {
+            y = -y;
+        }
 
         if dist < 1.0 && object_point.y >= self.maximum - EPSILON {
             return vector(0.0, 1.0, 0.0);
         } else if dist < 1.0 && object_point.y <= self.minimum + EPSILON {
             return vector(0.0, -1.0, 0.0);
         } else {
-            return vector(object_point.x, 0.0, object_point.z);
+            return vector(object_point.x, y, object_point.z);
         }
     }
 
@@ -161,6 +165,7 @@ mod tests {
     use crate::shapes::Shape;
     use crate::equals::equals;
     use std::f64::INFINITY;
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn a_ray_misses_a_cone(){
@@ -209,22 +214,18 @@ mod tests {
         assert!(equals(xs[0].t, 0.35355));
     }
 
-    // needs update
     #[test]
     fn normal_vector_on_a_cone(){
         let c = cone();
 
-        let n = c.local_normal_at(point(1.0, 0.0, 0.0));
-        assert_eq!(n, vector(1.0, 0.0, 0.0));
+        let n = c.local_normal_at(point(0.0, 0.0, 0.0));
+        assert_eq!(n, vector(0.0, 0.0, 0.0));
 
-        let n = c.local_normal_at(point(0.0, 5.0, -1.0));
-        assert_eq!(n, vector(0.0, 0.0, -1.0));
+        let n = c.local_normal_at(point(1.0, 1.0, 1.0));
+        assert_eq!(n, vector(1.0, -SQRT_2, 1.0));
 
-        let n = c.local_normal_at(point(0.0, -2.0, 1.0));
-        assert_eq!(n, vector(0.0, 0.0, 1.0));
-
-        let n = c.local_normal_at(point(-1.0, 1.0, 0.0));
-        assert_eq!(n, vector(-1.0, 0.0, 0.0));
+        let n = c.local_normal_at(point(-1.0, -1.0, 0.0));
+        assert_eq!(n, vector(-1.0, 1.0, 0.0));
     }
 
     #[test]
