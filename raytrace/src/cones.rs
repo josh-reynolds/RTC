@@ -32,7 +32,6 @@ impl Shape for Cone {
         self.supe.set_material( m );
     }
 
-    // needs update
     fn local_normal_at(&self, object_point: Tuple) -> Tuple {
         let dist = object_point.x.powf(2.0) + object_point.z.powf(2.0);
         let mut y = dist.sqrt();
@@ -236,7 +235,9 @@ mod tests {
         assert_eq!(c.maximum,  INFINITY);
     }
 
-    // needs update
+    // needs update? - uncertain, test data comes from
+    // cylinder and has not been reworked, but the test
+    // is passing as-is. Scrub at some point.
     #[test]
     fn intersecting_a_truncated_cone(){
         let mut c = cone();
@@ -304,7 +305,6 @@ mod tests {
         assert_eq!(xs.len(), 4);
     }
 
-    // needs update
     #[test]
     fn normal_vector_on_cone_end_caps(){
         let mut c = cone();
