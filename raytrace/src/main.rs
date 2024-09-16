@@ -35,41 +35,72 @@ fn main() {
     w.add_object(Box::new(wall));
 
     let mut eraser = sphere();
-    eraser.set_transform(translation(1.0, 1.0, 0.0).mult(
+    eraser.set_transform(translation(1.5, 1.0, 0.0).mult(
                          &scaling(0.5, 0.5, 0.5)));
     let mut mat = material();
     mat.color = color(0.68, 0.24, 0.51);
-    mat.diffuse = 0.7;
-    mat.specular = 0.3;
+    mat.diffuse = 1.0;
+    mat.specular = 0.1;
+    mat.shininess = 10.0;
     eraser.set_material( mat );
     w.add_object(Box::new(eraser));
     
-    let mut cyl = cylinder();
-    cyl.minimum = -2.0;
-    cyl.maximum = 2.0;
-    cyl.closed = true;
-    cyl.set_transform(translation(0.0, 1.0, 0.0).mult(
+    let mut pencil = cylinder();
+    pencil.minimum = -2.0;
+    pencil.maximum = 2.0;
+    pencil.closed = true;
+    pencil.set_transform(translation(0.0, 1.0, 0.0).mult(
                       &rotation_z(PI/2.0).mult(
                       &scaling(0.5, 0.5, 0.5))));
     let mut mat = material();
     mat.color = color(0.73, 0.64, 0.08);
-    mat.diffuse = 0.7;
-    mat.specular = 0.3;
-    cyl.set_material(mat);
-    w.add_object(Box::new(cyl));
+    mat.diffuse = 1.0;
+    mat.specular = 0.7;
+    mat.shininess = 100.0;
+    pencil.set_material(mat);
+    w.add_object(Box::new(pencil));
 
-    let mut con = cone();
-    con.minimum = -1.0;
-    con.maximum =  0.0;
-    con.set_transform(translation(-2.0, 1.0, 0.0).mult(
+    let mut ferrule = cylinder();
+    ferrule.minimum = 0.0;
+    ferrule.maximum = 1.0;
+    ferrule.closed = true;
+    ferrule.set_transform(translation(1.5, 1.0, 0.0).mult(
+                      &rotation_z(PI/2.0).mult(
+                      &scaling(0.5, 0.5, 0.5))));
+    let mut mat = material();
+    mat.color = color(0.06, 0.2, 0.05);
+    mat.diffuse = 1.0;
+    mat.specular = 1.0;
+    mat.shininess = 300.0;
+    ferrule.set_material(mat);
+    w.add_object(Box::new(ferrule));
+    
+    let mut lead = cone();
+    lead.minimum = -0.5;
+    lead.maximum =  0.0;
+    lead.set_transform(translation(-2.0, 1.0, 0.0).mult(
                       &rotation_z(PI/2.0).mult(
                       &scaling(0.5, 1.0, 0.5))));
     let mut mat = material();
     mat.color = color(0.35, 0.35, 0.35);
     mat.diffuse = 0.7;
     mat.specular = 0.3;
-    con.set_material(mat);
-    w.add_object(Box::new(con));
+    lead.set_material(mat);
+    w.add_object(Box::new(lead));
+
+    let mut wood = cone();
+    wood.minimum = -1.0;
+    wood.maximum = -0.5;
+    wood.set_transform(translation(-2.0, 1.0, 0.0).mult(
+                      &rotation_z(PI/2.0).mult(
+                      &scaling(0.5, 1.0, 0.5))));
+    let mut mat = material();
+    mat.color = color(0.75, 0.54, 0.37);
+    mat.diffuse = 0.7;
+    mat.specular = 0.3;
+    mat.shininess = 10.0;
+    wood.set_material(mat);
+    w.add_object(Box::new(wood));
 
     let mut c = camera(600, 300, PI / 3.0);
     let from = point(0.0, 1.5, -5.0);
@@ -79,7 +110,7 @@ fn main() {
 
     let image = c.render(w);
 
-    let _ = image.to_ppm("pencil.ppm");
+    let _ = image.to_ppm("pencil_2.ppm");
 
     let elapsed = now.elapsed();
     println!("Size: {} x {}", c.hsize, c.vsize);
