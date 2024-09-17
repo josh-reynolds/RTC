@@ -23,6 +23,7 @@ pub mod radial_gradients;
 pub mod cubes;
 pub mod cylinders;
 pub mod cones;
+pub mod groups;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
