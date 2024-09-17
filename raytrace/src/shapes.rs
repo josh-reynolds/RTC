@@ -9,6 +9,7 @@ use core::fmt::Debug;
 pub struct Base {
     transform: Matrix,
     material: Material,
+    parent: Option<usize>,
     index: usize,
 }
 
@@ -44,6 +45,14 @@ impl Shape for Base {
     fn set_index(&mut self, index: usize){
         self.index = index;
     }
+
+    fn get_parent(&self) -> Option<usize> {
+        self.parent
+    }
+
+    fn set_parent(&mut self, parent_index: usize){
+        self.parent = Some(parent_index);
+    }
 }
 
 pub trait Shape {
@@ -66,6 +75,8 @@ pub trait Shape {
     fn intersect(&self, r: Ray) -> Vec<Intersection>; 
     fn get_index(&self) -> usize;
     fn set_index(&mut self, index: usize);
+    fn get_parent(&self) -> Option<usize>;
+    fn set_parent(&mut self, parent_index: usize);
 
     // text implements this as a mutable field on Shape,
     // but this causes mutability contagion across the entire
@@ -92,6 +103,7 @@ pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
+        parent: None,
         index: 0,
     }
 }
@@ -176,5 +188,11 @@ mod tests {
 
         let n = s.normal_at( point(0.0, SQRT_2 / 2.0, -SQRT_2 / 2.0) );
         assert!( n.equals( vector(0.0, 0.97014, -0.24254) ));
+    }
+
+    #[test]
+    fn a_shape_has_a_parent_attribute(){
+        let s = shape();
+        assert!(s.parent == None);
     }
 }

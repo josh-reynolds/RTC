@@ -69,6 +69,14 @@ impl Shape for Cube {
     fn set_index(&mut self, index: usize){
         self.supe.set_index(index);
     }
+
+    fn get_parent(&self) -> Option<usize> {
+        self.supe.get_parent()
+    }
+
+    fn set_parent(&mut self, parent_index: usize){
+        self.supe.set_parent(parent_index);
+    }
 }
 
 impl Cube {
