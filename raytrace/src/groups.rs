@@ -48,7 +48,10 @@ impl Shape for Group {
 
     fn get_parent(&self) -> Option<usize> {
         self.supe.get_parent()
-    }
+    }  // TO_DO: if Group is going to manage members and pass along
+       // calls to intersect(), we shouldn't do the same from World
+       // possible solution - check to see if parent is None in 
+       // World, and only go after those...
 
     fn set_parent(&mut self, parent_index: usize){
         self.supe.set_parent(parent_index);
@@ -56,6 +59,9 @@ impl Shape for Group {
 }
 
 impl Group {
+    pub fn add_child(&mut self, child: Box<dyn Shape>){
+        self.shapes.push(child);
+    }
 }
 
 pub fn group() -> Group {
@@ -70,7 +76,7 @@ mod tests {
     use crate::groups::group;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
-    use crate::shapes::Shape;
+    use crate::shapes::{Shape, shape};
     //use crate::equals::equals;
     use crate::matrix::identity;
     //use std::f64::consts::SQRT_2;
@@ -81,6 +87,20 @@ mod tests {
 
         assert!(g.get_transform().equals(identity()));
         assert!(g.shapes.len() == 0);
+    }
+
+    #[test]
+    fn adding_a_child_to_a_group(){
+        let mut g = group();
+        g.set_index(3);
+
+        let mut s = Box::new(shape()) as Box<dyn Shape>;
+        s.set_index(4);
+        g.add_child(s);
+
+        assert!(g.shapes.len() == 1);
+        //assert_eq!(&g.shapes[1] as *const _, &s as *const _);
+        //assert!(s.get_parent() == Some(g.get_index()));
     }
 
     #[test]

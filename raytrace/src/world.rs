@@ -22,7 +22,7 @@ impl World {
         let mut result = vec!();
 
         for obj in &self.objects {
-            let mut xs = obj.intersect(r);
+            let mut xs = obj.intersect(r);  // see note in Group
             if xs.len() > 0 {
                 result.append(&mut xs);
             }
