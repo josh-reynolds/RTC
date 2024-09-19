@@ -7,7 +7,7 @@ use crate::matrix::Matrix;
 
 pub struct Group {
     supe: Base,
-    pub shapes: Vec<Box<dyn Shape>>,
+    pub shapes: Vec<usize>,
 }
 
 impl Shape for Group {
@@ -59,8 +59,12 @@ impl Shape for Group {
 }
 
 impl Group {
-    pub fn add_child(&mut self, child: Box<dyn Shape>){
-        self.shapes.push(child);
+    pub fn add_child(&mut self, child_index: usize){
+        self.shapes.push(child_index);
+    }
+    
+    pub fn get_size(&self) -> usize {
+        self.shapes.len()
     }
 }
 
@@ -79,6 +83,7 @@ mod tests {
     use crate::shapes::{Shape, shape};
     //use crate::equals::equals;
     use crate::matrix::identity;
+    use crate::world::world;
     //use std::f64::consts::SQRT_2;
 
     #[test]
@@ -91,15 +96,19 @@ mod tests {
 
     #[test]
     fn adding_a_child_to_a_group(){
+        let mut w = world();
+
+        let s = shape();
+        let shape_index = w.add_object(Box::new(s));
+
         let mut g = group();
-        g.set_index(3);
+        g.add_child(shape_index);
+        let sz = g.get_size();
+        let _group_index = w.add_object(Box::new(g));
 
-        let mut s = Box::new(shape()) as Box<dyn Shape>;
-        s.set_index(4);
-        g.add_child(s);
-
-        assert!(g.shapes.len() == 1);
-        //assert_eq!(&g.shapes[1] as *const _, &s as *const _);
+        assert!(sz == 1);
+        //assert_eq!(w.get_object(group_index).get_child(0).get_index(),
+                   //shape_index);
         //assert!(s.get_parent() == Some(g.get_index()));
     }
 

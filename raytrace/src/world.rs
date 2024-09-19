@@ -146,10 +146,11 @@ impl World {
         col * transparency
     }
 
-    pub fn add_object(&mut self, mut obj: Box<dyn Shape>){
+    pub fn add_object(&mut self, mut obj: Box<dyn Shape>) -> usize{
         let current = self.objects.len();
         obj.set_index( current as usize );
         self.objects.push( obj );
+        current as usize
     }
 
     pub fn get_object(&self, index: usize) -> &Box<dyn Shape> {
