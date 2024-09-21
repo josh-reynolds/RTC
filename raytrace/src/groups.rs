@@ -4,6 +4,7 @@ use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
+use crate::world::World;
 
 pub struct Group {
     supe: Base,
@@ -59,9 +60,11 @@ impl Shape for Group {
 }
 
 impl Group {
-    pub fn add_child(&mut self, child_index: usize){
+    pub fn add_child(&mut self, child_index: usize, world: &World){
         self.shapes.push(child_index);
+        //world.get_object(child_index).set_parent(self.get_index());
     }
+
     
     pub fn get_size(&self) -> usize {
         self.shapes.len()
@@ -102,14 +105,18 @@ mod tests {
         let shape_index = w.add_object(Box::new(s));
 
         let mut g = group();
-        g.add_child(shape_index);
+        g.add_child(shape_index, &w);
         let sz = g.get_size();
-        let _group_index = w.add_object(Box::new(g));
+        let group_index = w.add_object(Box::new(g));
 
         assert!(sz == 1);
+        //println!("{:?}", w.get_object(group_index).get_transform());
+        //println!("{:?}", w.get_object(shape_index).get_parent());
+        //println!("{:?}", w);
+        //assert!(false);
         //assert_eq!(w.get_object(group_index).get_child(0).get_index(),
                    //shape_index);
-        //assert!(s.get_parent() == Some(g.get_index()));
+        assert!(w.get_object(shape_index).get_parent() == Some(group_index));
     }
 
     #[test]
