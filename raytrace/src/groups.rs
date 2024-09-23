@@ -66,7 +66,6 @@ impl Group {
         // Problem here - we can't get a mutable object from world with
         // get_object(), so this set_parent() call fails to compile 
     }
-
     
     pub fn get_size(&self) -> usize {
         self.shapes.len()
@@ -85,7 +84,9 @@ mod tests {
     use crate::groups::group;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
+    use crate::transform::translation;
     use crate::shapes::{Shape, shape};
+    use crate::spheres::sphere;
     //use crate::equals::equals;
     use crate::matrix::identity;
     use crate::world::world;
@@ -132,29 +133,36 @@ mod tests {
     }
 
     #[test]
-    fn a_ray_hits_a_group(){
-        //let c = group();
+    fn intersecting_ray_with_nonempty_group(){
+        let mut w = world();
 
-        //let direction = vector(0.0, 0.0, 1.0).normal();
-        //let r = ray(point(0.0, 0.0, -5.0), direction, 0);
-        //let xs = c.intersect(r);
-        //assert_eq!(xs.len(), 2);
-        //assert!(equals(xs[0].t, 5.0));
-        //assert!(equals(xs[1].t, 5.0));
+        let mut s1 = sphere();
+        s1.set_parent(3);  // same hack, see note above...
+        let s1_index = w.add_object(Box::new(s1));
 
-        //let direction = vector(1.0, 1.0, 1.0).normal();
-        //let r = ray(point(0.0, 0.0, -5.0), direction, 0);
-        //let xs = c.intersect(r);
-        //assert_eq!(xs.len(), 2);
-        //assert!(equals(xs[0].t, 8.66025));
-        //assert!(equals(xs[1].t, 8.66025));
+        let mut s2 = sphere();
+        s2.set_parent(3);
+        s2.set_transform(translation(0.0, 0.0, -3.0));
+        let s2_index = w.add_object(Box::new(s2));
+        
+        let mut s3 = sphere();
+        s3.set_parent(3);
+        s3.set_transform(translation(5.0, 0.0, 0.0));
+        let s3_index = w.add_object(Box::new(s3));
+        
+        let mut g = group();
+        g.add_child(s1_index, &w);
+        g.add_child(s2_index, &w);
+        g.add_child(s3_index, &w);
+        w.add_object(Box::new(g));
 
-        //let direction = vector(-0.5, -1.0, 1.0).normal();
-        //let r = ray(point(1.0, 1.0, -5.0), direction, 0);
-        //let xs = c.intersect(r);
-        //assert_eq!(xs.len(), 2);
-        //assert!(equals(xs[0].t,  4.55006));
-        //assert!(equals(xs[1].t, 49.44994));
+        let _r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
+        //let xs = g.intersect(r);  // ownership problem
+        //assert_eq!(xs.len(), 4);
+        //assert!(equals(xs[0].object, 1));
+        //assert!(equals(xs[1].object, 1));
+        //assert!(equals(xs[2].object, 0));
+        //assert!(equals(xs[3].object, 0));
     }
 
     #[test]
