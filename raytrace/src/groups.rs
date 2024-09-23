@@ -123,12 +123,11 @@ mod tests {
     }
 
     #[test]
-    fn a_ray_misses_a_group(){
-        let c = group();
-        
-        let direction = vector(1.0, 0.0, 0.0).normal();
-        let r = ray(point(1.0, 0.0, 1.0), direction, 0);
-        let xs = c.intersect(r);
+    fn intersecting_ray_with_empty_group(){
+        let g = group();
+
+        let r = ray(point(0.0, 0.0, 0.0), vector(0.0, 0.0, 1.0), 0);
+        let xs = g.intersect(r);
         assert_eq!(xs.len(), 0);
     }
 
