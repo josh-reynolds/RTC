@@ -144,4 +144,58 @@ value.
 I think it's time to change approaches. Going to back all this out to the working 
 state, then try to figure out an index-based strategy.
 
+-----
+All the previous has been working fine - I was able to convert everything over to using
+index values, with the actual objects owned by collections in World. Was able to get 
+everything from the book up through Cones implemented. But now I'm hitting a serious 
+snag - Groups.
+
+My first naive approach was to have Group contain a collection just like World. That 
+started running into some spreading lifetime issues, so I pulled back and tried another
+approach.
+
+Second attempt is to have a single canonical 'dictionary' of every object in the system, 
+owned and managed by World. Every other reference is a simple index value used to query 
+World for the actual object. That's how everything worked to this point, so I switched 
+Group to have a collection of index values instead of Boxes.
+
+That's run into its own roadblock after following a series of decision. Since 
+World.add_object() takes ownership and returns the resulting index value, I needed to
+create the Shapes first, add to World, then add their indices to Group before it is
+added to World itself. But you can't get a mutable object back from World (at least not 
+without a lot of mutability contagion that I shied away from), so in order to set the
+back-reference parent value on Shape, you have to know it ahead of time. Chicken and Egg. 
+I have tests working by hardcoding a value, but it's a very dumb hack.
+
+After that, when I try to call Group.intersect(), I hit ownership issues again. Feels 
+like this is driving into a dead end.
+
+So, after wrangling with this a few days, I see three paths forward:
+
+1) Go for the naive approach. World doesn't know about the the child Shapes at all. 
+   Maybe I didn't pursue the lifetime problems far enough to see light at the end of 
+   the tunnel. This feels like a more proper OO design, too. Composite pattern (though 
+   the root node of the tree - World - is a bit special, and not a Shape... what if 
+   it was, though)?
+
+   One possible implication, though: Pattern is also stashed in World. Arguably Material 
+   should be too. Should we have an equivalent in Group for this (these?) too? Would 
+   potentially mean some duplicated Pattern definitions if we want one used in multiple 
+   Groups, but at least right now the re-use benefit is more theoretical than actual. 
+   Since scenes are currently manually built, they haven't gotten super complex yet.
+
+2) Bang on the index approach some more. Fight the mutability contagion, and think 
+   through the true use cases. Do I have the right interfaces in place? Some of my
+   problems might be a test artifact - in a real scenario, World would be passing 
+   the intersect call down to every member of its collection.
+
+3) More thorough redesign. Probably the most work, but the more I hit these issues, I 
+   feel like Rust is fighting me. Maybe insisting on an OO structure isn't the right 
+   way to do this. Most of this project has been straightforward, except for the OO 
+   issues trying to get polymorphism working, and now composition. Perhaps I need more 
+   experience with the Rust way, but it keeps steering me down very complicated rabbit 
+   holes and bizarre syntax for things that would be trivial in a vanilla OO setup. So,
+   what if this should be changed to a procedural or functional design instead?
+
+
 
