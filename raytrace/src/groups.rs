@@ -108,13 +108,13 @@ mod tests {
     #[test]
     fn adding_a_child_to_a_group(){
         let mut w = world();
-        let mut s = shape();
+        let s = shape();
         let mut g = group();
         g.add_child(Box::new(s));
-        let group_index = w.add_object(Box::new(g));
+        let size = g.shapes.len();
+        let _group_index = w.add_object(Box::new(g));
 
-        assert!(w.get_object(group_index).get_size());
-        //assert!(w.get_object(shape_index).get_parent() == Some(group_index));
+        assert!(size == 1);
     }
 
     #[test]
