@@ -89,9 +89,9 @@ mod tests {
     use crate::groups::group;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
-    //use crate::transform::translation;
+    use crate::transform::translation;
     use crate::shapes::{Shape, shape};
-    //use crate::spheres::sphere;
+    use crate::spheres::sphere;
     //use crate::equals::equals;
     use crate::matrix::identity;
     use crate::world::world;
@@ -126,30 +126,27 @@ mod tests {
         assert_eq!(xs.len(), 0);
     }
 
-    //#[test]
-    //fn intersecting_ray_with_nonempty_group(){
-        //let mut w = world();
+    #[test]
+    fn intersecting_ray_with_nonempty_group(){
+        let mut w = world();
 
-        //let mut s1 = sphere();
-        //s1.set_parent(3);  // same hack, see note above...
-        //let s1_index = w.add_object(Box::new(s1));
+        let s1 = sphere();
 
-        //let mut s2 = sphere();
-        //s2.set_parent(3);
-        //s2.set_transform(translation(0.0, 0.0, -3.0));
-        //let s2_index = w.add_object(Box::new(s2));
+        let mut s2 = sphere();
+        s2.set_transform(translation(0.0, 0.0, -3.0));
         
-        //let mut s3 = sphere();
-        //s3.set_parent(3);
-        //s3.set_transform(translation(5.0, 0.0, 0.0));
-        //let s3_index = w.add_object(Box::new(s3));
+        let mut s3 = sphere();
+        s3.set_transform(translation(5.0, 0.0, 0.0));
         
-        //let mut g = group();
-        //g.add_child(s1_index, &w);
-        //g.add_child(s2_index, &w);
-        //g.add_child(s3_index, &w);
-        //w.add_object(Box::new(g));
+        let mut g = group();
+        g.add_child(Box::new(s1));
+        g.add_child(Box::new(s2));
+        g.add_child(Box::new(s3));
+        let size = g.shapes.len();
+        w.add_object(Box::new(g));
 
+        assert!(size == 3);
+        
         //let _r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
         //let xs = g.intersect(r);  // ownership problem
         //assert_eq!(xs.len(), 4);
@@ -157,7 +154,7 @@ mod tests {
         //assert!(equals(xs[1].object, 1));
         //assert!(equals(xs[2].object, 0));
         //assert!(equals(xs[3].object, 0));
-    //}
+    }
 
     #[test]
     fn normal_vector_on_a_group(){
