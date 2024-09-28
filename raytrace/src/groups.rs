@@ -128,8 +128,6 @@ mod tests {
 
     #[test]
     fn intersecting_ray_with_nonempty_group(){
-        let mut w = world();
-
         let s1 = sphere();
 
         let mut s2 = sphere();
@@ -143,13 +141,12 @@ mod tests {
         g.add_child(Box::new(s2));
         g.add_child(Box::new(s3));
         let size = g.shapes.len();
-        w.add_object(Box::new(g));
 
         assert!(size == 3);
         
-        //let _r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
-        //let xs = g.intersect(r);  // ownership problem
-        //assert_eq!(xs.len(), 4);
+        let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
+        let xs = g.intersect(r);
+        assert_eq!(xs.len(), 4);
         //assert!(equals(xs[0].object, 1));
         //assert!(equals(xs[1].object, 1));
         //assert!(equals(xs[2].object, 0));
