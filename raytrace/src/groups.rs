@@ -4,7 +4,6 @@ use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
 use crate::matrix::Matrix;
-//use crate::world::World;
 
 pub struct Group {
     supe: Base,
@@ -100,10 +99,7 @@ mod tests {
     use crate::transform::translation;
     use crate::shapes::{Shape, shape};
     use crate::spheres::sphere;
-    //use crate::equals::equals;
     use crate::matrix::identity;
-    use crate::world::world;
-    //use std::f64::consts::SQRT_2;
 
     #[test]
     fn creating_a_new_group(){
@@ -115,14 +111,13 @@ mod tests {
 
     #[test]
     fn adding_a_child_to_a_group(){
-        let mut w = world();
         let s = shape();
         let mut g = group();
+        g.set_index(4);   // arbitrary value for test purposes
         g.add_child(Box::new(s));
-        let size = g.shapes.len();
-        let _group_index = w.add_object(Box::new(g));
 
-        assert!(size == 1);
+        assert!(g.shapes.len() == 1);
+        assert!(g.get_child(0).get_parent() == Some(g.get_index()));
     }
 
     #[test]
@@ -154,11 +149,12 @@ mod tests {
         
         let r = ray(point(0.0, 0.0, -5.0), vector(0.0, 0.0, 1.0), 0);
         let xs = g.intersect(r);
+
         assert_eq!(xs.len(), 4);
-        //assert!(equals(xs[0].object, 1));
-        //assert!(equals(xs[1].object, 1));
-        //assert!(equals(xs[2].object, 0));
-        //assert!(equals(xs[3].object, 0));
+        assert!(xs[0].object == 1);
+        assert!(xs[1].object == 1);
+        assert!(xs[2].object == 0);
+        assert!(xs[3].object == 0);
     }
 
     #[test]
