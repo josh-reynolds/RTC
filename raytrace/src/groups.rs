@@ -1,5 +1,5 @@
 use crate::shapes::{Shape, Base, shape};
-use crate::intersections::{Intersection, intersections};
+use crate::intersections::Intersection;
 use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
 use crate::materials::Material;
@@ -33,10 +33,18 @@ impl Shape for Group {
     }
 
     fn intersect(&self, r: Ray) -> Vec<Intersection> {
-        let _r2 = self.saved_ray(r);
-        let xs = intersections(&[]);
-        
-        return xs;
+        let r2 = self.saved_ray(r);
+        let mut result = vec!();
+
+        for s in &self.shapes {
+            let mut xs = s.intersect(r2);
+            if xs.len() > 0 {
+                result.append(&mut xs);
+            }
+        }
+
+        result.sort_by( |a, b| a.t.partial_cmp(&b.t).unwrap() );
+        result
     }
 
     fn get_index(&self) -> usize {
