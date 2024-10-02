@@ -85,6 +85,14 @@ pub trait Shape {
     fn saved_ray(&self, r: Ray) -> Ray {
         r.transform( self.get_transform().inverse() )
     }
+
+    fn world_to_object(&self, p: Tuple) -> Tuple {
+        //match self.get_parent() {
+            //Some(parent) => parent.world_to_object(p),
+            //None         => self.get_transform().inverse().multup(&p)
+        //}
+        p
+    }
 }
 
 impl Debug for dyn Shape {
@@ -112,10 +120,12 @@ pub fn shape() -> Base {
 mod tests {
     use crate::matrix::identity;
     use crate::shapes::{Shape, shape};
-    use crate::transform::{scaling, translation, rotation_z};
+    use crate::transform::{scaling, translation, rotation_y, rotation_z};
     use crate::materials::material;
     use crate::rays::ray;
     use crate::tuple::{point, vector};
+    use crate::groups::group;
+    use crate::spheres::sphere;
     use std::f64::consts::{PI, SQRT_2};
 
     #[test]
@@ -194,5 +204,23 @@ mod tests {
     fn a_shape_has_a_parent_attribute(){
         let s = shape();
         assert!(s.parent == None);
+    }
+
+    #[test]
+    fn converting_point_from_world_to_object_space(){
+        let mut g1 = group();
+        g1.set_transform(rotation_y(PI/2.0));
+
+        let mut g2 = group();
+        g2.set_transform(scaling(2.0, 2.0, 2.0));
+
+        let mut s = sphere();
+        s.set_transform(translation(5.0, 0.0, 0.0));
+
+        g2.add_child(Box::new(s.clone()));
+        g1.add_child(Box::new(g2));
+
+        let p = s.world_to_object(point(-2.0, 0.0, -10.0));
+        assert!(p.equals(point(0.0, 0.0, -1.0)));
     }
 }
