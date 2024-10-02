@@ -96,7 +96,7 @@ mod tests {
     use crate::groups::group;
     use crate::tuple::{point, vector};
     use crate::rays::ray;
-    use crate::transform::translation;
+    use crate::transform::{translation, scaling};
     use crate::shapes::{Shape, shape};
     use crate::spheres::sphere;
     use crate::matrix::identity;
@@ -155,6 +155,21 @@ mod tests {
         assert!(xs[1].object == 1);
         assert!(xs[2].object == 0);
         assert!(xs[3].object == 0);
+    }
+
+    #[test]
+    fn intersecting_a_transformed_group(){
+        let mut s = sphere();
+        s.set_transform(translation(5.0, 0.0, 0.0));
+
+        let mut g = group();
+        g.set_transform(scaling(2.0, 2.0, 2.0));
+        g.add_child(Box::new(s));
+
+        let r = ray(point(10.0, 0.0, -10.0), vector(0.0, 0.0, 1.0), 0);
+        let xs = g.intersect(r);
+
+        assert_eq!(xs.len(), 2);
     }
 
     #[test]
