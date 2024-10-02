@@ -197,5 +197,22 @@ So, after wrangling with this a few days, I see three paths forward:
    holes and bizarre syntax for things that would be trivial in a vanilla OO setup. So,
    what if this should be changed to a procedural or functional design instead?
 
+---
+So, I've started pursuing the first solution. And easy going to this point - I think I 
+got into trouble with the previous attempt by adding an unnecessary World to the 
+test scenarios, which started causing all sorts of ownership and lifetime problems. After 
+simplifying the test scenario to the bare essentials, the basic Group structure is in
+place.
 
+But looking ahead, I can see a tricky problem. And now that I'm putting together normal 
+calculations, it is biting. We're passing around 'objects' in the form of usize indices, 
+and as long as there's just one list in World that works just fine. But now, the index 
+might refer to a list in some unknown group somewhere. So how do we get the object back 
+when we need it?
+
+I anticipated this being an issue with intersection hits. But while implementing 
+Shape.world_to_object(), this is also a problem getting to the parent of a Shape.
+
+So we either need a facility to go back and forth between indices and objects, or rethink 
+the approach altogether. Real references (with all the lifefime complications that involves)? Approach #2 above? Need to mull it over.
 
