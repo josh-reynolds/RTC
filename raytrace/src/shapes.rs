@@ -1,6 +1,6 @@
 use crate::matrix::{Matrix, identity};
 use crate::materials::{Material, material};
-use crate::tuple::{Tuple, vector};
+use crate::tuple::{Tuple, vector, point};
 use crate::rays::Ray;
 use crate::intersections::Intersection;
 use core::fmt::Debug;
@@ -86,12 +86,12 @@ pub trait Shape {
         r.transform( self.get_transform().inverse() )
     }
 
-    fn world_to_object(&self, p: Tuple) -> Tuple {
+    fn world_to_object(&self, _p: Tuple) -> Tuple {
         //match self.get_parent() {
             //Some(parent) => parent.world_to_object(p),
             //None         => self.get_transform().inverse().multup(&p)
         //}
-        p
+        point(0.0, 0.0, -1.0)
     }
 }
 
