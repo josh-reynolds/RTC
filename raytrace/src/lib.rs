@@ -24,6 +24,7 @@ pub mod cubes;
 pub mod cylinders;
 pub mod cones;
 pub mod groups;
+pub mod shape_index;
 
 mod equals {
     pub const EPSILON: f64 = 0.00001;
