@@ -1,9 +1,12 @@
 
-
+#[derive(Clone,PartialEq,Debug)]
 pub struct ShapeIndex {
     pub parents: Vec<usize>,
 }
 
+pub fn shape_index() -> ShapeIndex {
+    ShapeIndex{ parents: vec!() }
+}
 // sketching out schema here:
 //   accumulate a vector of indices as the 'coordinate' for a Shape
 //   the right-most value is a non-Group Shape

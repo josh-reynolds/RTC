@@ -3,6 +3,7 @@ use crate::materials::{Material, material};
 use crate::tuple::{Tuple, vector, point};
 use crate::rays::Ray;
 use crate::intersections::Intersection;
+use crate::shape_index::{ShapeIndex, shape_index};
 use core::fmt::Debug;
 
 #[derive(Debug,PartialEq,Clone)]
@@ -11,6 +12,7 @@ pub struct Base {
     material: Material,
     parent: Option<usize>,
     index: usize,
+    i: ShapeIndex,
 }
 
 impl Shape for Base {
@@ -113,6 +115,7 @@ pub fn shape() -> Base {
         material: material(),
         parent: None,
         index: 0,
+        i: shape_index(),
     }
 }
 
