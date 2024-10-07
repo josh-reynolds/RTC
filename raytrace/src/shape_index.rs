@@ -1,11 +1,21 @@
 
 #[derive(Clone,PartialEq,Debug)]
 pub struct ShapeIndex {
+    pub index: usize,
+    pub parent: Option<usize>,
+    pub grandparent: Option<usize>,
+    pub greatparent: Option<usize>,  // arbitrary depth limit of four
     pub parents: Vec<usize>,
 }
 
 pub fn shape_index() -> ShapeIndex {
-    ShapeIndex{ parents: vec!() }
+    ShapeIndex{ 
+        parents: vec!(),
+        index: 0,
+        parent: None,
+        grandparent: None,
+        greatparent: None, 
+    }
 }
 // sketching out schema here:
 //   accumulate a vector of indices as the 'coordinate' for a Shape
@@ -15,5 +25,10 @@ pub fn shape_index() -> ShapeIndex {
 //   each intervening value is found in the Group referenced to its left
 //
 //   so complete lookup involves walking through chain of get_object() calls
-//   (note: should unify method names, World::get_object() and Group::get_shape())
+//   (note: should unify method names, World::get_object() and Group::get_child())
 //
+//
+// reconsidering... the simplest/dumbest approach is to have distinct parent
+// fields. This would impose a depth limit - for now I think that's OK. If we also
+// wrap the interactivity in method calls, we can hide the implementation and 
+// change later if this limit becomes a problem.
