@@ -75,7 +75,7 @@ impl Group {
         current as usize
     }
 
-    pub fn get_child(&self, index: usize) -> &Box<dyn Shape> {
+    pub fn get_object(&self, index: usize) -> &Box<dyn Shape> {
         &(self.shapes[index])
     }
     
@@ -117,7 +117,7 @@ mod tests {
         g.add_child(Box::new(s));
 
         assert!(g.shapes.len() == 1);
-        assert!(g.get_child(0).get_parent() == Some(g.get_index()));
+        assert!(g.get_object(0).get_parent() == Some(g.get_index()));
     }
 
     #[test]

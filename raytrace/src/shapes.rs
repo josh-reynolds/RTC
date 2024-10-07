@@ -46,6 +46,7 @@ impl Shape for Base {
 
     fn set_index(&mut self, index: usize){
         self.index = index;
+        self.i.parents.push(index);
     }
 
     fn get_parent(&self) -> Option<usize> {
