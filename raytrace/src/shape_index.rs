@@ -5,12 +5,10 @@ pub struct ShapeIndex {
     pub parent: Option<usize>,
     pub grandparent: Option<usize>,
     pub greatparent: Option<usize>,  // arbitrary depth limit of four
-    pub parents: Vec<usize>,
 }
 
 pub fn shape_index() -> ShapeIndex {
     ShapeIndex{ 
-        parents: vec!(),
         index: 0,
         parent: None,
         grandparent: None,

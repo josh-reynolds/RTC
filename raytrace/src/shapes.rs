@@ -11,7 +11,6 @@ pub struct Base {
     transform: Matrix,
     material: Material,
     parent: Option<usize>,
-    index: usize,
     i: ShapeIndex,
 }
 
@@ -41,12 +40,11 @@ impl Shape for Base {
     }
 
     fn get_index(&self) -> usize {
-        self.index
+        self.i.index
     }
 
     fn set_index(&mut self, index: usize){
-        self.index = index;
-        self.i.parents.push(index);
+        self.i.index = index;
     }
 
     fn get_parent(&self) -> Option<usize> {
@@ -115,7 +113,6 @@ pub fn shape() -> Base {
         transform: identity(),
         material: material(),
         parent: None,
-        index: 0,
         i: shape_index(),
     }
 }
