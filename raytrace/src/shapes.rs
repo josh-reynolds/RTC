@@ -10,7 +10,6 @@ use core::fmt::Debug;
 pub struct Base {
     transform: Matrix,
     material: Material,
-    parent: Option<usize>,
     i: ShapeIndex,
 }
 
@@ -48,11 +47,11 @@ impl Shape for Base {
     }
 
     fn get_parent(&self) -> Option<usize> {
-        self.parent
+        self.i.parent
     }
 
     fn set_parent(&mut self, parent_index: usize){
-        self.parent = Some(parent_index);
+        self.i.parent = Some(parent_index);
     }
 }
 
@@ -112,7 +111,6 @@ pub fn shape() -> Base {
     Base {
         transform: identity(),
         material: material(),
-        parent: None,
         i: shape_index(),
     }
 }
@@ -204,7 +202,7 @@ mod tests {
     #[test]
     fn a_shape_has_a_parent_attribute(){
         let s = shape();
-        assert!(s.parent == None);
+        assert!(s.i.parent == None);
     }
 
     #[test]
