@@ -7,6 +7,16 @@ pub struct ShapeIndex {
     pub greatparent: Option<usize>,  // arbitrary depth limit of four
 }
 
+impl ShapeIndex {
+    pub fn get_index(&self) -> usize {
+        self.index
+    }
+
+    pub fn set_index(&mut self, index: usize){
+        self.index = index;
+    }
+}
+
 pub fn shape_index() -> ShapeIndex {
     ShapeIndex{ 
         index: 0,
