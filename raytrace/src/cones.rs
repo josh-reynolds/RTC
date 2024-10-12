@@ -1,4 +1,5 @@
 use crate::shapes::{Shape, Base, shape};
+use crate::shape_index::ShapeIndex;
 use crate::intersections::{Intersection, intersection, intersections};
 use crate::tuple::{Tuple, vector};
 use crate::rays::Ray;
@@ -124,6 +125,10 @@ impl Shape for Cone {
 
     fn set_parent(&mut self, parent_index: usize){
         self.supe.set_parent(parent_index);
+    }
+    
+    fn get_reference(&self) -> ShapeIndex {
+        self.supe.get_reference()
     }
 }
 

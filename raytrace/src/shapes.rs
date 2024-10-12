@@ -53,6 +53,10 @@ impl Shape for Base {
     fn set_parent(&mut self, parent_index: usize){
         self.i.set_parent(parent_index);
     }
+
+    fn get_reference(&self) -> ShapeIndex {
+        self.i
+    }
 }
 
 pub trait Shape {
@@ -77,6 +81,7 @@ pub trait Shape {
     fn set_index(&mut self, index: usize);
     fn get_parent(&self) -> Option<usize>;
     fn set_parent(&mut self, parent_index: usize);
+    fn get_reference(&self) -> ShapeIndex;
 
     // text implements this as a mutable field on Shape,
     // but this causes mutability contagion across the entire

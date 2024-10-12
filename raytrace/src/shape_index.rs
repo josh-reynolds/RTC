@@ -1,5 +1,5 @@
 
-#[derive(Clone,PartialEq,Debug)]
+#[derive(Clone,PartialEq,Debug,Copy)]
 pub struct ShapeIndex {
     pub index: usize,
     pub parent: Option<usize>,

@@ -3,6 +3,7 @@ use crate::tuple::{Tuple, vector};
 use crate::intersections::{Intersection, intersection, intersections};
 use crate::matrix::Matrix;
 use crate::shapes::{Base, Shape, shape};
+use crate::shape_index::ShapeIndex;
 use crate::materials::Material;
 use crate::equals::EPSILON;
 use std::f64::INFINITY;
@@ -76,6 +77,10 @@ impl Shape for Cube {
 
     fn set_parent(&mut self, parent_index: usize){
         self.supe.set_parent(parent_index);
+    }
+    
+    fn get_reference(&self) -> ShapeIndex {
+        self.supe.get_reference()
     }
 }
 
