@@ -47,11 +47,11 @@ impl Shape for Base {
     }
 
     fn get_parent(&self) -> Option<usize> {
-        self.i.parent
+        self.i.get_parent()
     }
 
     fn set_parent(&mut self, parent_index: usize){
-        self.i.parent = Some(parent_index);
+        self.i.set_parent(parent_index);
     }
 }
 

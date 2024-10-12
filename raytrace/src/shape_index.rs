@@ -15,6 +15,14 @@ impl ShapeIndex {
     pub fn set_index(&mut self, index: usize){
         self.index = index;
     }
+
+    pub fn get_parent(&self) -> Option<usize>{
+        self.parent
+    }
+
+    pub fn set_parent(&mut self, parent: usize){
+        self.parent = Some(parent);
+    }
 }
 
 pub fn shape_index() -> ShapeIndex {
