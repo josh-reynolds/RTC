@@ -178,6 +178,20 @@ mod tests {
     }
 
     #[test]
+    fn adding_to_group_sets_reference(){
+        let s = sphere();
+        let mut g = group();
+        g.add_child(Box::new(s));
+
+        let r = g.get_object(0).get_reference();
+        assert!(match r.parent {
+                  Some(0) => true,
+                  Some(_) => false,
+                  None => false,
+        });
+    }
+
+    #[test]
     fn normal_vector_on_a_group(){
         //let c = group();
 
