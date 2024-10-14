@@ -109,6 +109,18 @@ impl Shape for Cylinder {
     fn get_reference(&self) -> ShapeIndex {
         self.supe.get_reference()
     }
+    
+    fn add_child(&mut self, mut _child: Box<dyn Shape>) -> usize {
+        0
+    }
+
+    fn get_object(&self, _index: usize) -> &Box<dyn Shape> {
+        &(Box::new(shape()) as Box<dyn Shape>)
+    }
+
+    fn get_size(&self) -> usize {
+        0
+    }
 }
 
 impl Cylinder {

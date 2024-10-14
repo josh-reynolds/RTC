@@ -69,10 +69,8 @@ impl Shape for Group {
     fn get_reference(&self) -> ShapeIndex {
         self.supe.get_reference()
     }
-}
 
-impl Group {
-    pub fn add_child(&mut self, mut child: Box<dyn Shape>) -> usize {
+    fn add_child(&mut self, mut child: Box<dyn Shape>) -> usize {
         let current = self.shapes.len();
         child.set_index(current as usize);
         child.set_parent(self.get_index());
@@ -80,11 +78,11 @@ impl Group {
         current as usize
     }
 
-    pub fn get_object(&self, index: usize) -> &Box<dyn Shape> {
+    fn get_object(&self, index: usize) -> &Box<dyn Shape> {
         &(self.shapes[index])
     }
     
-    pub fn get_size(&self) -> usize {
+    fn get_size(&self) -> usize {
         self.shapes.len()
     }
 }
@@ -189,6 +187,17 @@ mod tests {
                   Some(_) => false,
                   None => false,
         });
+    }
+
+    #[test]
+    fn adding_to_nested_groups_sets_references(){
+        let s = sphere();
+        let mut g1 = group();
+        g1.add_child(Box::new(s));
+        let mut g2 = group();
+        g2.add_child(Box::new(g1));
+
+        let _r = g2.get_object(0).get_object(0).get_reference();
     }
 
     #[test]

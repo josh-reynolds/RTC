@@ -57,6 +57,18 @@ impl Shape for Base {
     fn get_reference(&self) -> ShapeIndex {
         self.i
     }
+    
+    fn add_child(&mut self, mut _child: Box<dyn Shape>) -> usize {
+        0
+    }
+
+    fn get_object(&self, _index: usize) -> &Box<dyn Shape> {
+        &(Box::new(shape()) as Box<dyn Shape>)
+    }
+
+    fn get_size(&self) -> usize {
+        0
+    }
 }
 
 pub trait Shape {
@@ -98,6 +110,10 @@ pub trait Shape {
         //}
         point(0.0, 0.0, -1.0)
     }
+
+    fn add_child(&mut self, child: Box<dyn Shape>) -> usize;
+    fn get_object(&self, index: usize) -> &Box<dyn Shape>;
+    fn get_size(&self) -> usize;
 }
 
 impl Debug for dyn Shape {
