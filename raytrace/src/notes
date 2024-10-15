@@ -216,3 +216,32 @@ Shape.world_to_object(), this is also a problem getting to the parent of a Shape
 So we either need a facility to go back and forth between indices and objects, or rethink 
 the approach altogether. Real references (with all the lifefime complications that involves)? Approach #2 above? Need to mull it over.
 
+---
+Still futzing around with this latest issue. To solve the previous, I introduced a new 
+type - ShapeIndex - that collects a set of indices. It's dumb at the moment, with 
+explicit self/parent/grandparent/greatparent fields. I toyed with the idea of a vector
+or something dynamic, but until I can solve the larger issues in this area, trying to 
+keep things very simple. (And in practice, nesting groups four-deep is probably 
+sufficient for some time.)
+
+I got the very basics working, but when trying to verify the parent link, hit a blocker 
+with the interface to Group. As currently defined, the methods to add/retrieve members 
+are specific to Group, not coming to it from Shape. So when I retrieve a Box<Shape>, it 
+can't respond to get_child(). So next step was to move those methods into the Shape 
+interface (which probably conforms to the Composite pattern more properly anyway).
+
+Basics are working OK, but stuck on a new problem. To comply with the Trait definition, 
+all the other Shape classes need to implement these methods. Two issues, first minor, 
+second is a blocker. First, non-Group Shapes shouldn't really respond to these (and it
+should never be invoked) - so I am returning hard-coded dummy values. (Should they 
+throw an exception instead?).
+
+Second, for get_object(), I am also returning a dummy value, but it needs to be a 
+Box<Shape>. Had a heck of a time coming up with valid syntax to create a Box and coerce 
+it to Box<Shape>, but then it complains I am returning a temp value (Boxing shape()).
+But it also won't let me box self or supe. Would really like an empty Box here, 
+working through it, probably need to do some research or experiments.
+
+One article covering a similar issue suggested using either Option (to allow for None), 
+or an Enum instead of a Struct. Would be a large-ish overhaul, I think, so may want to 
+build a toy project on the side to get that working, then implement here.
