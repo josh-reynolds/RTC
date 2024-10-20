@@ -1,4 +1,4 @@
-use crate::component::Component;
+use crate::component::{Comp,Component};
 
 pub struct Leaf {
     value: usize,
@@ -8,7 +8,11 @@ impl Component for Leaf {
     fn operation(&self) -> usize{
         self.value
     }
-    //fn add(&self, Component: c);
+
+    fn add(&mut self, _c: Comp) -> Option<usize> {
+        None
+    }
+
     //fn remove(&self, Component: c);
     //fn get_child(&self, usize: i);
 }

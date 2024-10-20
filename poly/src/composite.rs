@@ -1,8 +1,8 @@
-use crate::component::Component;
+use crate::component::{Comp,Component};
 
 pub struct Composite {
     value: usize,
-    //children: Vec<Box<dyn Component>>
+    children: Vec<Comp>
 }
 
 impl Component for Composite {
@@ -10,13 +10,21 @@ impl Component for Composite {
         self.value
         //for all g in children: g.operation()
     }
-    //fn add(&self, Component: c);
+
+    fn add(&mut self, c: Comp) -> Option<usize> {
+        self.children.push(c);
+        Some(self.children.len() - 1)
+    }
+
     //fn remove(&self, Component: c);
     //fn get_child(&self, usize: i);
 }
 
 pub fn composite() -> Composite {
-    Composite{ value: 0 }
+    Composite{ 
+        value: 0,
+        children: vec!(),
+    }
 }
 
 #[cfg(test)]
