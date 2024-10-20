@@ -1,34 +1,34 @@
-use crate::component::{Comp,Component};
+//use crate::component::{IComponent, Component};
 
-pub struct Leaf {
-    value: usize,
-}
+//pub struct Leaf {
+    //value: usize,
+//}
 
-impl Component for Leaf {
-    fn operation(&self) -> usize{
-        self.value
-    }
+//impl IComponent for Leaf {
+    //fn operation(&self) -> usize{
+        //self.value
+    //}
 
-    fn add(&mut self, _c: Comp) -> Option<usize> {
-        None
-    }
+    //fn add(&mut self, _c: Component) -> Option<usize> {
+        //None
+    //}
 
     //fn remove(&self, Component: c);
     //fn get_child(&self, usize: i);
-}
+//}
 
-pub fn leaf() -> Leaf {
-    Leaf{ value: 1 }
-}
+//pub fn leaf() -> Component {
+    //Leaf{ value: 1 }
+//}
 
-#[cfg(test)]
-mod tests {
-    use crate::leaf::leaf;
-    use crate::component::Component;
+//#[cfg(test)]
+//mod tests {
+    //use crate::leaf::leaf;
+    //use crate::component::IComponent;
 
-    #[test]
-    fn constructing_a_leaf(){
-        let l = leaf();
-        assert!(l.operation() == 1);
-    }
-}
+    //#[test]
+    //fn constructing_a_leaf(){
+        //let l = leaf();
+        //assert!(l.operation() == 1);
+    //}
+//}
