@@ -1,4 +1,4 @@
-use poly::component::{IComponent, leaf, composite};
+use poly::component::{leaf, composite};
 
 fn main() {
     let l = leaf();

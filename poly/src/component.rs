@@ -5,15 +5,15 @@ pub enum Component {
                 children: Vec<Component>},
 }
 
-impl IComponent for Component {
-    fn operation(self) -> usize {
+impl Component {
+    pub fn operation(self) -> usize {
         match self {
             Component::Leaf{value} => value,
             Component::Composite{value,children: _} => value,
         }
     }
 
-    fn add(&mut self, c: Component) -> Option<usize> {
+    pub fn add(&mut self, c: Component) -> Option<usize> {
         match self {
             Component::Leaf{value: _} => None,
             Component::Composite{value: _, children: ch} => { 
@@ -22,13 +22,6 @@ impl IComponent for Component {
             },
         }
     }
-}
-
-pub trait IComponent {
-    fn operation(self) -> usize;
-    fn add(&mut self, c: Component) -> Option<usize>;
-    //fn remove(&self, c: Component);
-    //fn get_child(&self, i: usize);
 }
 
 pub fn leaf() -> Component {
