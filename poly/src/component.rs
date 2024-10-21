@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub enum Component {
     Leaf { value: usize },
     Composite { value: usize,
@@ -20,6 +20,21 @@ impl Component {
                 ch.push(c);
                 Some(ch.len() - 1)
             },
+        }
+    }
+
+    //pub fn remove(&mut self, c: Component);
+    
+    pub fn get_child(&self, i: usize) -> Option<Component> {
+        match self {
+            Component::Leaf{value: _} => None,
+            Component::Composite{value: _, children: ch} => {
+                if i >= ch.len() {
+                    None      // not sure if we should assert here instead...
+                } else {
+                    Some(ch[i].clone())  
+                }
+            }
         }
     }
 }
