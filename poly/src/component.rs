@@ -49,3 +49,22 @@ pub fn composite() -> Component {
         children: vec!(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::component::leaf;
+    use crate::component::composite;
+
+    #[test]
+    fn constructing_a_leaf(){
+        let l = leaf();
+        assert!(l.operation() == 1);
+    }
+    
+
+    #[test]
+    fn constructing_a_composite(){
+        let c = composite();
+        assert!(c.operation() == 0);
+    }
+}
