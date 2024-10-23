@@ -9,6 +9,9 @@ fn main() {
 
     println!("{:?}", c2);
 
+    let grp = c2.get_child(0).unwrap();
+    println!("{:?}", grp);
+
     let ch = c2.get_child(0)
                .expect("VALID INDEX")
                .get_child(0)

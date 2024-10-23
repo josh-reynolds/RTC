@@ -1,3 +1,7 @@
+// TO_DO:
+//   coordinate/index values
+//   Visitor class for operations
+
 #[derive(Debug,Clone)]
 pub enum Component {
     Leaf { value: usize },
@@ -52,8 +56,7 @@ pub fn composite() -> Component {
 
 #[cfg(test)]
 mod tests {
-    use crate::component::leaf;
-    use crate::component::composite;
+    use crate::component::{Component, leaf, composite};
 
     #[test]
     fn constructing_a_leaf(){
@@ -66,5 +69,18 @@ mod tests {
     fn constructing_a_composite(){
         let c = composite();
         assert!(c.operation() == 0);
+    }
+
+    #[test]
+    fn adding_to_a_composite(){
+        let mut c = composite();
+        let l = leaf();
+        let index = c.add(l);
+
+        assert!(index == Some(0));
+
+        if let Component::Composite{value: _, children: ch} = c {
+            assert!(ch.len() == 1);
+        }
     }
 }
