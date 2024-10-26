@@ -1,26 +1,29 @@
+use crate::coordinate::{Coordinate,coordinate};
 // TO_DO:
 //   coordinate/index values
 //   Visitor class for operations
 
 #[derive(Debug,Clone)]
 pub enum Component {
-    Leaf { value: usize },
+    Leaf { value: usize,
+           index: Coordinate },
     Composite { value: usize,
-                children: Vec<Component>},
+                children: Vec<Component>,
+                index: Coordinate },
 }
 
 impl Component {
     pub fn operation(self) -> usize {
         match self {
-            Component::Leaf{value} => value,
-            Component::Composite{value,children: _} => value,
+            Component::Leaf{value,index: _} => value,
+            Component::Composite{value,children: _,index: _} => value,
         }
     }
 
     pub fn add(&mut self, c: Component) -> Option<usize> {
         match self {
-            Component::Leaf{value: _} => None,
-            Component::Composite{value: _, children: ch} => { 
+            Component::Leaf{value: _,index: _} => None,
+            Component::Composite{value: _, children: ch,index: _} => { 
                 ch.push(c);
                 Some(ch.len() - 1)
             },
@@ -31,8 +34,8 @@ impl Component {
     
     pub fn get_child(&self, i: usize) -> Option<Component> {
         match self {
-            Component::Leaf{value: _} => None,
-            Component::Composite{value: _, children: ch} => {
+            Component::Leaf{value: _, index: _} => None,
+            Component::Composite{value: _, children: ch, index: _} => {
                 if i >= ch.len() {
                     None      // not sure if we should assert here instead...
                 } else {
@@ -44,13 +47,17 @@ impl Component {
 }
 
 pub fn leaf() -> Component {
-    Component::Leaf { value: 1 }
+    Component::Leaf { 
+        value: 1,
+        index: coordinate(),
+    }
 }
 
 pub fn composite() -> Component {
     Component::Composite { 
         value: 0,
         children: vec!(),
+        index: coordinate(),
     }
 }
 
@@ -79,7 +86,7 @@ mod tests {
 
         assert!(index == Some(0));
 
-        if let Component::Composite{value: _, children: ch} = c {
+        if let Component::Composite{value: _, children: ch, index: _} = c {
             assert!(ch.len() == 1);
         }
     }
