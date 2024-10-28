@@ -4,9 +4,9 @@ pub struct Coordinate {
     pub index: usize,
 }
 
-pub fn coordinate() -> Coordinate {
+pub fn coordinate(i: usize) -> Coordinate {
     Coordinate {
-        index: 0,
+        index: i,
     }
 }
 
@@ -16,7 +16,7 @@ mod tests {
 
     #[test]
     fn constructing_a_coordinate(){
-        let c = coordinate();
+        let c = coordinate(0);
         assert!(c.index == 0);
     }
 }

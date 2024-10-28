@@ -49,7 +49,7 @@ impl Component {
 pub fn leaf() -> Component {
     Component::Leaf { 
         value: 1,
-        index: coordinate(),
+        index: coordinate(0),
     }
 }
 
@@ -57,7 +57,7 @@ pub fn composite() -> Component {
     Component::Composite { 
         value: 0,
         children: vec!(),
-        index: coordinate(),
+        index: coordinate(0),
     }
 }
 
