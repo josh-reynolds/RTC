@@ -20,12 +20,12 @@ impl Component {
         }
     }
 
-    pub fn add(&mut self, c: Component) -> Option<usize> {
+    pub fn add(&mut self, c: Component) -> Option<Coordinate> {
         match self {
             Component::Leaf{value: _,index: _} => None,
             Component::Composite{value: _, children: ch,index: _} => { 
                 ch.push(c);
-                Some(ch.len() - 1)
+                Some(coordinate(ch.len() - 1))
             },
         }
     }
@@ -82,12 +82,21 @@ mod tests {
     fn adding_to_a_composite(){
         let mut c = composite();
         let l = leaf();
-        let index = c.add(l);
+        let index = c.add(l).unwrap();
 
-        assert!(index == Some(0));
+        assert!(index.index == 0);
 
         if let Component::Composite{value: _, children: ch, index: _} = c {
             assert!(ch.len() == 1);
         }
+    }
+
+    #[test]
+    fn add_returns_coordinate(){
+        let mut c = composite();
+        let l = leaf();
+        let index = c.add(l).unwrap();
+
+        assert!(index.index == 0);
     }
 }
