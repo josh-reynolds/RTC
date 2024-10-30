@@ -99,4 +99,22 @@ mod tests {
 
         assert!(index.index == 0);
     }
+
+    #[test]
+    fn add_sets_index_correctly(){
+        let mut c = composite();
+
+        let l1 = leaf();
+        let index1 = c.add(l1).unwrap();
+
+        let l2 = leaf();
+        let index2 = c.add(l2).unwrap();
+
+        let l3 = leaf();
+        let index3 = c.add(l3).unwrap();
+
+        assert!(index1.index == 0);
+        assert!(index2.index == 1);
+        assert!(index3.index == 2);
+    }
 }
