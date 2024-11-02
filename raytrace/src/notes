@@ -245,3 +245,14 @@ working through it, probably need to do some research or experiments.
 One article covering a similar issue suggested using either Option (to allow for None), 
 or an Enum instead of a Struct. Would be a large-ish overhaul, I think, so may want to 
 build a toy project on the side to get that working, then implement here.
+
+---
+World.objects : Vec<Box<dyn Shape>>
+World.add_object(obj : Box<dyn Shape>)
+World.get_object() -> &Box<dyn Shape>
+Materials.lighting(o: &Box<dyn Shape>)
+Patterns.pattern_at_shape(o: &Box<dyn Shape>)
+Group.shapes : Vec<Box<dyn Shape>>
+
+for obj in World.objects : obj.intersect(ray)
+

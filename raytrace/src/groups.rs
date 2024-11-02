@@ -78,8 +78,8 @@ impl Shape for Group {
         current as usize
     }
 
-    fn get_object(&self, index: usize) -> &Box<dyn Shape> {
-        &(self.shapes[index])
+    fn get_object(&self, index: usize) -> Option<&Box<dyn Shape>> {
+        Some(&(self.shapes[index]))
     }
     
     fn get_size(&self) -> usize {
@@ -120,7 +120,7 @@ mod tests {
         g.add_child(Box::new(s));
 
         assert!(g.shapes.len() == 1);
-        assert!(g.get_object(0).get_parent() == Some(g.get_index()));
+        assert!(g.get_object(0).expect("VALID INDEX").get_parent() == Some(g.get_index()));
     }
 
     #[test]
@@ -181,7 +181,7 @@ mod tests {
         let mut g = group();
         g.add_child(Box::new(s));
 
-        let r = g.get_object(0).get_reference();
+        let r = g.get_object(0).expect("VALID INDEX").get_reference();
         assert!(match r.parent {
                   Some(0) => true,
                   Some(_) => false,
@@ -197,7 +197,11 @@ mod tests {
         let mut g2 = group();
         g2.add_child(Box::new(g1));
 
-        let _r = g2.get_object(0).get_object(0).get_reference();
+        let _r = g2.get_object(0)
+                   .expect("VALID INDEX")
+                   .get_object(0)
+                   .expect("VALID INDEX")
+                   .get_reference();
     }
 
     #[test]

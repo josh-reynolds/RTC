@@ -87,8 +87,8 @@ impl Shape for Cube {
         0
     }
 
-    fn get_object(&self, _index: usize) -> &Box<dyn Shape> {
-        &(Box::new(shape()) as Box<dyn Shape>)
+    fn get_object(&self, _index: usize) -> Option<&Box<dyn Shape>> {
+        None
     }
 
     fn get_size(&self) -> usize {
