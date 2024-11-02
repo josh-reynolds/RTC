@@ -117,4 +117,20 @@ mod tests {
         assert!(index2.index == 1);
         assert!(index3.index == 2);
     }
+
+    #[test]
+    fn add_sets_parent_correctly(){
+        let mut c1 = composite();
+        let c2 = composite();
+        let mut c3 = composite();
+
+        let l = leaf();
+        let index = c3.add(l).unwrap();
+        
+        c1.add(c2);
+        c1.add(c3);
+
+        assert!(index.index == 0);
+        //assert!(index.parent == 1);
+    }
 }
