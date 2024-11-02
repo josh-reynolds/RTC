@@ -1,4 +1,5 @@
-use crate::coordinate::{Coordinate,coordinate};
+use crate::coordinate::{Coordinate, coordinate};
+use crate::materials::{Material, material};
 // TO_DO:
 //   coordinate/index values
 //   Visitor class for operations
@@ -6,7 +7,8 @@ use crate::coordinate::{Coordinate,coordinate};
 #[derive(Debug,Clone)]
 pub enum Component {
     Leaf { value: usize,
-           index: Coordinate },
+           index: Coordinate,
+           material: Material },
     Composite { value: usize,
                 children: Vec<Component>,
                 index: Coordinate },
@@ -15,15 +17,15 @@ pub enum Component {
 impl Component {
     pub fn operation(self) -> usize {
         match self {
-            Component::Leaf{value,index: _} => value,
-            Component::Composite{value,children: _,index: _} => value,
+            Component::Leaf{value, index: _, material: _} => value,
+            Component::Composite{value, children: _, index: _} => value,
         }
     }
 
     pub fn add(&mut self, c: Component) -> Option<Coordinate> {
         match self {
-            Component::Leaf{value: _,index: _} => None,
-            Component::Composite{value: _, children: ch,index: _} => { 
+            Component::Leaf{value: _,index: _, material: _} => None,
+            Component::Composite{value: _, children: ch, index: _} => { 
                 ch.push(c);
                 Some(coordinate(ch.len() - 1))
             },
@@ -34,7 +36,7 @@ impl Component {
     
     pub fn get_child(&self, i: usize) -> Option<Component> {
         match self {
-            Component::Leaf{value: _, index: _} => None,
+            Component::Leaf{value: _, index: _, material: _} => None,
             Component::Composite{value: _, children: ch, index: _} => {
                 if i >= ch.len() {
                     None      // not sure if we should assert here instead...
@@ -50,6 +52,7 @@ pub fn leaf() -> Component {
     Component::Leaf { 
         value: 1,
         index: coordinate(0),
+        material: material(),
     }
 }
 
