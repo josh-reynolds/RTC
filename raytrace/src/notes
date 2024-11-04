@@ -256,3 +256,25 @@ Group.shapes : Vec<Box<dyn Shape>>
 
 for obj in World.objects : obj.intersect(ray)
 
+---
+Catching up - I added a side project (poly) to explore this structure stripped down. By 
+happenstance, I landed on an Enum approach rather than the Trait object style used in
+the raytrace project, and it's working well at least for the simple version. But it's 
+now stuck at the same point - whether to handle object references as indices into a 
+collection (and more problematically, *which* collection), or as reference pointers, with 
+all the potential lifetime headaches that incurs.
+
+In the meantime, I came back to the raytrace project and implemented the Option approach 
+for get_parent(), which took care of all lingering compilation errors. So now I can 
+make headway here again.
+
+I left off while implementing Shape.world_to_object(), which currently has a hardcoded 
+return value to pass the existing test. As noted above, the problem is that get_parent() 
+just returns an index value, which of course does not have a world_to_object() method. 
+We need to retrieve the actual object using the index first, hence the rabbit hole
+the past couple weeks. So, two options right now I think:
+
+* Solve the index lookup issue, including objects nested in groups
+* Go back to reference pointers, and deal with lifetime issues
+
+

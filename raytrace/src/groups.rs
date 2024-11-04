@@ -103,6 +103,7 @@ mod tests {
     use crate::shapes::{Shape, shape};
     use crate::spheres::sphere;
     use crate::matrix::identity;
+    use std::f64::consts::SQRT_2;
 
     #[test]
     fn creating_a_new_group(){
@@ -206,10 +207,10 @@ mod tests {
 
     #[test]
     fn normal_vector_on_a_group(){
-        //let c = group();
+        let c = group();
 
-        //let n = c.local_normal_at(point(0.0, 0.0, 0.0));
-        //assert_eq!(n, vector(0.0, 0.0, 0.0));
+        let n = c.local_normal_at(point(0.0, 0.0, 0.0));
+        assert_eq!(n, vector(0.0, 0.0, 0.0));
 
         //let n = c.local_normal_at(point(1.0, 1.0, 1.0));
         //assert_eq!(n, vector(1.0, -SQRT_2, 1.0));
