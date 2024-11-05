@@ -103,7 +103,7 @@ mod tests {
     use crate::shapes::{Shape, shape};
     use crate::spheres::sphere;
     use crate::matrix::identity;
-    use std::f64::consts::SQRT_2;
+    //use std::f64::consts::SQRT_2;
 
     #[test]
     fn creating_a_new_group(){
@@ -192,17 +192,22 @@ mod tests {
 
     #[test]
     fn adding_to_nested_groups_sets_references(){
-        let s = sphere();
+        let s1 = sphere();
+        let s2 = sphere();
         let mut g1 = group();
-        g1.add_child(Box::new(s));
+        g1.add_child(Box::new(s1));
+        g1.add_child(Box::new(s2));
         let mut g2 = group();
         g2.add_child(Box::new(g1));
 
-        let _r = g2.get_object(0)
-                   .expect("VALID INDEX")
-                   .get_object(0)
-                   .expect("VALID INDEX")
-                   .get_reference();
+        let r = g2.get_object(0)
+                  .expect("VALID INDEX")
+                  .get_object(1)
+                  .expect("VALID INDEX")
+                  .get_reference();
+
+        assert!(r.get_index() == 1);
+        assert!(r.get_parent() == Some(0));
     }
 
     #[test]
