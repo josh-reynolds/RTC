@@ -5,6 +5,7 @@ pub struct ShapeIndex {
     pub parent: Option<usize>,
     pub grandparent: Option<usize>,
     pub greatparent: Option<usize>,  // arbitrary depth limit of four
+    coordinate: &'static str,
 }
 
 impl ShapeIndex {
@@ -14,6 +15,7 @@ impl ShapeIndex {
 
     pub fn set_index(&mut self, index: usize){
         self.index = index;
+        //self.coordinate = &index.to_string();
     }
 
     pub fn get_parent(&self) -> Option<usize>{
@@ -31,6 +33,7 @@ pub fn shape_index() -> ShapeIndex {
         parent: None,
         grandparent: None,
         greatparent: None, 
+        coordinate: "0",
     }
 }
 // sketching out schema here:
