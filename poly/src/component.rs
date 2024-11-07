@@ -34,14 +34,14 @@ impl Component {
 
     //pub fn remove(&mut self, c: Component);
     
-    pub fn get_child(&self, i: usize) -> Option<Component> {
+    pub fn get_child(&'static self, i: usize) -> Option<&'static Component> {
         match self {
             Component::Leaf{value: _, index: _, material: _} => None,
             Component::Composite{value: _, children: ch, index: _} => {
                 if i >= ch.len() {
                     None      // not sure if we should assert here instead...
                 } else {
-                    Some(ch[i].clone())  
+                    Some(&ch[i])  
                 }
             }
         }
