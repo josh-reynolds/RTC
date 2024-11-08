@@ -5,5 +5,7 @@ pub struct Material {
 }
 
 pub fn material() -> Material {
-    Material { value: 4.3, }
+    Material { 
+        value: 4.3,
+    }
 }

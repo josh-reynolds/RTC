@@ -1,5 +1,5 @@
 use crate::coordinate::{Coordinate, coordinate};
-use crate::materials::{Material, material};
+use crate::materials::Material;
 // TO_DO:
 //   coordinate/index values
 //   Visitor class for operations
@@ -8,10 +8,12 @@ use crate::materials::{Material, material};
 pub enum Component {
     Leaf { value: usize,
            index: Coordinate,
-           material: Material },
+           material: Option<Material>,
+    },
     Composite { value: usize,
                 children: Vec<Component>,
-                index: Coordinate },
+                index: Coordinate,
+    },
 }
 
 impl Component {
@@ -48,11 +50,11 @@ impl Component {
     }
 }
 
-pub fn leaf() -> Component {
+pub fn leaf(mat: Option<Material>) -> Component {
     Component::Leaf { 
         value: 1,
         index: coordinate(0),
-        material: material(),
+        material: mat,
     }
 }
 
@@ -70,7 +72,7 @@ mod tests {
 
     #[test]
     fn constructing_a_leaf(){
-        let l = leaf();
+        let l = leaf(None);
         assert!(l.operation() == 1);
     }
     
@@ -84,7 +86,7 @@ mod tests {
     #[test]
     fn adding_to_a_composite(){
         let mut c = composite();
-        let l = leaf();
+        let l = leaf(None);
         let index = c.add(l).unwrap();
 
         assert!(index.index == 0);
@@ -97,7 +99,7 @@ mod tests {
     #[test]
     fn add_returns_coordinate(){
         let mut c = composite();
-        let l = leaf();
+        let l = leaf(None);
         let index = c.add(l).unwrap();
 
         assert!(index.index == 0);
@@ -107,13 +109,13 @@ mod tests {
     fn add_sets_index_correctly(){
         let mut c = composite();
 
-        let l1 = leaf();
+        let l1 = leaf(None);
         let index1 = c.add(l1).unwrap();
 
-        let l2 = leaf();
+        let l2 = leaf(None);
         let index2 = c.add(l2).unwrap();
 
-        let l3 = leaf();
+        let l3 = leaf(None);
         let index3 = c.add(l3).unwrap();
 
         assert!(index1.index == 0);
@@ -127,7 +129,7 @@ mod tests {
         let c2 = composite();
         let mut c3 = composite();
 
-        let l = leaf();
+        let l = leaf(None);
         let index = c3.add(l).unwrap();
         
         c1.add(c2);
