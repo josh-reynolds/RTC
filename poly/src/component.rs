@@ -36,7 +36,7 @@ impl Component {
 
     //pub fn remove(&mut self, c: Component);
     
-    pub fn get_child(&'static self, i: usize) -> Option<&'static Component> {
+    pub fn get_child(&self, i: usize) -> Option<&Component> {
         match self {
             Component::Leaf{value: _, index: _, material: _} => None,
             Component::Composite{value: _, children: ch, index: _} => {
@@ -45,6 +45,24 @@ impl Component {
                 } else {
                     Some(&ch[i])  
                 }
+            }
+        }
+    }
+
+    pub fn get_index(&self) -> Coordinate {
+        match self {
+            Component::Leaf{value: _, index: i, material: _} => i.clone(),
+            Component::Composite{value: _, children: _, index: i} => i.clone(),
+        }
+    }
+
+    pub fn set_index(&mut self, c: Coordinate){
+        match self {
+            Component::Leaf{value: _, index: i, material: _} => {
+                *i = c;
+            },
+            Component::Composite{value: _, children: _, index: i} => {
+                *i = c;
             }
         }
     }
