@@ -24,12 +24,15 @@ impl Component {
         }
     }
 
-    pub fn add(&mut self, c: Component) -> Option<Coordinate> {
+    pub fn add(&mut self, mut c: Component) -> Option<Coordinate> {
         match self {
             Component::Leaf{value: _,index: _, material: _} => None,
-            Component::Composite{value: _, children: ch, index: _} => { 
+            Component::Composite{value: _, children: ch, index: indx} => { 
+                let mut coord = coordinate(ch.len());
+                coord.parent = indx.index;
+                c.set_index(coord.clone());
                 ch.push(c);
-                Some(coordinate(ch.len() - 1))
+                Some(coord)
             },
         }
     }
