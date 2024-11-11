@@ -157,6 +157,6 @@ mod tests {
         c1.add(c3);
 
         assert!(index.index == 0);
-        //assert!(index.parent == 1);
+        //assert_eq!(index.parent, 1);
     }
 }
