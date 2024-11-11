@@ -26,6 +26,8 @@ class Tuple():
 def point(x, y, z):
     return Tuple(x, y, z, 1)
 
+def vector(x, y, z):
+    return Tuple(x, y, z, 0)
 
 class TupleTestCase(unittest.TestCase):
     def test_tuple_with_w_1_is_point(self):
@@ -52,3 +54,8 @@ class TupleTestCase(unittest.TestCase):
         self.assertFalse(a.isVector())
         self.assertEqual(a, Tuple(4, -4, 3, 1))
 
+    def test_vector_creates_tuples_with_w_0(self):
+        a = vector(4, -4, 3)
+        self.assertFalse(a.isPoint())
+        self.assertTrue(a.isVector())
+        self.assertEqual(a, Tuple(4, -4, 3, 0))
