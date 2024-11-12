@@ -1,4 +1,7 @@
 # to run tests: python -m unittest -v tuple
+
+# TO_DO: implement EPSILON and float equals
+
 import unittest
 
 class Tuple():
@@ -22,6 +25,12 @@ class Tuple():
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __add__(self, other):
+        return Tuple(self.x + other.x,
+                     self.y + other.y,
+                     self.z + other.z,
+                     self.w + other.w)
 
 def point(x, y, z):
     return Tuple(x, y, z, 1)
@@ -59,3 +68,8 @@ class TupleTestCase(unittest.TestCase):
         self.assertFalse(a.isPoint())
         self.assertTrue(a.isVector())
         self.assertEqual(a, Tuple(4, -4, 3, 0))
+
+    def test_adding_two_tuples(self):
+        a1 = Tuple(3, -2, 5, 1)
+        a2 = Tuple(-2, 3, 1, 0)
+        self.assertEqual(a1 + a2, Tuple(1, 1, 6, 1))
