@@ -84,3 +84,13 @@ class TupleTestCase(unittest.TestCase):
         p1 = point(3, 2, 1)
         p2 = point(5, 6, 7)
         self.assertEqual(p1 - p2, vector(-2, -4, -6))
+
+    def test_subtracting_vector_from_point(self):
+        p = point(3, 2, 1)
+        v = vector(5, 6, 7)
+        self.assertEqual(p - v, point(-2, -4, -6))
+        
+    def test_subtracting_two_vectors(self):
+        v1 = vector(3, 2, 1)
+        v2 = vector(5, 6, 7)
+        self.assertEqual(v1 - v2, vector(-2, -4, -6))
