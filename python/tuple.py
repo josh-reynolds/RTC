@@ -38,6 +38,10 @@ class Tuple():
                      self.z - other.z,
                      self.w - other.w)
 
+    def __neg__(self):
+        return Tuple(-self.x, -self.y, -self.z, -self.w)
+
+
 def point(x, y, z):
     return Tuple(x, y, z, 1)
 
@@ -94,3 +98,13 @@ class TupleTestCase(unittest.TestCase):
         v1 = vector(3, 2, 1)
         v2 = vector(5, 6, 7)
         self.assertEqual(v1 - v2, vector(-2, -4, -6))
+
+    def test_subtracting_vector_from_zero_vector(self):
+        zero = vector(0, 0, 0)
+        v = vector(1, -2, 3)
+        self.assertEqual(zero - v, vector(-1, 2, -3))
+
+    def test_negating_a_tuple(self):
+        a = Tuple(1, -2, 3, -4)
+        self.assertEqual(-a, Tuple(-1, 2, -3, 4))
+
