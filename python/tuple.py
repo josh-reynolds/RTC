@@ -32,6 +32,12 @@ class Tuple():
                      self.z + other.z,
                      self.w + other.w)
 
+    def __sub__(self, other):
+        return Tuple(self.x - other.x,
+                     self.y - other.y,
+                     self.z - other.z,
+                     self.w - other.w)
+
 def point(x, y, z):
     return Tuple(x, y, z, 1)
 
@@ -73,3 +79,8 @@ class TupleTestCase(unittest.TestCase):
         a1 = Tuple(3, -2, 5, 1)
         a2 = Tuple(-2, 3, 1, 0)
         self.assertEqual(a1 + a2, Tuple(1, 1, 6, 1))
+    
+    def test_subtracting_two_points(self):
+        p1 = point(3, 2, 1)
+        p2 = point(5, 6, 7)
+        self.assertEqual(p1 - p2, vector(-2, -4, -6))
