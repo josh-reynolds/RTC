@@ -3,6 +3,7 @@
 # TO_DO: implement EPSILON and float equals
 
 import unittest
+import math
 
 class Tuple():
     def __init__(self, x, y, z, w):
@@ -18,7 +19,10 @@ class Tuple():
         return self.w == 0.0
 
     def magnitude(self):
-        return 1
+        return math.sqrt(self.x ** 2 +
+                         self.y ** 2 +
+                         self.z ** 2 +
+                         self.w ** 2)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -148,4 +152,12 @@ class TupleTestCase(unittest.TestCase):
     def test_computing_magnitude_of_vector_0_0_1(self):
         v = vector(0, 0, 1)
         self.assertEqual(v.magnitude(), 1)
+
+    def test_computing_magnitude_of_vector_1_2_3(self):
+        v = vector(1, 2, 3)
+        self.assertEqual(v.magnitude(), math.sqrt(14))
+
+    def test_computing_magnitude_of_vector_neg1_neg2_neg3(self):
+        v = vector(-1, -2, -3)
+        self.assertEqual(v.magnitude(), math.sqrt(14))
 
