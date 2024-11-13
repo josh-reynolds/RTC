@@ -42,6 +42,11 @@ class Tuple():
                self.z * other.z + \
                self.w * other.w
 
+    def cross(self, other):
+        return vector(self.y * other.z - self.z * other.y,
+                      self.z * other.x - self.x * other.z,
+                      self.x * other.y - self.y * other.x)
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return flequal(self.x, other.x) and \
@@ -205,6 +210,12 @@ class TupleTestCase(unittest.TestCase):
         a = vector(1, 2, 3)
         b = vector(2, 3, 4)
         self.assertEqual(a.dot(b), 20)
+
+    def test_cross_product_of_two_vectors(self):
+        a = vector(1, 2, 3)
+        b = vector(2, 3, 4)
+        self.assertEqual(a.cross(b), vector(-1, 2, -1))
+        self.assertEqual(b.cross(a), vector(1, -2, 1))
 
 
 # ---------------------------------------------------------------------------
