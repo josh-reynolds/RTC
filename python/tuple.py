@@ -36,6 +36,12 @@ class Tuple():
                      self.z/mag,
                      self.w/mag)
 
+    def dot(self, other):
+        return self.x * other.x + \
+               self.y * other.y + \
+               self.z * other.z + \
+               self.w * other.w
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return flequal(self.x, other.x) and \
@@ -194,6 +200,12 @@ class TupleTestCase(unittest.TestCase):
         v = vector(1, 2, 3)
         norm = v.normalize()
         self.assertEqual(norm.magnitude(), 1)
+
+    def test_dot_product_of_two_tuples(self):
+        a = vector(1, 2, 3)
+        b = vector(2, 3, 4)
+        self.assertEqual(a.dot(b), 20)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
