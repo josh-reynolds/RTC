@@ -25,7 +25,11 @@ class Tuple():
                          self.w ** 2)
 
     def normalize(self):
-        return vector(1, 0, 0)
+        mag = self.magnitude()
+        return Tuple(self.x/mag,
+                     self.y/mag,
+                     self.z/mag,
+                     self.w/mag)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -61,6 +65,12 @@ class Tuple():
     def __truediv__(self, rhs):
         if isinstance(rhs, float) or isinstance(rhs, int):
             return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
+
+    def __str__(self):
+        return "(" + str(self.x) + ", " + \
+                     str(self.y) + ", " + \
+                     str(self.z) + ", " + \
+                     str(self.w) + ")"
 
 def point(x, y, z):
     return Tuple(x, y, z, 1)
@@ -167,4 +177,10 @@ class TupleTestCase(unittest.TestCase):
     def test_normalizing_vector_4_0_0_gives_vector_1_0_0(self):
         v = vector(4, 0, 0)
         self.assertEqual(v.normalize(), vector(1, 0, 0))
+
+    def test_normalizing_vector_1_2_3(self):
+        v = vector(1, 2, 3)
+        print(v)
+        print(v.normalize())
+        self.assertEqual(v.normalize(), vector(0.26726, 0.53452, 0.80178))
 
