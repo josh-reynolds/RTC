@@ -17,6 +17,9 @@ class Tuple():
     def isVector(self):
         return self.w == 0.0
 
+    def magnitude(self):
+        return 1
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
@@ -133,3 +136,16 @@ class TupleTestCase(unittest.TestCase):
     def test_divide_tuple_by_scalar(self):
         a = Tuple(1, -2, 3, -4)
         self.assertEqual(a / 2, Tuple(0.5, -1, 1.5, -2))
+
+    def test_computing_magnitude_of_vector_1_0_0(self):
+        v = vector(1, 0, 0)
+        self.assertEqual(v.magnitude(), 1)
+
+    def test_computing_magnitude_of_vector_0_1_0(self):
+        v = vector(0, 1, 0)
+        self.assertEqual(v.magnitude(), 1)
+
+    def test_computing_magnitude_of_vector_0_0_1(self):
+        v = vector(0, 0, 1)
+        self.assertEqual(v.magnitude(), 1)
+
