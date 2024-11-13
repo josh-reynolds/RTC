@@ -48,6 +48,10 @@ class Tuple():
     def __rmul__(self, lhs):
         return self.__mul__(lhs)
 
+    def __truediv__(self, rhs):
+        if isinstance(rhs, float) or isinstance(rhs, int):
+            return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
+
 def point(x, y, z):
     return Tuple(x, y, z, 1)
 
@@ -125,3 +129,7 @@ class TupleTestCase(unittest.TestCase):
     def test_multiply_tuple_is_commutative(self):
         a = Tuple(1, -2, 3, -4)
         self.assertEqual(3.5 * a, Tuple(3.5, -7, 10.5, -14))
+
+    def test_divide_tuple_by_scalar(self):
+        a = Tuple(1, -2, 3, -4)
+        self.assertEqual(a / 2, Tuple(0.5, -1, 1.5, -2))
