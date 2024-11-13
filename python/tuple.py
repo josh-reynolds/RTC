@@ -1,9 +1,14 @@
 # to run tests: python -m unittest -v tuple
 
-# TO_DO: implement EPSILON and float equals
-
 import unittest
 import math
+
+EPSILON = 0.00001
+
+def flequal(a, b):
+    if abs(a - b) < EPSILON:
+        return True
+    return False
 
 class Tuple():
     def __init__(self, x, y, z, w):
@@ -33,7 +38,10 @@ class Tuple():
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__
+            return flequal(self.x, other.x) and \
+                   flequal(self.y, other.y) and \
+                   flequal(self.z, other.z) and \
+                   flequal(self.w, other.w)
         else:
             return False
 
@@ -180,7 +188,5 @@ class TupleTestCase(unittest.TestCase):
 
     def test_normalizing_vector_1_2_3(self):
         v = vector(1, 2, 3)
-        print(v)
-        print(v.normalize())
         self.assertEqual(v.normalize(), vector(0.26726, 0.53452, 0.80178))
 
