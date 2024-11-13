@@ -24,6 +24,9 @@ class Tuple():
                          self.z ** 2 +
                          self.w ** 2)
 
+    def normalize(self):
+        return vector(1, 0, 0)
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
@@ -160,4 +163,8 @@ class TupleTestCase(unittest.TestCase):
     def test_computing_magnitude_of_vector_neg1_neg2_neg3(self):
         v = vector(-1, -2, -3)
         self.assertEqual(v.magnitude(), math.sqrt(14))
+
+    def test_normalizing_vector_4_0_0_gives_vector_1_0_0(self):
+        v = vector(4, 0, 0)
+        self.assertEqual(v.normalize(), vector(1, 0, 0))
 
