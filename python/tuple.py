@@ -195,3 +195,6 @@ class TupleTestCase(unittest.TestCase):
         norm = v.normalize()
         self.assertEqual(norm.magnitude(), 1)
 
+# ---------------------------------------------------------------------------
+if __name__ == '__main__':
+    unittest.main()
