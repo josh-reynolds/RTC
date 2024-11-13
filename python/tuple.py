@@ -190,3 +190,8 @@ class TupleTestCase(unittest.TestCase):
         v = vector(1, 2, 3)
         self.assertEqual(v.normalize(), vector(0.26726, 0.53452, 0.80178))
 
+    def test_magnitude_of_normalized_vector(self):
+        v = vector(1, 2, 3)
+        norm = v.normalize()
+        self.assertEqual(norm.magnitude(), 1)
+
