@@ -26,11 +26,10 @@ class Color():
                      self.green + other.green,
                      self.blue + other.blue)
 
-#    def __sub__(self, other):
-#        return Tuple(self.x - other.x,
-#                     self.y - other.y,
-#                     self.z - other.z,
-#                     self.w - other.w)
+    def __sub__(self, other):
+        return Color(self.red - other.red,
+                     self.green - other.green,
+                     self.blue - other.blue)
 
 #    def __neg__(self):
 #        return Tuple(-self.x, -self.y, -self.z, -self.w)
@@ -65,6 +64,11 @@ class ColorTestCase(unittest.TestCase):
         c1 = color(0.9, 0.6, 0.75)
         c2 = color(0.7, 0.1, 0.25)
         self.assertEqual(c1 + c2, color(1.6, 0.7, 1.0))
+
+    def test_subtracting_colors(self):
+        c1 = color(0.9, 0.6, 0.75)
+        c2 = color(0.7, 0.1, 0.25)
+        self.assertEqual(c1 - c2, color(0.2, 0.5, 0.5))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
