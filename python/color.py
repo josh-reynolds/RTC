@@ -34,12 +34,12 @@ class Color():
 #    def __neg__(self):
 #        return Tuple(-self.x, -self.y, -self.z, -self.w)
 
-#    def __mul__(self, rhs):
-#        if isinstance(rhs, float) or isinstance(rhs, int):
-#            return Tuple(self.x * rhs, self.y * rhs, self.z * rhs, self.w * rhs)
+    def __mul__(self, rhs):
+        if isinstance(rhs, float) or isinstance(rhs, int):
+            return Color(self.red * rhs, self.green * rhs, self.blue * rhs)
 
-#    def __rmul__(self, lhs):
-#        return self.__mul__(lhs)
+    def __rmul__(self, lhs):
+        return self.__mul__(lhs)
 
 #    def __truediv__(self, rhs):
 #        if isinstance(rhs, float) or isinstance(rhs, int):
@@ -69,6 +69,11 @@ class ColorTestCase(unittest.TestCase):
         c1 = color(0.9, 0.6, 0.75)
         c2 = color(0.7, 0.1, 0.25)
         self.assertEqual(c1 - c2, color(0.2, 0.5, 0.5))
+
+    def test_multiplying_color_by_scalar(self):
+        c = color(0.2, 0.3, 0.4)
+        self.assertEqual(c * 2, color(0.4, 0.6, 0.8))
+        self.assertEqual(2 * c, color(0.4, 0.6, 0.8))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
