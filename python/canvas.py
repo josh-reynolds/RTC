@@ -3,11 +3,13 @@
 import unittest
 #import math
 #from tuple import flequal
+from color import color
 
 class Canvas():
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.pixels = [[color(0,0,0) for x in range(width)] for x in range(height)]
 
 #    def __eq__(self, other):
 #        if isinstance(other, self.__class__):
@@ -48,10 +50,16 @@ class Canvas():
 #        if isinstance(rhs, float) or isinstance(rhs, int):
 #            return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
-#    def __str__(self):
-#        return "(" + str(self.red) + ", " + \
-#                     str(self.green) + ", " + \
-#                     str(self.blue) + ")"
+    def __str__(self):
+        result = ""
+        for x in range(self.height):
+            for y in range(self.width):
+                result += self.pixels[x][y].__str__()
+            result += "\n"
+        return result
+
+#    def __getitem__(self, w):
+#        return self.pixels[w]
 
 def canvas(width, height):
     return Canvas(width, height)
@@ -61,6 +69,11 @@ class CanvasTestCase(unittest.TestCase):
         c = canvas(10, 20)
         self.assertEqual(c.width, 10)
         self.assertEqual(c.height, 20)
+
+        default = color(0,0,0)
+        for row in c.pixels:
+            for pixel in row:
+                self.assertEqual(pixel, default)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
