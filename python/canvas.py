@@ -1,8 +1,6 @@
 # to run tests: python -m unittest -v color
 
 import unittest
-#import math
-#from tuple import flequal
 from color import color
 
 class Canvas():
@@ -22,52 +20,18 @@ class Canvas():
         result.append("P3")
         result.append("{0} {1}".format(self.width, self.height))
         result.append("255")
+        for row in self.pixels:
+            line = ""
+            for pixel in row:
+                line += str(pixel)
+            result.append(line)
         return result
-
-#    def __eq__(self, other):
-#        if isinstance(other, self.__class__):
-#            return flequal(self.red, other.red) and \
-#                   flequal(self.green, other.green) and \
-#                   flequal(self.blue, other.blue)
-#        else:
-#            return False
-
-#    def __ne__(self, other):
-#        return not self.__eq__(other)
-
-#    def __add__(self, other):
-#        return Color(self.red + other.red,
-#                     self.green + other.green,
-#                     self.blue + other.blue)
-
-#    def __sub__(self, other):
-#        return Color(self.red - other.red,
-#                     self.green - other.green,
-#                     self.blue - other.blue)
-
-#    def __neg__(self):
-#        return Tuple(-self.x, -self.y, -self.z, -self.w)
-
-#    def __mul__(self, rhs):
-#        if isinstance(rhs, float) or isinstance(rhs, int):
-#            return Color(self.red * rhs, self.green * rhs, self.blue * rhs)
-#        elif isinstance(rhs, Color):
-#            return Color(self.red * rhs.red,
-#                         self.green * rhs.green,
-#                         self.blue * rhs.blue)
-
-#    def __rmul__(self, lhs):
-#        return self.__mul__(lhs)
-
-#    def __truediv__(self, rhs):
-#        if isinstance(rhs, float) or isinstance(rhs, int):
-#            return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
     def __str__(self):
         result = ""
         for x in range(self.height):
             for y in range(self.width):
-                result += self.pixels[x][y].__str__()
+                result += str(self.pixels[x][y])
             result += "\n"
         return result
 
@@ -76,6 +40,10 @@ class Canvas():
 
 def canvas(width, height):
     return Canvas(width, height)
+
+def clamp(value):
+    result = round(value * 255)
+    return max(0, min(255, result))
 
 class CanvasTestCase(unittest.TestCase):
     def test_creating_a_canvas(self):
@@ -101,6 +69,25 @@ class CanvasTestCase(unittest.TestCase):
         self.assertEqual(ppm[1], "5 3")
         self.assertEqual(ppm[2], "255")
 
+    def test_clamp_constrains_pixel_values(self):
+        n1 = clamp(1.5)
+        self.assertEqual(n1, 255)
+        n2 = clamp(1)
+        self.assertEqual(n2, 255)
+        n3 = clamp(0.5)
+        self.assertEqual(n3, 128)
+        n4 = clamp(0)
+        self.assertEqual(n4, 0)
+        n5 = clamp(-0.5)
+        self.assertEqual(n5, 0)
+
+    def test_constructing_ppm_pixel_data(self):
+        c = canvas(5, 3)
+        c.write_pixel(0, 0, color(1.5, 0, 0))
+        c.write_pixel(2, 1, color(0, 0.5, 0))
+        c.write_pixel(2, 1, color(-0.5, 0, 1))
+        ppm = c.to_ppm()
+        #self.assertEqual(ppm[3], "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0")
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
