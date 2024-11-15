@@ -11,6 +11,12 @@ class Canvas():
         self.height = height
         self.pixels = [[color(0,0,0) for x in range(width)] for x in range(height)]
 
+    def write_pixel(self, x, y, color):
+        self.pixels[y][x] = color
+
+    def pixel_at(self, x, y):
+        return self.pixels[y][x]
+
 #    def __eq__(self, other):
 #        if isinstance(other, self.__class__):
 #            return flequal(self.red, other.red) and \
@@ -74,6 +80,13 @@ class CanvasTestCase(unittest.TestCase):
         for row in c.pixels:
             for pixel in row:
                 self.assertEqual(pixel, default)
+
+    def test_writing_pixels_to_canvas(self):
+        c = canvas(10, 20)
+        red = color(1, 0, 0)
+        c.write_pixel(2, 3, red)
+        self.assertEqual(c.pixel_at(2, 3), red)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
