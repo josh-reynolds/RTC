@@ -17,6 +17,13 @@ class Canvas():
     def pixel_at(self, x, y):
         return self.pixels[y][x]
 
+    def to_ppm(self):
+        result = []
+        result.append("P3")
+        result.append("{0} {1}".format(self.width, self.height))
+        result.append("255")
+        return result
+
 #    def __eq__(self, other):
 #        if isinstance(other, self.__class__):
 #            return flequal(self.red, other.red) and \
@@ -86,6 +93,13 @@ class CanvasTestCase(unittest.TestCase):
         red = color(1, 0, 0)
         c.write_pixel(2, 3, red)
         self.assertEqual(c.pixel_at(2, 3), red)
+
+    def test_constructing_ppm_header(self):
+        c = canvas(5, 3)
+        ppm = c.to_ppm()
+        self.assertEqual(ppm[0], "P3")
+        self.assertEqual(ppm[1], "5 3")
+        self.assertEqual(ppm[2], "255")
 
 
 # ---------------------------------------------------------------------------
