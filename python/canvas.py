@@ -23,7 +23,9 @@ class Canvas():
         for row in self.pixels:
             line = ""
             for pixel in row:
-                line += str(pixel)
+                line += str(clamp(pixel.red)) + " "
+                line += str(clamp(pixel.green)) + " "
+                line += str(clamp(pixel.blue)) + " "
             result.append(line)
         return result
 
@@ -85,9 +87,11 @@ class CanvasTestCase(unittest.TestCase):
         c = canvas(5, 3)
         c.write_pixel(0, 0, color(1.5, 0, 0))
         c.write_pixel(2, 1, color(0, 0.5, 0))
-        c.write_pixel(2, 1, color(-0.5, 0, 1))
+        c.write_pixel(4, 2, color(-0.5, 0, 1))
         ppm = c.to_ppm()
-        #self.assertEqual(ppm[3], "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0")
+        self.assertEqual(ppm[3], "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ")
+        self.assertEqual(ppm[4], "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0 ")
+        self.assertEqual(ppm[5], "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 ")
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
