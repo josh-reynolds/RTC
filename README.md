@@ -1,2 +1,4 @@
 # RTC
-The project from Jamis Buck's "The Ray Tracer Challenge." 
+The project from Jamis Buck's "The Ray Tracer Challenge."
+
+This started in Rust - that's the project under /raytrace. Everything is working there up through Chapter 13, all features including rendering, primitive shapes, patterns and so on. However, I ran into difficulties implementing Groups from Chapter 14, likely due to my inexperience with Rust. I spent some time trying to solve, part of which is the side effort under /poly. The low velocity is aggravating, though, so I am parking the Rust version here, and starting from scratch with Python (under /python obviously). Undoubtedly that will be slower, though I'm curious to see how much once it starts producing renders. Development velocity at least is very fast, and I don't expect to hit the same difficulties with groups. We will see.
