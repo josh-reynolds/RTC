@@ -30,6 +30,7 @@ class Canvas():
                 result.append(line)
             else:
                result += splitline(line)
+        result.append("\n")
         return result
 
     def __str__(self):
@@ -103,7 +104,7 @@ class CanvasTestCase(unittest.TestCase):
         c.write_pixel(2, 1, color(0, 0.5, 0))
         c.write_pixel(4, 2, color(-0.5, 0, 1))
         ppm = c.to_ppm()
-        self.assertEqual(len(ppm), 6)
+        self.assertEqual(len(ppm), 7)
         self.assertEqual(ppm[3], "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ")
         self.assertEqual(ppm[4], "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0 ")
         self.assertEqual(ppm[5], "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 ")
@@ -115,12 +116,17 @@ class CanvasTestCase(unittest.TestCase):
             for y in range(2):
                 c.write_pixel(x, y, col)
         ppm = c.to_ppm()
-        self.assertEqual(len(ppm), 7)
+        self.assertEqual(len(ppm), 8)
         self.assertEqual(ppm[3], "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 ")
         self.assertEqual(ppm[4], "153 255 204 153 255 204 153 255 204 153 255 204 153 ")
         self.assertEqual(ppm[5], "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 ")
         self.assertEqual(ppm[6], "153 255 204 153 255 204 153 255 204 153 255 204 153 ")
 
+    def test_ppm_terminated_by_newline(self):
+        c = canvas(5, 3)
+        ppm = c.to_ppm()
+        self.assertEqual(len(ppm), 7)
+        self.assertEqual(ppm[6], "\n")
 
 
 # ---------------------------------------------------------------------------
