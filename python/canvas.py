@@ -26,7 +26,10 @@ class Canvas():
                 line += str(clamp(pixel.red)) + " "
                 line += str(clamp(pixel.green)) + " "
                 line += str(clamp(pixel.blue)) + " "
-            result.append(line)
+            if len(line) <= 70:          # 70 is max line length for some PPM readers
+                result.append(line)
+            else:
+               result += splitline(line)
         return result
 
     def __str__(self):
@@ -46,6 +49,17 @@ def canvas(width, height):
 def clamp(value):
     result = round(value * 255)
     return max(0, min(255, result))
+
+def splitline(line, length=70, separator=" ", chunksize=3):
+    result = []
+    index = line.find(separator, length - chunksize, length) + 1
+    result.append(line[:index])
+    if len(line[index:]) > length:
+        result += splitline(line[index:])
+    else:
+        result.append(line[index:])
+    return result
+
 
 class CanvasTestCase(unittest.TestCase):
     def test_creating_a_canvas(self):
@@ -89,9 +103,25 @@ class CanvasTestCase(unittest.TestCase):
         c.write_pixel(2, 1, color(0, 0.5, 0))
         c.write_pixel(4, 2, color(-0.5, 0, 1))
         ppm = c.to_ppm()
+        self.assertEqual(len(ppm), 6)
         self.assertEqual(ppm[3], "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ")
         self.assertEqual(ppm[4], "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0 ")
         self.assertEqual(ppm[5], "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 ")
+
+    def test_splitting_long_lines_in_ppm_data(self):
+        c = canvas(10, 2)
+        col = color(1, 0.8, 0.6)
+        for x in range(10):
+            for y in range(2):
+                c.write_pixel(x, y, col)
+        ppm = c.to_ppm()
+        self.assertEqual(len(ppm), 7)
+        self.assertEqual(ppm[3], "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 ")
+        self.assertEqual(ppm[4], "153 255 204 153 255 204 153 255 204 153 255 204 153 ")
+        self.assertEqual(ppm[5], "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204 ")
+        self.assertEqual(ppm[6], "153 255 204 153 255 204 153 255 204 153 255 204 153 ")
+
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
