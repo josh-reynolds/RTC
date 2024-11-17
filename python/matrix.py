@@ -97,6 +97,15 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(m[3,0], 13.5)
         self.assertEqual(m[3,2], 15.5)
 
+    def test_creation_2_by_2_matrix(self):
+        m = matrix(2,2)
+        m.data[0] = [-3,  5]
+        m.data[1] = [ 1, -2]
+        self.assertEqual(m[0,0], -3)
+        self.assertEqual(m[0,1],  5)
+        self.assertEqual(m[1,0],  1)
+        self.assertEqual(m[1,1], -2)
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
