@@ -61,7 +61,6 @@ def splitline(line, length=70, separator=" ", chunksize=3):
         result.append(line[index:])
     return result
 
-
 class CanvasTestCase(unittest.TestCase):
     def test_creating_a_canvas(self):
         c = canvas(10, 20)
@@ -127,7 +126,6 @@ class CanvasTestCase(unittest.TestCase):
         ppm = c.to_ppm()
         self.assertEqual(len(ppm), 7)
         self.assertEqual(ppm[6], "\n")
-
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
