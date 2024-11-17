@@ -106,6 +106,15 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(m[1,0],  1)
         self.assertEqual(m[1,1], -2)
         
+    def test_creation_3_by_3_matrix(self):
+        m = matrix(3,3)
+        m.data[0] = [-3,  5,  0]
+        m.data[1] = [ 1, -2, -7]
+        m.data[2] = [ 0,  1,  1]
+        self.assertEqual(m[0,0], -3)
+        self.assertEqual(m[1,1], -2)
+        self.assertEqual(m[2,2],  1)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
