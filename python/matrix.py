@@ -54,8 +54,8 @@ class Matrix():
         #if isinstance(rhs, float) or isinstance(rhs, int):
             #return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
-#    def __getitem__(self, w):
-#        return self.pixels[w]
+    def __getitem__(self, w):
+        return self.data[w[0]][w[1]]
 
     def __str__(self):
         result = ""
@@ -71,9 +71,9 @@ def matrix(rows=4, columns=4):
 class MatrixTestCase(unittest.TestCase):
     def test_matrix_creation(self):
         m = matrix()
-        m.data[0] = [  1,   2,   3,   4]
-        m.data[1] = [5.5, 6.5, 7.5, 8.5]
-        m.data[2] = [  9,  10,  11,  12]
+        m.data[0] = [   1,      2,     3,     4]
+        m.data[1] = [ 5.5,    6.5,   7.5,   8.5]
+        m.data[2] = [   9,     10,    11,    12]
         m.data[3] = [13.5,   14.5,  15.5,  16.5]
         self.assertEqual(m.data[0][0],    1)
         self.assertEqual(m.data[0][3],    4)
@@ -82,6 +82,20 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(m.data[2][2],   11)
         self.assertEqual(m.data[3][0], 13.5)
         self.assertEqual(m.data[3][2], 15.5)
+
+    def test_matrix_access(self):
+        m = matrix()
+        m.data[0] = [   1,      2,     3,     4]
+        m.data[1] = [ 5.5,    6.5,   7.5,   8.5]
+        m.data[2] = [   9,     10,    11,    12]
+        m.data[3] = [13.5,   14.5,  15.5,  16.5]
+        self.assertEqual(m[0,0],    1)
+        self.assertEqual(m[0,3],    4)
+        self.assertEqual(m[1,0],  5.5)
+        self.assertEqual(m[1,2],  7.5)
+        self.assertEqual(m[2,2],   11)
+        self.assertEqual(m[3,0], 13.5)
+        self.assertEqual(m[3,2], 15.5)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
