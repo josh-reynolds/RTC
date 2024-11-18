@@ -41,12 +41,19 @@ class Matrix():
     #def __neg__(self):
         #return Tuple(-self.x, -self.y, -self.z, -self.w)
 
-    #def __mul__(self, rhs):
-        #if isinstance(rhs, float) or isinstance(rhs, int):
-            #return Tuple(self.x * rhs, self.y * rhs, self.z * rhs, self.w * rhs)
+    def __mul__(self, rhs):         
+        if isinstance(rhs, Matrix):      # only concerned with two 4x4 matrices here
+            m = matrix()
+            for row in range(self.rows):
+                for col in range(self.columns):
+                    m.data[row][col] = self.data[row][0] * rhs[0, col] + \
+                                       self.data[row][1] * rhs[1, col] + \
+                                       self.data[row][2] * rhs[2, col] + \
+                                       self.data[row][3] * rhs[3, col]
+            return m
 
-    #def __rmul__(self, lhs):
-        #return self.__mul__(lhs)
+    def __rmul__(self, lhs):
+        return self.__mul__(lhs)
 
     #def __truediv__(self, rhs):
         #if isinstance(rhs, float) or isinstance(rhs, int):
@@ -73,6 +80,7 @@ class MatrixTestCase(unittest.TestCase):
         m.data[1] = [ 5.5,    6.5,   7.5,   8.5]
         m.data[2] = [   9,     10,    11,    12]
         m.data[3] = [13.5,   14.5,  15.5,  16.5]
+
         self.assertEqual(m.data[0][0],    1)
         self.assertEqual(m.data[0][3],    4)
         self.assertEqual(m.data[1][0],  5.5)
@@ -87,6 +95,7 @@ class MatrixTestCase(unittest.TestCase):
         m.data[1] = [ 5.5,    6.5,   7.5,   8.5]
         m.data[2] = [   9,     10,    11,    12]
         m.data[3] = [13.5,   14.5,  15.5,  16.5]
+
         self.assertEqual(m[0,0],    1)
         self.assertEqual(m[0,3],    4)
         self.assertEqual(m[1,0],  5.5)
@@ -99,6 +108,7 @@ class MatrixTestCase(unittest.TestCase):
         m = matrix(2,2)
         m.data[0] = [-3,  5]
         m.data[1] = [ 1, -2]
+
         self.assertEqual(m[0,0], -3)
         self.assertEqual(m[0,1],  5)
         self.assertEqual(m[1,0],  1)
@@ -109,6 +119,7 @@ class MatrixTestCase(unittest.TestCase):
         m.data[0] = [-3,  5,  0]
         m.data[1] = [ 1, -2, -7]
         m.data[2] = [ 0,  1,  1]
+
         self.assertEqual(m[0,0], -3)
         self.assertEqual(m[1,1], -2)
         self.assertEqual(m[2,2],  1)
@@ -119,11 +130,13 @@ class MatrixTestCase(unittest.TestCase):
         a.data[1] = [5, 6, 7, 8]
         a.data[2] = [9, 8, 7, 6]
         a.data[3] = [5, 4, 3, 2]
+
         b = matrix()
         b.data[0] = [1, 2, 3, 4]
         b.data[1] = [5, 6, 7, 8]
         b.data[2] = [9, 8, 7, 6]
         b.data[3] = [5, 4, 3, 2]
+
         self.assertEqual(a, b)
 
     def test_matrix_equality_with_different_matrices(self):
@@ -132,11 +145,13 @@ class MatrixTestCase(unittest.TestCase):
         a.data[1] = [5, 6, 7, 8]
         a.data[2] = [9, 8, 7, 6]
         a.data[3] = [5, 4, 3, 2]
+
         b = matrix()
         b.data[0] = [2, 3, 4, 5]
         b.data[1] = [6, 7, 8, 9]
         b.data[2] = [8, 7, 6, 5]
         b.data[3] = [4, 3, 2, 1]
+
         self.assertNotEqual(a, b)
 
     def test_matrix_equality_with_different_size_matrices(self):
@@ -145,11 +160,34 @@ class MatrixTestCase(unittest.TestCase):
         a.data[1] = [5, 6, 7, 8]
         a.data[2] = [9, 8, 7, 6]
         a.data[3] = [5, 4, 3, 2]
+
         b = matrix(3,3)
         b.data[0] = [1, 2, 3]
         b.data[1] = [5, 6, 7]
         b.data[2] = [9, 8, 7]
+        
         self.assertNotEqual(a, b)
+
+    def test_multiplying_two_matrices(self):
+        a = matrix()
+        a.data[0] = [1, 2, 3, 4]
+        a.data[1] = [5, 6, 7, 8]
+        a.data[2] = [9, 8, 7, 6]
+        a.data[3] = [5, 4, 3, 2]
+
+        b = matrix()
+        b.data[0] = [-2, 1, 2,  3]
+        b.data[1] = [ 3, 2, 1, -1]
+        b.data[2] = [ 4, 3, 6,  5]
+        b.data[3] = [ 1, 2, 7,  8]
+
+        result = matrix()
+        result.data[0] = [20, 22,  50,  48]
+        result.data[1] = [44, 54, 114, 108]
+        result.data[2] = [40, 58, 110, 102]
+        result.data[3] = [16, 26,  46,  42]
+
+        self.assertEqual(a * b, result)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
