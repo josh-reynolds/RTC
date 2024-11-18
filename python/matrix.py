@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v matrix
 
 import unittest
-from tuple import flequal
+from tuple import flequal, Tuple
 #import math
 
 class Matrix():
@@ -51,6 +51,27 @@ class Matrix():
                                        self.data[row][2] * rhs[2, col] + \
                                        self.data[row][3] * rhs[3, col]
             return m
+        elif isinstance(rhs, Tuple):
+            result = Tuple(0, 0, 0, 0)
+
+            r1 = self.data[0]
+            row1 = Tuple(r1[0], r1[1], r1[2], r1[3])
+            result.x = row1.dot(rhs)
+
+            r2 = self.data[1]
+            row2 = Tuple(r2[0], r2[1], r2[2], r2[3])
+            result.y = row2.dot(rhs)
+
+            r3 = self.data[2]
+            row3 = Tuple(r3[0], r3[1], r3[2], r3[3])
+            result.z = row3.dot(rhs)
+
+            r4 = self.data[3]
+            row4 = Tuple(r4[0], r4[1], r4[2], r4[3])
+            result.w = row4.dot(rhs)
+
+            return result
+
 
     def __rmul__(self, lhs):
         return self.__mul__(lhs)
@@ -188,6 +209,17 @@ class MatrixTestCase(unittest.TestCase):
         result.data[3] = [16, 26,  46,  42]
 
         self.assertEqual(a * b, result)
+
+    def test_multiplying_matrix_by_tuple(self):
+        a = matrix()
+        a.data[0] = [1, 2, 3, 4]
+        a.data[1] = [2, 4, 4, 2]
+        a.data[2] = [8, 6, 4, 1]
+        a.data[3] = [0, 0, 0, 1]
+
+        b = Tuple(1, 2, 3, 1)
+
+        self.assertEqual(a * b, Tuple(18, 24, 33, 1))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
