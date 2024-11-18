@@ -72,7 +72,6 @@ class Matrix():
 
             return result
 
-
     def __rmul__(self, lhs):
         return self.__mul__(lhs)
 
@@ -93,6 +92,14 @@ class Matrix():
 
 def matrix(rows=4, columns=4):
     return Matrix(rows, columns)
+
+def identity():
+    result = matrix()
+    result.data[0] = [1, 0, 0, 0]
+    result.data[1] = [0, 1, 0, 0]
+    result.data[2] = [0, 0, 1, 0]
+    result.data[3] = [0, 0, 0, 1]
+    return result
 
 class MatrixTestCase(unittest.TestCase):
     def test_matrix_creation(self):
@@ -220,6 +227,20 @@ class MatrixTestCase(unittest.TestCase):
         b = Tuple(1, 2, 3, 1)
 
         self.assertEqual(a * b, Tuple(18, 24, 33, 1))
+
+    def test_multiplying_matrix_by_identity(self):
+        a = matrix()
+        a.data[0] = [0, 1,  2,  4]
+        a.data[1] = [1, 2,  4,  8]
+        a.data[2] = [2, 4,  8, 16]
+        a.data[3] = [4, 8, 16, 32]
+
+        self.assertEqual(a * identity(), a)
+
+    def test_multiplying_tuple_by_identity(self):
+        a = Tuple(1, 2, 3, 4)
+
+        self.assertEqual(identity() * a, a)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
