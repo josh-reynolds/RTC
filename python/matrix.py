@@ -1,14 +1,8 @@
 # to run tests: python -m unittest -v matrix
 
 import unittest
+from tuple import flequal
 #import math
-
-#EPSILON = 0.00001
-
-#def flequal(a, b):
-    #if abs(a - b) < EPSILON:
-        #return True
-    #return False
 
 class Matrix():
     def __init__(self, rows, columns):
@@ -16,17 +10,21 @@ class Matrix():
         self.columns = columns
         self.data = [[0 for x in range(columns)] for x in range(rows)]
 
-    #def __eq__(self, other):
-        #if isinstance(other, self.__class__):
-            #return flequal(self.x, other.x) and \
-                   #flequal(self.y, other.y) and \
-                   #flequal(self.z, other.z) and \
-                   #flequal(self.w, other.w)
-        #else:
-            #return False
+    def __eq__(self, other):
+        result = True
+        if isinstance(other, self.__class__) and \
+                self.rows == other.rows and \
+                self.columns == other.columns:
+                    for row in range(self.rows):
+                        for col in range(self.columns):
+                            if not flequal(self.__getitem__((row,col)), other[row,col]):
+                                result = False
+        else:
+            result = False
+        return result
 
-    #def __ne__(self, other):
-        #return not self.__eq__(other)
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     #def __add__(self, other):
         #return Tuple(self.x + other.x,
@@ -114,6 +112,19 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(m[0,0], -3)
         self.assertEqual(m[1,1], -2)
         self.assertEqual(m[2,2],  1)
+
+    def test_matrix_equality_with_identical_matrices(self):
+        a = matrix()
+        a.data[0] = [1, 2, 3, 4]
+        a.data[1] = [5, 6, 7, 8]
+        a.data[2] = [9, 8, 7, 6]
+        a.data[3] = [5, 4, 3, 2]
+        b = matrix()
+        b.data[0] = [1, 2, 3, 4]
+        b.data[1] = [5, 6, 7, 8]
+        b.data[2] = [9, 8, 7, 6]
+        b.data[3] = [5, 4, 3, 2]
+        self.assertEqual(a, b)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
