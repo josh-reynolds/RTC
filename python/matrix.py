@@ -126,6 +126,31 @@ class MatrixTestCase(unittest.TestCase):
         b.data[3] = [5, 4, 3, 2]
         self.assertEqual(a, b)
 
+    def test_matrix_equality_with_different_matrices(self):
+        a = matrix()
+        a.data[0] = [1, 2, 3, 4]
+        a.data[1] = [5, 6, 7, 8]
+        a.data[2] = [9, 8, 7, 6]
+        a.data[3] = [5, 4, 3, 2]
+        b = matrix()
+        b.data[0] = [2, 3, 4, 5]
+        b.data[1] = [6, 7, 8, 9]
+        b.data[2] = [8, 7, 6, 5]
+        b.data[3] = [4, 3, 2, 1]
+        self.assertNotEqual(a, b)
+
+    def test_matrix_equality_with_different_size_matrices(self):
+        a = matrix()
+        a.data[0] = [1, 2, 3, 4]
+        a.data[1] = [5, 6, 7, 8]
+        a.data[2] = [9, 8, 7, 6]
+        a.data[3] = [5, 4, 3, 2]
+        b = matrix(3,3)
+        b.data[0] = [1, 2, 3]
+        b.data[1] = [5, 6, 7]
+        b.data[2] = [9, 8, 7]
+        self.assertNotEqual(a, b)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
