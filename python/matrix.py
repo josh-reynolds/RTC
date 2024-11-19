@@ -25,7 +25,7 @@ class Matrix():
     def submatrix(self, row, column):
         result = matrix(self.rows-1, self.columns-1)
         for r in range(self.rows):
-            trimmed_row = self.data[r].copy()
+            trimmed_row = self.data[r].copy()  # need copy or we alias and mutate self
             trimmed_row.pop(column)
             if r < row:
                 result.data[r] = trimmed_row
@@ -300,12 +300,38 @@ class MatrixTestCase(unittest.TestCase):
         a.data[1] = [-3, 2,  7]
         a.data[2] = [ 0, 6, -3]
 
+        b = matrix(3, 3)
+        b.data[0] = [ 1, 5,  0]
+        b.data[1] = [-3, 2,  7]
+        b.data[2] = [ 0, 6, -3]
+        
         result = matrix(2, 2)
         result.data[0] = [-3, 2]
         result.data[1] = [ 0, 6]
 
         self.assertEqual(a.submatrix(0,2), result)
+        self.assertEqual(a, b)   # verifying original matrix is not modified
 
+    def test_submatrix_of_4_by_4_matrix(self):
+        a = matrix()
+        a.data[0] = [-6, 1,  1, 6]
+        a.data[1] = [-8, 5,  8, 6]
+        a.data[2] = [-1, 0,  8, 2]
+        a.data[3] = [-7, 1, -1, 1]
+
+        b = matrix()
+        b.data[0] = [-6, 1,  1, 6]
+        b.data[1] = [-8, 5,  8, 6]
+        b.data[2] = [-1, 0,  8, 2]
+        b.data[3] = [-7, 1, -1, 1]
+        
+        result = matrix(3, 3)
+        result.data[0] = [-6,  1, 6]
+        result.data[1] = [-8,  8, 6]
+        result.data[2] = [-7, -1, 1]
+
+        self.assertEqual(a.submatrix(2,1), result)
+        self.assertEqual(a, b)   # verifying original matrix is not modified
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
