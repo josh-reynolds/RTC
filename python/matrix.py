@@ -22,6 +22,19 @@ class Matrix():
         c,d = self.data[1]
         return a * d - b * c
 
+    def submatrix(self, row, column):
+        result = matrix(self.rows-1, self.columns-1)
+        for r in range(self.rows):
+            trimmed_row = self.data[r].copy()
+            trimmed_row.pop(column)
+            if r < row:
+                result.data[r] = trimmed_row
+            if r == row:
+                continue
+            if r > row:
+                result.data[r-1] = trimmed_row
+        return result
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -280,6 +293,18 @@ class MatrixTestCase(unittest.TestCase):
         a.data[1] = [-3, 2]
 
         self.assertEqual(a.determinant(), 17)
+
+    def test_submatrix_of_3_by_3_matrix(self):
+        a = matrix(3, 3)
+        a.data[0] = [ 1, 5,  0]
+        a.data[1] = [-3, 2,  7]
+        a.data[2] = [ 0, 6, -3]
+
+        result = matrix(2, 2)
+        result.data[0] = [-3, 2]
+        result.data[1] = [ 0, 6]
+
+        self.assertEqual(a.submatrix(0,2), result)
 
 
 # ---------------------------------------------------------------------------
