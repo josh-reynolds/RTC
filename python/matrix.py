@@ -35,6 +35,10 @@ class Matrix():
                 result.data[r-1] = trimmed_row
         return result
 
+    def minor(self, row, column):
+        sub = self.submatrix(row, column)
+        return sub.determinant()
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -333,6 +337,16 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(a.submatrix(2,1), result)
         self.assertEqual(a, b)   # verifying original matrix is not modified
 
+    def test_calculating_minor_of_3_by_3_matrix(self):
+        a = matrix(3,3)
+        a.data[0] = [3,  5,  0]
+        a.data[1] = [2, -1, -7]
+        a.data[2] = [6, -1,  5]
+
+        b = a.submatrix(1, 0)
+        
+        self.assertEqual(b.determinant(), 25)
+        self.assertEqual(a.minor(1, 0), 25)
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
