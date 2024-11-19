@@ -264,6 +264,11 @@ class MatrixTestCase(unittest.TestCase):
 
         self.assertEqual(a.transpose(), result)
 
+    def test_transposing_identity(self):
+        a = identity().transpose()
+
+        self.assertEqual(a, identity())
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
