@@ -17,6 +17,11 @@ class Matrix():
                 result.data[col][row] = self.data[row][col]
         return result
 
+    def determinant(self):      # only works for 2x2 matrices right now
+        a,b = self.data[0]
+        c,d = self.data[1]
+        return a * d - b * c
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -268,6 +273,14 @@ class MatrixTestCase(unittest.TestCase):
         a = identity().transpose()
 
         self.assertEqual(a, identity())
+
+    def test_determinant_of_2_by_2_matrix(self):
+        a = matrix(2, 2)
+        a.data[0] = [ 1, 5]
+        a.data[1] = [-3, 2]
+
+        self.assertEqual(a.determinant(), 17)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
