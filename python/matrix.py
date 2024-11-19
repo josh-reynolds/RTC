@@ -39,6 +39,13 @@ class Matrix():
         sub = self.submatrix(row, column)
         return sub.determinant()
 
+    def cofactor(self, row, column):
+        sign = -1
+        if (row + column) % 2 == 0:
+            sign = 1
+
+        return self.minor(row, column) * sign
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -347,6 +354,19 @@ class MatrixTestCase(unittest.TestCase):
         
         self.assertEqual(b.determinant(), 25)
         self.assertEqual(a.minor(1, 0), 25)
+
+    def test_calculating_cofactor_of_3_by_3_matrix(self):
+        a = matrix(3,3)
+        a.data[0] = [3,  5,  0]
+        a.data[1] = [2, -1, -7]
+        a.data[2] = [6, -1,  5]
+
+        self.assertEqual(a.minor(0,0), -12)
+        self.assertEqual(a.cofactor(0,0), -12)
+
+        self.assertEqual(a.minor(1,0), 25)
+        self.assertEqual(a.cofactor(1,0), -25)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
