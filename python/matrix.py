@@ -10,6 +10,13 @@ class Matrix():
         self.columns = columns
         self.data = [[0 for x in range(columns)] for x in range(rows)]
 
+    def transpose(self):
+        result = matrix()
+        for row in range(self.rows):
+            for col in range(self.columns):
+                result.data[col][row] = self.data[row][col]
+        return result
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -241,6 +248,21 @@ class MatrixTestCase(unittest.TestCase):
         a = Tuple(1, 2, 3, 4)
 
         self.assertEqual(identity() * a, a)
+
+    def test_transposing_a_matrix(self):
+        a = matrix()
+        a.data[0] = [0, 9, 3, 0]
+        a.data[1] = [9, 8, 0, 8]
+        a.data[2] = [1, 8, 5, 3]
+        a.data[3] = [0, 0, 5, 8]
+
+        result = matrix()
+        result.data[0] = [0, 9, 1, 0]
+        result.data[1] = [9, 8, 8, 0]
+        result.data[2] = [3, 0, 5, 5]
+        result.data[3] = [0, 8, 3, 8]
+
+        self.assertEqual(a.transpose(), result)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
