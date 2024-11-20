@@ -18,9 +18,10 @@ class Matrix():
         return result
 
     def determinant(self):      # only works for 2x2 matrices right now
-        a,b = self.data[0]
-        c,d = self.data[1]
-        return a * d - b * c
+        if self.rows == 2 and self.columns == 2:
+            a,b = self.data[0]
+            c,d = self.data[1]
+            return a * d - b * c
 
     def submatrix(self, row, column):
         result = matrix(self.rows-1, self.columns-1)
@@ -35,16 +36,18 @@ class Matrix():
                 result.data[r-1] = trimmed_row
         return result
 
-    def minor(self, row, column):
-        sub = self.submatrix(row, column)
-        return sub.determinant()
+    def minor(self, row, column):    # only works for 3x3 matrices right now
+        if self.rows == 3 and self.columns == 3:
+            sub = self.submatrix(row, column)
+            return sub.determinant()
 
     def cofactor(self, row, column):
         sign = -1
         if (row + column) % 2 == 0:
             sign = 1
 
-        return self.minor(row, column) * sign
+        if self.rows == 3 and self.columns == 3:
+            return self.minor(row, column) * sign
 
     def __eq__(self, other):
         result = True
@@ -366,6 +369,30 @@ class MatrixTestCase(unittest.TestCase):
 
         self.assertEqual(a.minor(1,0), 25)
         self.assertEqual(a.cofactor(1,0), -25)
+
+    def test_calculating_determinant_of_3_by_3_matrix(self):
+        a = matrix(3,3)
+        a.data[0] = [ 1, 2,  6]
+        a.data[1] = [-5, 8, -4]
+        a.data[2] = [ 2, 6,  4]
+
+        self.assertEqual(a.cofactor(0,0),  56)
+        self.assertEqual(a.cofactor(0,1),  12)
+        self.assertEqual(a.cofactor(0,2), -46)
+        self.assertEqual(a.determinant(), -196)
+
+    def test_calculating_determinant_of_4_by_4_matrix(self):
+        a = matrix()
+        a.data[0] = [-2, -8,  3,  5]
+        a.data[1] = [-3,  1,  7,  3]
+        a.data[2] = [ 1,  2, -9,  6]
+        a.data[3] = [-6,  7,  7, -9]
+
+        self.assertEqual(a.cofactor(0,0),   690)
+        self.assertEqual(a.cofactor(0,1),   447)
+        self.assertEqual(a.cofactor(0,2),   210)
+        self.assertEqual(a.cofactor(0,3),    51)
+        self.assertEqual(a.determinant(), -4071)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
