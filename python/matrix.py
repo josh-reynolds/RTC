@@ -43,18 +43,16 @@ class Matrix():
                 result.data[r-1] = trimmed_row
         return result
 
-    def minor(self, row, column):    # only works for 3x3 matrices right now
-        if self.rows == 3 and self.columns == 3:
-            sub = self.submatrix(row, column)
-            return sub.determinant()
+    def minor(self, row, column):
+        sub = self.submatrix(row, column)
+        return sub.determinant()
 
     def cofactor(self, row, column):
         sign = -1
         if (row + column) % 2 == 0:
             sign = 1
 
-        if self.rows == 3 and self.columns == 3:
-            return self.minor(row, column) * sign
+        return self.minor(row, column) * sign
 
     def __eq__(self, other):
         result = True
