@@ -17,11 +17,18 @@ class Matrix():
                 result.data[col][row] = self.data[row][col]
         return result
 
-    def determinant(self):      # only works for 2x2 matrices right now
+    def determinant(self):
+        result = 0 
+
         if self.rows == 2 and self.columns == 2:
             a,b = self.data[0]
             c,d = self.data[1]
-            return a * d - b * c
+            result = a * d - b * c
+        else:
+            for col in range(self.columns):
+                result += self.data[0][col] * self.cofactor(0, col)
+
+        return result
 
     def submatrix(self, row, column):
         result = matrix(self.rows-1, self.columns-1)
