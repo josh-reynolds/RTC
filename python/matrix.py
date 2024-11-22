@@ -54,6 +54,9 @@ class Matrix():
 
         return self.minor(row, column) * sign
 
+    def isInvertible(self):
+        return self.determinant() != 0
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -398,6 +401,17 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(a.cofactor(0,2),   210)
         self.assertEqual(a.cofactor(0,3),    51)
         self.assertEqual(a.determinant(), -4071)
+
+    def test_invertible_matrix_for_invertibility(self):
+        a = matrix()
+        a.data[0] = [ 6,  4,  4,  4]
+        a.data[1] = [ 5,  5,  7,  6]
+        a.data[2] = [ 4, -9,  3, -7]
+        a.data[3] = [ 9,  1,  7, -6]
+
+        self.assertEqual(a.determinant(), -2120)
+        self.assertTrue(a.isInvertible())
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
