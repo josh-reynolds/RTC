@@ -57,6 +57,19 @@ class Matrix():
     def isInvertible(self):
         return self.determinant() != 0
 
+    def inverse(self):
+        if self.isInvertible():
+            result = matrix(self.rows, self.columns)
+            d = self.determinant()
+
+            for row in range(self.rows):
+                for col in range(self.columns):
+                    c = self.cofactor(row, col)
+                    result.data[col][row] = c/d  # col/row transposes matrix, which is what we want
+
+            return result
+
+
     def __eq__(self, other):
         result = True
         if isinstance(other, self.__class__) and \
@@ -422,6 +435,30 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(a.determinant(), 0)
         self.assertFalse(a.isInvertible())
 
+    def test_calculating_inverse_of_a_matrix(self):
+        a = matrix()
+        a.data[0] = [-5,  2,  6, -8]
+        a.data[1] = [ 1, -5,  1,  8]
+        a.data[2] = [ 7,  7, -6, -7]
+        a.data[3] = [ 1, -3,  7,  4]
+
+        b = a.inverse()
+
+        self.assertEqual(a.determinant(), 532)
+
+        self.assertEqual(a.cofactor(2, 3), -160)
+        self.assertEqual(b[3,2], -160 / 532)
+
+        self.assertEqual(a.cofactor(3, 2), 105)
+        self.assertEqual(b[2,3], 105 / 532)
+
+        result = matrix()
+        result.data[0] = [ 0.21805,  0.45113,  0.24060, -0.04511]
+        result.data[1] = [-0.80827, -1.45677, -0.44361,  0.52068]
+        result.data[2] = [-0.07895, -0.22368, -0.05263,  0.19737]
+        result.data[3] = [-0.52256, -0.81391, -0.30075,  0.30639]
+
+        self.assertEqual(b, result)
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
