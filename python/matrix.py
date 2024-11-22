@@ -412,6 +412,15 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(a.determinant(), -2120)
         self.assertTrue(a.isInvertible())
 
+    def test_noninvertible_matrix_for_invertibility(self):
+        a = matrix()
+        a.data[0] = [-4,  2, -2, -3]
+        a.data[1] = [ 9,  6,  2,  6]
+        a.data[2] = [ 0, -5,  1, -5]
+        a.data[3] = [ 0,  0,  0,  0]
+
+        self.assertEqual(a.determinant(), 0)
+        self.assertFalse(a.isInvertible())
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
