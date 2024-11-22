@@ -459,6 +459,41 @@ class MatrixTestCase(unittest.TestCase):
         result.data[3] = [-0.52256, -0.81391, -0.30075,  0.30639]
 
         self.assertEqual(b, result)
+
+    def test_calculating_inverse_of_another_matrix(self):
+        a = matrix()
+        a.data[0] = [ 8, -5,  9,  2]
+        a.data[1] = [ 7,  5,  6,  1]
+        a.data[2] = [-6,  0,  9,  6]
+        a.data[3] = [-3,  0, -9, -4]
+
+        b = a.inverse()
+
+        result = matrix()
+        result.data[0] = [-0.15385, -0.15385, -0.28205, -0.53846]
+        result.data[1] = [-0.07692,  0.12308,  0.02564,  0.03077]
+        result.data[2] = [ 0.35897,  0.35897,  0.43590,  0.92308]
+        result.data[3] = [-0.69231, -0.69231, -0.76923, -1.92308]
+
+        self.assertEqual(b, result)
+
+    def test_calculating_inverse_of_a_third_matrix(self):
+        a = matrix()
+        a.data[0] = [ 9,  3,  0,  9]
+        a.data[1] = [-5, -2, -6, -3]
+        a.data[2] = [-4,  9,  6,  4]
+        a.data[3] = [-7,  6,  6,  2]
+
+        b = a.inverse()
+
+        result = matrix()
+        result.data[0] = [-0.04074, -0.07778,  0.14444, -0.22222]
+        result.data[1] = [-0.07778,  0.03333,  0.36667, -0.33333]
+        result.data[2] = [-0.02901, -0.14630, -0.10926,  0.12963]
+        result.data[3] = [ 0.17778,  0.06667, -0.26667,  0.33333]
+
+        self.assertEqual(b, result)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
