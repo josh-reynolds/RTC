@@ -21,6 +21,10 @@ def scaling(dx, dy, dz):
 
 def rotation_x(radians):
     result = identity()
+    result.data[1][1] = math.cos(radians)
+    result.data[1][2] = -math.sin(radians)
+    result.data[2][1] = math.sin(radians)
+    result.data[2][2] = math.cos(radians)
     return result
 
 class TransformationsTestCase(unittest.TestCase):
