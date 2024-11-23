@@ -57,6 +57,12 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(inv * v, vector(-2, 2, 2))
 
+    def test_reflection_is_negative_scaling(self):
+        transform = scaling(-1, 1, 1)
+        v = vector(2, 3, 4)
+
+        self.assertEqual(transform * v, vector(-2, 3, 4))
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
