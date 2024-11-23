@@ -1,6 +1,7 @@
 # to run tests: python -m unittest -v transformations
 
 import unittest
+import math
 from tuple import point, vector
 from matrix import identity
 
@@ -16,6 +17,10 @@ def scaling(dx, dy, dz):
     result.data[0][0] = dx
     result.data[1][1] = dy
     result.data[2][2] = dz
+    return result
+
+def rotation_x(radians):
+    result = identity()
     return result
 
 class TransformationsTestCase(unittest.TestCase):
@@ -62,6 +67,24 @@ class TransformationsTestCase(unittest.TestCase):
         v = vector(2, 3, 4)
 
         self.assertEqual(transform * v, vector(-2, 3, 4))
+
+    def test_rotating_a_point_around_x_axis(self):
+        p = point(0, 1, 0)
+
+        half_quarter = rotation_x(math.pi / 4)
+        full_quarter = rotation_x(math.pi / 2)
+
+        self.assertEqual(half_quarter * p, point(0, math.sqrt(2)/2, math.sqrt(2)/2))
+        self.assertEqual(full_quarter * p, point(0, 0, 1))
+
+    def test_inverse_of_x_rotation_rotates_in_opposite_direction(self):
+        p = point(0, 1, 0)
+
+        half_quarter = rotation_x(math.pi / 4)
+        inver = half_quarter.inverse()
+
+        self.assertEqual(inver * p, point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
