@@ -40,6 +40,18 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(transform * p, point(-8, 18, 32))
 
+    def test_a_scaling_matrix_applied_to_a_vector(self):
+        transform = scaling(2, 3, 4)
+        v = vector(-4, 6, 8)
+
+        self.assertEqual(transform * v, vector(-8, 18, 32))
+
+    def test_multiplying_by_inverse_of_scaling_matrix(self):
+        transform = scaling(2, 3, 4)
+        inv = transform.inverse()
+        v = vector(-4, 6, 8)
+
+        self.assertEqual(inv * v, vector(-2, 2, 2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
