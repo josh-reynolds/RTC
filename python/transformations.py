@@ -5,8 +5,11 @@ from tuple import point, vector
 from matrix import identity
 
 def translation(dx, dy, dz):
-    return identity()
-
+    result = identity()
+    result.data[0][3] += dx
+    result.data[1][3] += dy
+    result.data[2][3] += dz
+    return result
 
 class TransformationsTestCase(unittest.TestCase):
     def test_multiplying_by_a_translation_matrix(self):
