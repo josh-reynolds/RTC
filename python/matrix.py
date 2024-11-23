@@ -145,8 +145,9 @@ class Matrix():
     def __str__(self):
         result = ""
         for x in range(self.rows):
+            result += "| "
             for y in range(self.columns):
-                result += str(self.data[x][y])
+                result += str(self.data[x][y]) + " |"
             result += "\n"
         return result
 
@@ -493,6 +494,23 @@ class MatrixTestCase(unittest.TestCase):
         result.data[3] = [ 0.17778,  0.06667, -0.26667,  0.33333]
 
         self.assertEqual(b, result)
+
+    def test_multiplying_a_product_by_its_inverse(self):
+        a = matrix()
+        a.data[0] = [ 3, -9,  7,  3]
+        a.data[1] = [ 3, -8,  2, -9]
+        a.data[2] = [-4,  4,  4,  1]
+        a.data[3] = [-6,  5, -1,  1]
+
+        b = matrix()
+        b.data[0] = [ 8,  2,  2,  2]
+        b.data[1] = [ 3, -1,  7,  0]
+        b.data[2] = [ 7,  0,  5,  4]
+        b.data[3] = [ 6, -2,  0,  5]
+
+        c = a * b
+
+        self.assertEqual(c * b.inverse(), a)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
