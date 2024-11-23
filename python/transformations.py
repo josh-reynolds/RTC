@@ -11,6 +11,9 @@ def translation(dx, dy, dz):
     result.data[2][3] += dz
     return result
 
+def scaling(dx, dy, dz):
+    return identity()
+
 class TransformationsTestCase(unittest.TestCase):
     def test_multiplying_by_a_translation_matrix(self):
         transform = translation(5, -3, 2)
@@ -31,6 +34,11 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(transform * v, v)
 
+    def test_a_scaling_matrix_applied_to_a_point(self):
+        transform = scaling(2, 3, 4)
+        p = point(-4, 6, 8)
+
+        self.assertEqual(transform * p, point(-8, 18, 32))
 
 
 # ---------------------------------------------------------------------------
