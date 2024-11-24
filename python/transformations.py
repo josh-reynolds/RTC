@@ -37,10 +37,10 @@ def rotation_y(radians):
 
 def rotation_z(radians):
     result = identity()
-    #result.data[0][0] = math.cos(radians)
-    #result.data[0][2] = math.sin(radians)
-    #result.data[2][0] = -math.sin(radians)
-    #result.data[2][2] = math.cos(radians)
+    result.data[0][0] = math.cos(radians)
+    result.data[0][1] = -math.sin(radians)
+    result.data[1][0] = math.sin(radians)
+    result.data[1][1] = math.cos(radians)
     return result
 
 class TransformationsTestCase(unittest.TestCase):
