@@ -137,6 +137,36 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(transform * p, point(5, 3, 4))
 
+    def test_a_shearing_transformation_moves_x_in_proportion_to_z(self):
+        transform = shearing(0, 1, 0, 0, 0, 0)
+        p = point(2, 3, 4)
+
+        self.assertEqual(transform * p, point(6, 3, 4))
+
+    def test_a_shearing_transformation_moves_y_in_proportion_to_x(self):
+        transform = shearing(0, 0, 1, 0, 0, 0)
+        p = point(2, 3, 4)
+
+        self.assertEqual(transform * p, point(2, 5, 4))
+
+    def test_a_shearing_transformation_moves_y_in_proportion_to_z(self):
+        transform = shearing(0, 0, 0, 1, 0, 0)
+        p = point(2, 3, 4)
+
+        self.assertEqual(transform * p, point(2, 7, 4))
+
+    def test_a_shearing_transformation_moves_z_in_proportion_to_x(self):
+        transform = shearing(0, 0, 0, 0, 1, 0)
+        p = point(2, 3, 4)
+
+        self.assertEqual(transform * p, point(2, 3, 6))
+
+    def test_a_shearing_transformation_moves_z_in_proportion_to_y(self):
+        transform = shearing(0, 0, 0, 0, 0, 1)
+        p = point(2, 3, 4)
+
+        self.assertEqual(transform * p, point(2, 3, 7))
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
