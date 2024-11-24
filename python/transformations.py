@@ -45,10 +45,12 @@ def rotation_z(radians):
 
 def shearing(xy, xz, yx, yz, zx, zy):
     result = identity()
-    #result.data[0][0] = math.cos(radians)
-    #result.data[0][1] = -math.sin(radians)
-    #result.data[1][0] = math.sin(radians)
-    #result.data[1][1] = math.cos(radians)
+    result.data[0][1] = xy
+    result.data[0][2] = xz
+    result.data[1][0] = yx
+    result.data[1][2] = yz
+    result.data[2][0] = zx
+    result.data[2][1] = zy
     return result
 
 class TransformationsTestCase(unittest.TestCase):
