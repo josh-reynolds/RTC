@@ -35,6 +35,14 @@ def rotation_y(radians):
     result.data[2][2] = math.cos(radians)
     return result
 
+def rotation_z(radians):
+    result = identity()
+    #result.data[0][0] = math.cos(radians)
+    #result.data[0][2] = math.sin(radians)
+    #result.data[2][0] = -math.sin(radians)
+    #result.data[2][2] = math.cos(radians)
+    return result
+
 class TransformationsTestCase(unittest.TestCase):
     def test_multiplying_by_a_translation_matrix(self):
         transform = translation(5, -3, 2)
@@ -105,6 +113,15 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(half_quarter * p, point(math.sqrt(2)/2, 0, math.sqrt(2)/2))
         self.assertEqual(full_quarter * p, point(1, 0, 0))
+
+    def test_rotating_a_point_around_z_axis(self):
+        p = point(0, 1, 0)
+
+        half_quarter = rotation_z(math.pi / 4)
+        full_quarter = rotation_z(math.pi / 2)
+
+        self.assertEqual(half_quarter * p, point(-math.sqrt(2)/2, math.sqrt(2)/2, 0))
+        self.assertEqual(full_quarter * p, point(-1, 0, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
