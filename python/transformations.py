@@ -184,6 +184,15 @@ class TransformationsTestCase(unittest.TestCase):
         p4 = c * p3
         self.assertEqual(p4, point(15, 0, 7))
 
+    def test_chained_transformations_applied_in_reverse_order(self):
+        p = point(1, 0, 1)
+        a = rotation_x(math.pi / 2)
+        b = scaling(5, 5, 5)
+        c = translation(10, 5, 7)
+
+        t = c * b * a
+
+        self.assertEqual(t * p, point(15, 0, 7))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
