@@ -11,7 +11,6 @@ c = canvas(size, size)
 col = color(1, 0, 0)
 
 twelve = point(0, 0, 1)
-p = point(0, 0, 1)
 
 for i in range(12):
     p = (translation(center, 0, center) * 
