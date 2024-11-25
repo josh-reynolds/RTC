@@ -169,6 +169,22 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(transform * p, point(2, 3, 7))
 
+    def test_individual_transformations_are_applied_in_sequence(self):
+        p = point(1, 0, 1)
+        a = rotation_x(math.pi / 2)
+        b = scaling(5, 5, 5)
+        c = translation(10, 5, 7)
+
+        p2 = a * p
+        self.assertEqual(p2, point(1, -1, 0))
+
+        p3 = b * p2
+        self.assertEqual(p3, point(5, -5, 0))
+
+        p4 = c * p3
+        self.assertEqual(p4, point(15, 0, 7))
+
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
