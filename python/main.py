@@ -1,44 +1,26 @@
-from tuple import point, vector
+import math
+from tuple import point
 from canvas import canvas
 from color import color
+from transformations import rotation_y, scaling, translation
 
-class Projectile:
-    def __init__(self, position, velocity):
-        self.position = position
-        self.velocity = velocity
-
-class Environment:
-    def __init__(self, gravity, wind):
-        self.gravity = gravity
-        self.wind = wind
-
-def tick(env, proj):
-    position = proj.position + proj.velocity
-    velocity = proj.velocity + env.gravity + env.wind
-    return Projectile(position, velocity)
-
-start = point(0, 1, 0)
-velocity = vector(1, 1.8, 0).normalize() * 11.25
-p = Projectile(start, velocity)
-
-gravity = vector(0, -0.1, 0)
-wind = vector(-0.01, 0, 0)
-e = Environment(gravity, wind)
-
-c = canvas(900, 550)
-
-count = 0
+size = 400
+radius = size * 3 / 8
+center = size / 2
+c = canvas(size, size)
 col = color(1, 0, 0)
-print("{0}\t{1}\t{2}".format("Tick", "x", "y"))
-while p.position.y > 0:
-    print("{0}\t{1:.2f}\t{2:.2f}".format(count, p.position.x, p.position.y))
-    px = round(p.position.x)
-    py = 550 - round(p.position.y)
-    c.write_pixel(px, py, col)
-    count += 1
-    p = tick(e, p)
 
-f = open("test_cannon.ppm", "w")
+twelve = point(0, 0, 1)
+p = point(0, 0, 1)
+
+for i in range(12):
+    p = (translation(center, 0, center) * 
+         scaling(radius, 0, radius) * 
+         rotation_y(i * math.pi / 6) * 
+         twelve)
+    c.write_pixel(math.floor(p.x), math.floor(p.z), col)
+
+f = open("clock.ppm", "w")
 lines = c.to_ppm()
 for line in lines:
     f.write(line + "\n")
