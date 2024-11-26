@@ -25,6 +25,12 @@ class SpheresTestCase(unittest.TestCase):
         self.assertEqual(xs[0], 4.0)
         self.assertEqual(xs[1], 6.0)
 
+    def test_sphere_returns_unique_instances(self):
+        s1 = sphere()
+        s2 = sphere()
+
+        self.assertFalse(s1 is s2)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
