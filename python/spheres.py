@@ -1,6 +1,7 @@
 # to run tests: python -m unittest -v spheres
 
 import unittest
+import math
 from rays import ray
 from tuple import point, vector
 
@@ -9,7 +10,23 @@ class Sphere:
         pass
 
     def intersect(self, r):
-        return [4.0, 6.0]
+        result = []
+        sphere_to_ray = r.origin - point(0, 0, 0)
+
+        a = r.direction.dot(r.direction)
+        b = 2 * r.direction.dot(sphere_to_ray)
+        c = sphere_to_ray.dot(sphere_to_ray) - 1
+
+        discriminant = (b ** 2) - (4 * a * c)
+
+        if discriminant >= 0:
+            dsqrt = math.sqrt(discriminant)
+            t1 = (-b - dsqrt) / (2 * a)
+            t2 = (-b + dsqrt) / (2 * a)
+            result.append(t1)
+            result.append(t2)
+
+        return result
 
 def sphere():
     return Sphere()
