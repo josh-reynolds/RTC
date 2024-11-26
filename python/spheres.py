@@ -31,6 +31,44 @@ class SpheresTestCase(unittest.TestCase):
 
         self.assertFalse(s1 is s2)
 
+    def test_a_ray_intersects_a_sphere_at_a_tangent(self):
+        r = ray(point(0, 1, -5), vector(0, 0, 1))
+        s = sphere()
+
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0], 5.0)
+        self.assertEqual(xs[1], 5.0)
+
+    def test_a_ray_misses_a_sphere(self):
+        r = ray(point(0, 2, -5), vector(0, 0, 1))
+        s = sphere()
+
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 0)
+
+    def test_a_ray_originates_inside_a_sphere(self):
+        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        s = sphere()
+
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0], -1.0)
+        self.assertEqual(xs[1], 1.0)
+
+    def test_a_sphere_is_behind_a_ray(self):
+        r = ray(point(0, 0, 5), vector(0, 0, 1))
+        s = sphere()
+
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0], -6.0)
+        self.assertEqual(xs[1], -4.0)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
