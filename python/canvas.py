@@ -41,9 +41,6 @@ class Canvas():
             result += "\n"
         return result
 
-#    def __getitem__(self, w):
-#        return self.pixels[w]
-
 def canvas(width, height):
     return Canvas(width, height)
 

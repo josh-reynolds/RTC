@@ -1,8 +1,8 @@
 # to run tests: python -m unittest -v matrix
 
 import unittest
-from tuple import flequal, Tuple
-#import math
+from tuple import Tuple
+from utils import flequal
 
 class Matrix():
     def __init__(self, rows, columns):
@@ -86,21 +86,6 @@ class Matrix():
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    #def __add__(self, other):
-        #return Tuple(self.x + other.x,
-                     #self.y + other.y,
-                     #self.z + other.z,
-                     #self.w + other.w)
-
-    #def __sub__(self, other):
-        #return Tuple(self.x - other.x,
-                     #self.y - other.y,
-                     #self.z - other.z,
-                     #self.w - other.w)
-
-    #def __neg__(self):
-        #return Tuple(-self.x, -self.y, -self.z, -self.w)
-
     def __mul__(self, rhs):         
         if isinstance(rhs, Matrix):      # only concerned with two 4x4 matrices here
             m = matrix()
@@ -134,10 +119,6 @@ class Matrix():
 
     def __rmul__(self, lhs):
         return self.__mul__(lhs)
-
-    #def __truediv__(self, rhs):
-        #if isinstance(rhs, float) or isinstance(rhs, int):
-            #return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
     def __getitem__(self, w):
         return self.data[w[0]][w[1]]

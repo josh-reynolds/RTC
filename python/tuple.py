@@ -2,13 +2,7 @@
 
 import unittest
 import math
-
-EPSILON = 0.00001
-
-def flequal(a, b):
-    if abs(a - b) < EPSILON:
-        return True
-    return False
+from utils import flequal
 
 class Tuple():
     def __init__(self, x, y, z, w):
@@ -216,7 +210,6 @@ class TupleTestCase(unittest.TestCase):
         b = vector(2, 3, 4)
         self.assertEqual(a.cross(b), vector(-1, 2, -1))
         self.assertEqual(b.cross(a), vector(1, -2, 1))
-
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

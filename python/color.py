@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from tuple import flequal
+from utils import flequal
 
 class Color():
     def __init__(self, r, g, b):
@@ -31,9 +31,6 @@ class Color():
                      self.green - other.green,
                      self.blue - other.blue)
 
-#    def __neg__(self):
-#        return Tuple(-self.x, -self.y, -self.z, -self.w)
-
     def __mul__(self, rhs):
         if isinstance(rhs, float) or isinstance(rhs, int):
             return Color(self.red * rhs, self.green * rhs, self.blue * rhs)
@@ -44,10 +41,6 @@ class Color():
 
     def __rmul__(self, lhs):
         return self.__mul__(lhs)
-
-#    def __truediv__(self, rhs):
-#        if isinstance(rhs, float) or isinstance(rhs, int):
-#            return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
     def __str__(self):
         return "(" + str(self.red) + ", " + \
