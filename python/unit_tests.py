@@ -11,6 +11,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('transformations'))
     suite.addTests(loader.loadTestsFromName('tuple'))
+    suite.addTests(loader.loadTestsFromName('utils'))
     return suite
 
 # ---------------------------------------------------------------------------
