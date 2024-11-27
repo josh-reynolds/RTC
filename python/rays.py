@@ -2,6 +2,7 @@
 
 import unittest
 from tuple import point, vector
+from transformations import translation, scaling
 
 class Ray:
     def __init__(self, origin, direction):
@@ -10,6 +11,11 @@ class Ray:
 
     def position(self, t):
         return self.origin + self.direction * t
+
+    def transform(self, matrix):
+        origin = matrix * self.origin
+        direction = matrix * self.direction
+        return ray(origin, direction)
 
 def ray(origin, direction):
     return Ray(origin, direction)
@@ -32,6 +38,24 @@ class RaysTestCase(unittest.TestCase):
         self.assertEqual(r.position(-1), point(1, 3, 4))
         self.assertEqual(r.position(2.5), point(4.5, 3, 4))
 
+    def test_translating_a_ray(self):
+        r = ray(point(1, 2, 3), vector(0, 1, 0))
+        m = translation(3, 4, 5)
+
+        r2 = r.transform(m)
+
+        self.assertEqual(r2.origin, point(4, 6, 8))
+        self.assertEqual(r2.direction, vector(0, 1, 0))
+        
+    def test_scaling_a_ray(self):
+        r = ray(point(1, 2, 3), vector(0, 1, 0))
+        m = scaling(2, 3, 4)
+
+        r2 = r.transform(m)
+
+        self.assertEqual(r2.origin, point(2, 6, 12))
+        self.assertEqual(r2.direction, vector(0, 3, 0))
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
