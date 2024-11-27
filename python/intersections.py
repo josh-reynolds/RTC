@@ -50,6 +50,38 @@ class IntersectionsTestCase(unittest.TestCase):
 
         self.assertEqual(i, i1)
         
+    def test_the_hit_when_some_intersections_negative(self):
+        s = spheres.sphere()
+        i1 = intersection(-1, s)
+        i2 = intersection(1, s)
+        xs = intersections(i2, i1)
+
+        i = hit(xs)
+
+        self.assertEqual(i, i2)
+        
+    def test_the_hit_when_all_intersections_negative(self):
+        s = spheres.sphere()
+        i1 = intersection(-2, s)
+        i2 = intersection(-1, s)
+        xs = intersections(i2, i1)
+
+        i = hit(xs)
+
+        self.assertEqual(i, None)
+        
+    def test_hit_is_always_lowest_nonnegative_intersection(self):
+        s = spheres.sphere()
+        i1 = intersection(5, s)
+        i2 = intersection(7, s)
+        i3 = intersection(-3, s)
+        i4 = intersection(2, s)
+        xs = intersections(i1, i2, i3, i4)
+
+        i = hit(xs)
+
+        self.assertEqual(i, i4)
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
