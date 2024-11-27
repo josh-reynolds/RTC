@@ -4,6 +4,7 @@ import unittest
 import math
 from rays import ray
 from tuple import point, vector
+import intersections
 
 class Sphere:
     def __init__(self):
@@ -23,8 +24,8 @@ class Sphere:
             dsqrt = math.sqrt(discriminant)
             t1 = (-b - dsqrt) / (2 * a)
             t2 = (-b + dsqrt) / (2 * a)
-            result.append(t1)
-            result.append(t2)
+            result.append(intersections.intersection(t1, self))
+            result.append(intersections.intersection(t2, self))
 
         return result
 
@@ -39,8 +40,8 @@ class SpheresTestCase(unittest.TestCase):
         xs = s.intersect(r)
 
         self.assertEqual(len(xs), 2)
-        self.assertEqual(xs[0], 4.0)
-        self.assertEqual(xs[1], 6.0)
+        self.assertEqual(xs[0].t, 4.0)
+        self.assertEqual(xs[1].t, 6.0)
 
     def test_sphere_returns_unique_instances(self):
         s1 = sphere()
@@ -55,8 +56,8 @@ class SpheresTestCase(unittest.TestCase):
         xs = s.intersect(r)
 
         self.assertEqual(len(xs), 2)
-        self.assertEqual(xs[0], 5.0)
-        self.assertEqual(xs[1], 5.0)
+        self.assertEqual(xs[0].t, 5.0)
+        self.assertEqual(xs[1].t, 5.0)
 
     def test_a_ray_misses_a_sphere(self):
         r = ray(point(0, 2, -5), vector(0, 0, 1))
@@ -73,8 +74,8 @@ class SpheresTestCase(unittest.TestCase):
         xs = s.intersect(r)
 
         self.assertEqual(len(xs), 2)
-        self.assertEqual(xs[0], -1.0)
-        self.assertEqual(xs[1], 1.0)
+        self.assertEqual(xs[0].t, -1.0)
+        self.assertEqual(xs[1].t, 1.0)
 
     def test_a_sphere_is_behind_a_ray(self):
         r = ray(point(0, 0, 5), vector(0, 0, 1))
@@ -83,8 +84,18 @@ class SpheresTestCase(unittest.TestCase):
         xs = s.intersect(r)
 
         self.assertEqual(len(xs), 2)
-        self.assertEqual(xs[0], -6.0)
-        self.assertEqual(xs[1], -4.0)
+        self.assertEqual(xs[0].t, -6.0)
+        self.assertEqual(xs[1].t, -4.0)
+
+    def test_intersect_sets_object_on_intersection(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = sphere()
+
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].object, s)
+        self.assertEqual(xs[1].object, s)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

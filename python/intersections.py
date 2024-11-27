@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v intersections
 
 import unittest
-from spheres import sphere
+import spheres
 
 class Intersection:
     def __init__(self, t, obj):
@@ -19,7 +19,7 @@ def intersections(*args):
 
 class IntersectionsTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
-        s = sphere()
+        s = spheres.sphere()
 
         i = intersection(3.5, s)
 
@@ -27,7 +27,7 @@ class IntersectionsTestCase(unittest.TestCase):
         self.assertEqual(i.object, s)
 
     def test_aggregating_intersections(self):
-        s = sphere()
+        s = spheres.sphere()
         i1 = intersection(1, s)
         i2 = intersection(2, s)
 
