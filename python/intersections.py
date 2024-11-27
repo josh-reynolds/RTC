@@ -15,10 +15,13 @@ def intersections(*args):
     result = []
     for arg in args:
         result.append(arg)
+    result.sort(key=lambda x: x.t)
     return result
 
 def hit(xs):
-    return xs[1]
+    for i in xs:
+        if i.t >=0:
+            return i
 
 class IntersectionsTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
