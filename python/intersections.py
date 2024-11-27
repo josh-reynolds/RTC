@@ -17,6 +17,9 @@ def intersections(*args):
         result.append(arg)
     return result
 
+def hit(xs):
+    return xs[1]
+
 class IntersectionsTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
         s = spheres.sphere()
@@ -37,6 +40,16 @@ class IntersectionsTestCase(unittest.TestCase):
         self.assertEqual(xs[0].t, 1)
         self.assertEqual(xs[1].t, 2)
 
+    def test_the_hit_when_all_intersections_positive(self):
+        s = spheres.sphere()
+        i1 = intersection(1, s)
+        i2 = intersection(2, s)
+        xs = intersections(i2, i1)
+
+        i = hit(xs)
+
+        self.assertEqual(i, i1)
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
