@@ -5,10 +5,11 @@ import math
 from rays import ray
 from tuple import point, vector
 import intersections
+from matrix import identity
 
 class Sphere:
     def __init__(self):
-        pass
+        self.transform = identity()
 
     def intersect(self, r):
         result = []
@@ -96,6 +97,11 @@ class SpheresTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].object, s)
         self.assertEqual(xs[1].object, s)
+
+    def test_a_spheres_default_transformation(self):
+        s = sphere()
+
+        self.assertEqual(s.transform, identity())
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
