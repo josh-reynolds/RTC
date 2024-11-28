@@ -6,6 +6,7 @@ from rays import ray
 from tuple import point, vector
 import intersections
 from matrix import identity
+from transformations import translation
 
 class Sphere:
     def __init__(self):
@@ -29,6 +30,9 @@ class Sphere:
             result.append(intersections.intersection(t2, self))
 
         return result
+    
+    def set_transform(self, t):
+        self.transform = t
 
 def sphere():
     return Sphere()
@@ -102,6 +106,14 @@ class SpheresTestCase(unittest.TestCase):
         s = sphere()
 
         self.assertEqual(s.transform, identity())
+
+    def test_setting_a_spheres_transform(self):
+        s = sphere()
+        t = translation(2, 3, 4)
+
+        s. set_transform(t)
+
+        self.assertEqual(s.transform, t)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
