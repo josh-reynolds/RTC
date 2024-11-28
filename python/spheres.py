@@ -6,7 +6,7 @@ from rays import ray
 from tuple import point, vector
 import intersections
 from matrix import identity
-from transformations import translation
+from transformations import translation, scaling
 
 class Sphere:
     def __init__(self):
@@ -14,10 +14,11 @@ class Sphere:
 
     def intersect(self, r):
         result = []
-        sphere_to_ray = r.origin - point(0, 0, 0)
+        r2 = r.transform(self.transform.inverse())
+        sphere_to_ray = r2.origin - point(0, 0, 0)
 
-        a = r.direction.dot(r.direction)
-        b = 2 * r.direction.dot(sphere_to_ray)
+        a = r2.direction.dot(r2.direction)
+        b = 2 * r2.direction.dot(sphere_to_ray)
         c = sphere_to_ray.dot(sphere_to_ray) - 1
 
         discriminant = (b ** 2) - (4 * a * c)
@@ -114,6 +115,24 @@ class SpheresTestCase(unittest.TestCase):
         s. set_transform(t)
 
         self.assertEqual(s.transform, t)
+
+    def test_intersecting_scaled_sphere_with_ray(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = sphere()
+        s.set_transform(scaling(2, 2, 2))
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 3)
+        self.assertEqual(xs[1].t, 7)
+
+    def test_intersecting_translated_sphere_with_ray(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = sphere()
+        s.set_transform(translation(5, 0, 0))
+        xs = s.intersect(r)
+
+        self.assertEqual(len(xs), 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
