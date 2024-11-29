@@ -2,24 +2,34 @@ import math
 from tuple import point
 from canvas import canvas
 from color import color
-from transformations import rotation_y, scaling, translation
+from spheres import sphere
+from rays import ray
+from intersections import hit
 
-size = 400
-radius = size * 3 / 8
-center = size / 2
-c = canvas(size, size)
+ray_origin = point(0, 0, -5)
+wall_z = 10
+wall_size = 7.0
+
+canvas_pixels = 100
+pixel_size = wall_size / canvas_pixels
+half = wall_size / 2
+
+c = canvas(canvas_pixels, canvas_pixels)
 col = color(1, 0, 0)
+shape = sphere()
 
-twelve = point(0, 0, 1)
+for y in range(canvas_pixels):
+    world_y = half - pixel_size * y
+    
+    for x in range(canvas_pixels):
+        world_x = half - pixel_size * x
+        position = point(world_x, world_y, wall_z)
+        r = ray(ray_origin, (position - ray_origin).normalize())
+        xs = shape.intersect(r)
+        if hit(xs):
+            c.write_pixel(x, y, col)
 
-for i in range(12):
-    p = (translation(center, 0, center) * 
-         scaling(radius, 0, radius) * 
-         rotation_y(i * math.pi / 6) * 
-         twelve)
-    c.write_pixel(math.floor(p.x), math.floor(p.z), col)
-
-f = open("clock.ppm", "w")
+f = open("sphere.ppm", "w")
 lines = c.to_ppm()
 for line in lines:
     f.write(line + "\n")
