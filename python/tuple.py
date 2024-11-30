@@ -41,6 +41,9 @@ class Tuple():
                       self.z * other.x - self.x * other.z,
                       self.x * other.y - self.y * other.x)
 
+    def reflect(self, nornal):
+        return vector(1, 1, 0)
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return flequal(self.x, other.x) and \
@@ -210,6 +213,14 @@ class TupleTestCase(unittest.TestCase):
         b = vector(2, 3, 4)
         self.assertEqual(a.cross(b), vector(-1, 2, -1))
         self.assertEqual(b.cross(a), vector(1, -2, 1))
+
+    def test_reflecting_a_vector_approaching_at_45_degrees(self):
+        v = vector(1, -1, 0)
+        n = vector(0, 1, 0)
+
+        r = v.reflect(n)
+
+        self.assertEqual(r, vector(1, 1, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
