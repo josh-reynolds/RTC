@@ -41,8 +41,8 @@ class Tuple():
                       self.z * other.x - self.x * other.z,
                       self.x * other.y - self.y * other.x)
 
-    def reflect(self, nornal):
-        return vector(1, 1, 0)
+    def reflect(self, normal):
+        return self - normal * 2 * self.dot(normal)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -221,6 +221,14 @@ class TupleTestCase(unittest.TestCase):
         r = v.reflect(n)
 
         self.assertEqual(r, vector(1, 1, 0))
+
+    def test_reflecting_a_vector_off_slanted_surface(self):
+        v = vector(0, -1, 0)
+        n = vector(math.sqrt(2)/2, math.sqrt(2)/2, 0)
+
+        r = v.reflect(n)
+
+        self.assertEqual(r, vector(1, 0, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
