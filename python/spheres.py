@@ -6,7 +6,7 @@ from rays import ray
 from tuple import point, vector
 import intersections
 from matrix import identity
-from transformations import translation, scaling
+from transformations import translation, scaling, rotation_z
 
 class Sphere:
     def __init__(self):
@@ -166,6 +166,21 @@ class SpheresTestCase(unittest.TestCase):
         n = s.normal_at(point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
 
         self.assertEqual(n, n.normalize())
+
+    def test_computing_normal_on_translated_sphere(self):
+        s = sphere()
+        s.set_transform(translation(0, 1, 0))
+        n = s.normal_at(point(0, 1.70711, -0.70711))
+
+        self.assertEqual(n, vector(0, 0.70711, -0.70711))
+
+    def test_computing_normal_on_transformed_sphere(self):
+        s = sphere()
+        m = scaling(1, 0.5, 1) * rotation_z(math.pi/5)
+        s.set_transform(m)
+        n = s.normal_at(point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+
+        self.assertEqual(n, vector(0, 0.97014, -0.24254))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
