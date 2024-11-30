@@ -35,8 +35,8 @@ class Sphere:
     def set_transform(self, t):
         self.transform = t
 
-    def normal_at(self, point):
-        return vector(1, 0, 0)
+    def normal_at(self, pt):
+        return (pt - point(0, 0, 0)).normalize()
 
 def sphere():
     return Sphere()
@@ -142,6 +142,31 @@ class SpheresTestCase(unittest.TestCase):
         n = s.normal_at(point(1, 0, 0))
 
         self.assertEqual(n, vector(1, 0, 0))
+
+    def test_normal_on_a_sphere_at_point_on_y_axis(self):
+        s = sphere()
+        n = s.normal_at(point(0, 1, 0))
+
+        self.assertEqual(n, vector(0, 1, 0))
+
+    def test_normal_on_a_sphere_at_point_on_z_axis(self):
+        s = sphere()
+        n = s.normal_at(point(0, 0, 1))
+
+        self.assertEqual(n, vector(0, 0, 1))
+
+    def test_normal_on_a_sphere_at_nonaxial_point(self):
+        s = sphere()
+        n = s.normal_at(point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+
+        self.assertEqual(n, vector(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+
+    def test_normal_is_normalized_vector(self):
+        s = sphere()
+        n = s.normal_at(point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+
+        self.assertEqual(n, n.normalize())
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
