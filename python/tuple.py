@@ -31,10 +31,10 @@ class Tuple():
                      self.w/mag)
 
     def dot(self, other):
-        return self.x * other.x + \
-               self.y * other.y + \
-               self.z * other.z + \
-               self.w * other.w
+        return (self.x * other.x +
+                self.y * other.y +
+                self.z * other.z +
+                self.w * other.w)
 
     def cross(self, other):
         return vector(self.y * other.z - self.z * other.y,
@@ -46,10 +46,10 @@ class Tuple():
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return flequal(self.x, other.x) and \
-                   flequal(self.y, other.y) and \
-                   flequal(self.z, other.z) and \
-                   flequal(self.w, other.w)
+            return (flequal(self.x, other.x) and
+                    flequal(self.y, other.y) and
+                    flequal(self.z, other.z) and
+                    flequal(self.w, other.w))
         else:
             return False
 
@@ -83,10 +83,10 @@ class Tuple():
             return Tuple(self.x / rhs, self.y / rhs, self.z / rhs, self.w / rhs)
 
     def __str__(self):
-        return "(" + str(self.x) + ", " + \
-                     str(self.y) + ", " + \
-                     str(self.z) + ", " + \
-                     str(self.w) + ")"
+        return "(" + (str(self.x) + ", " +
+                     str(self.y) + ", " +
+                     str(self.z) + ", " +
+                     str(self.w) + ")")
 
 def point(x, y, z):
     return Tuple(x, y, z, 1)

@@ -72,9 +72,9 @@ class Matrix():
 
     def __eq__(self, other):
         result = True
-        if isinstance(other, self.__class__) and \
-                self.rows == other.rows and \
-                self.columns == other.columns:
+        if (isinstance(other, self.__class__) and
+                self.rows == other.rows and
+                self.columns == other.columns):
                     for row in range(self.rows):
                         for col in range(self.columns):
                             if not flequal(self.__getitem__((row,col)), other[row,col]):
@@ -91,10 +91,10 @@ class Matrix():
             m = matrix()
             for row in range(self.rows):
                 for col in range(self.columns):
-                    m.data[row][col] = self.data[row][0] * rhs[0, col] + \
-                                       self.data[row][1] * rhs[1, col] + \
-                                       self.data[row][2] * rhs[2, col] + \
-                                       self.data[row][3] * rhs[3, col]
+                    m.data[row][col] = (self.data[row][0] * rhs[0, col] +
+                                        self.data[row][1] * rhs[1, col] +
+                                        self.data[row][2] * rhs[2, col] +
+                                        self.data[row][3] * rhs[3, col])
             return m
         elif isinstance(rhs, Tuple):
             result = Tuple(0, 0, 0, 0)

@@ -12,9 +12,9 @@ class Color():
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return flequal(self.red, other.red) and \
-                   flequal(self.green, other.green) and \
-                   flequal(self.blue, other.blue)
+            return (flequal(self.red, other.red) and
+                    flequal(self.green, other.green) and
+                    flequal(self.blue, other.blue))
         else:
             return False
 
@@ -43,9 +43,9 @@ class Color():
         return self.__mul__(lhs)
 
     def __str__(self):
-        return "(" + str(self.red) + ", " + \
-                     str(self.green) + ", " + \
-                     str(self.blue) + ")"
+        return "(" + (str(self.red) + ", " +
+                     str(self.green) + ", " +
+                     str(self.blue) + ")")
 
 def color(r, g, b):
     return Color(r, g, b)
