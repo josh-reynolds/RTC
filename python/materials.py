@@ -29,7 +29,27 @@ def material():
     return Material()
 
 def lighting(material, light, position, eyev, normalv):
-    return color(1.9, 1.9, 1.9)
+    effective_color = material.color * light.intensity
+    lightv = (light.position - position).normalize()
+    ambient = effective_color * material.ambient
+
+    light_dot_normal = lightv.dot(normalv)
+    if light_dot_normal < 0:
+        diffuse = color(0, 0, 0)
+        specular = color(0, 0, 0)
+    else:
+        diffuse = effective_color * material.diffuse * light_dot_normal
+        reflectv = (-lightv).reflect(normalv)
+        reflect_dot_eye = reflectv.dot(eyev)
+
+        if reflect_dot_eye < 0:
+            specular = color(0, 0, 0)
+        else:
+            factor = reflect_dot_eye ** material.shininess
+            specular = light.intensity * material.specular * factor
+
+    return ambient + diffuse + specular
+
 
 class MaterialTestCase(unittest.TestCase):
     def test_the_default_material(self):
