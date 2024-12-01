@@ -29,7 +29,7 @@ class Canvas():
             if len(line) <= 70:          # 70 is max line length for some PPM readers
                 result.append(line)
             else:
-               result += splitline(line)
+                result += splitline(line)
         result.append("\n")
         return result
 
@@ -48,7 +48,7 @@ def clamp(value):
     result = round(value * 255)
     return max(0, min(255, result))
 
-def splitline(line, length=70, separator=" ", chunksize=3):
+def splitline(line, length=70, separator=" ", chunksize=4):
     result = []
     index = line.find(separator, length - chunksize, length) + 1
     result.append(line[:index])
@@ -123,6 +123,17 @@ class CanvasTestCase(unittest.TestCase):
         ppm = c.to_ppm()
         self.assertEqual(len(ppm), 7)
         self.assertEqual(ppm[6], "\n")
+
+    def test_split_with_space_at_segment_end(self):
+        line = ("11 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 111"
+                "1 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 111 "
+                " 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 111 1"
+                "255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 111 11")
+
+        try:
+            splitline(line)
+        except RecursionError:
+            self.fail("Recursion error in splitline")
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
