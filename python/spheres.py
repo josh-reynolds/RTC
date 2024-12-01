@@ -194,6 +194,15 @@ class SpheresTestCase(unittest.TestCase):
 
         self.assertEqual(s.material, m)
 
+    def test_a_sphere_may_be_assigned_a_material(self):
+        s = sphere()
+        m = material()
+        m.ambient = 1
+
+        s.material = m
+
+        self.assertEqual(s.material, m)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
