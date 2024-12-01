@@ -7,10 +7,12 @@ from tuple import point, vector
 import intersections
 from matrix import identity
 from transformations import translation, scaling, rotation_z
+from materials import material
 
 class Sphere:
     def __init__(self):
         self.transform = identity()
+        self.material = material()
 
     def intersect(self, r):
         result = []
@@ -185,6 +187,12 @@ class SpheresTestCase(unittest.TestCase):
         n = s.normal_at(point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
 
         self.assertEqual(n, vector(0, 0.97014, -0.24254))
+
+    def test_a_sphere_has_a_default_material(self):
+        s = sphere()
+        m = material()
+
+        self.assertEqual(s.material, m)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

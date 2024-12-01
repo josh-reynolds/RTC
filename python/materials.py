@@ -2,6 +2,7 @@
 
 import unittest
 from color import color
+from utils import flequal
 
 class Material:
     def __init__(self):
@@ -10,6 +11,16 @@ class Material:
         self.diffuse = 0.9
         self.specular = 0.9
         self.shininess = 200.0
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return ((self.color == other.color) and
+                    flequal(self.ambient, other.ambient) and
+                    flequal(self.diffuse, other.diffuse) and
+                    flequal(self.specular, other.specular) and
+                    flequal(self.shininess, other.shininess))
+        else:
+            return False
 
 def material():
     return Material()
