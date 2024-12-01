@@ -1,6 +1,7 @@
 # to run tests: python -m unittest -v materials
 
 import unittest
+import math
 from color import color
 from utils import flequal
 from lights import point_light
@@ -50,6 +51,50 @@ class MaterialTestCase(unittest.TestCase):
         result = lighting(m, light, position, eyev, normalv)
 
         self.assertEqual(result, color(1.9, 1.9, 1.9))
+
+    def test_lighting_with_eye_between_light_and_surface_and_offset_45_degrees(self):
+        m = material()
+        light = point_light(point(0, 0, -10), color(1, 1, 1))
+        position = point(0, 0, 0)
+        eyev = vector(0, math.sqrt(2)/2, -math.sqrt(2)/2)
+        normalv = vector(0, 0, -1)
+        
+        result = lighting(m, light, position, eyev, normalv)
+
+        self.assertEqual(result, color(1.0, 1.0, 1.0))
+
+    def test_lighting_with_eye_opposite_surface_and_light_offset_45_degrees(self):
+        m = material()
+        light = point_light(point(0, 10, -10), color(1, 1, 1))
+        position = point(0, 0, 0)
+        eyev = vector(0, 0, -1)
+        normalv = vector(0, 0, -1)
+        
+        result = lighting(m, light, position, eyev, normalv)
+
+        self.assertEqual(result, color(0.7364, 0.7364, 0.7364))
+
+    def test_lighting_with_eye_in_path_of_reflection_vector(self):
+        m = material()
+        light = point_light(point(0, 10, -10), color(1, 1, 1))
+        position = point(0, 0, 0)
+        eyev = vector(0, -math.sqrt(2)/2, -math.sqrt(2)/2)
+        normalv = vector(0, 0, -1)
+        
+        result = lighting(m, light, position, eyev, normalv)
+
+        self.assertEqual(result, color(1.6364, 1.6364, 1.6364))
+
+    def test_lighting_with_light_behind_surface(self):
+        m = material()
+        light = point_light(point(0, 0, 10), color(1, 1, 1))
+        position = point(0, 0, 0)
+        eyev = vector(0, 0, -1)
+        normalv = vector(0, 0, -1)
+        
+        result = lighting(m, light, position, eyev, normalv)
+
+        self.assertEqual(result, color(0.1, 0.1, 0.1))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
