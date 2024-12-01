@@ -8,6 +8,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('intersections'))
     suite.addTests(loader.loadTestsFromName('lights'))
     suite.addTests(loader.loadTestsFromName('matrix'))
+    suite.addTests(loader.loadTestsFromName('materials'))
     suite.addTests(loader.loadTestsFromName('rays'))
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('transformations'))
