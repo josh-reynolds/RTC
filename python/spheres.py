@@ -14,6 +14,13 @@ class Sphere:
         self.transform = identity()
         self.material = material()
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.transform == other.transform and
+                    self.material == other.material)
+        else:
+            return False
+
     def intersect(self, r):
         result = []
         r2 = r.transform(self.transform.inverse())

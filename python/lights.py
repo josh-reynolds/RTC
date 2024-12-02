@@ -9,6 +9,13 @@ class Light:
         self.position = position
         self.intensity = intensity
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.position == other.position and
+                    self.intensity == other.intensity)
+        else:
+            return False
+
 def point_light(position, intensity):
     return Light(position, intensity)
 
