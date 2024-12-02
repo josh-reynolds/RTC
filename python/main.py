@@ -28,7 +28,7 @@ for y in range(canvas_pixels):
     world_y = half - pixel_size * y
     
     for x in range(canvas_pixels):
-        world_x = half - pixel_size * x
+        world_x = -half + pixel_size * x
         position = point(world_x, world_y, wall_z)
         r = ray(ray_origin, (position - ray_origin).normalize())
         xs = shape.intersect(r)
