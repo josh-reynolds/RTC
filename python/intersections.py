@@ -33,6 +33,12 @@ class Computation:
         self.eyev = -ray.direction
         self.normalv = self.object.normal_at(self.point)
 
+        if self.normalv.dot(self.eyev) < 0:
+            self.inside = True
+            self.normalv = -self.normalv
+        else:
+            self.inside = False
+
 def prepare_computations(intersect, ray):
     return Computation(intersect, ray)
 
@@ -110,8 +116,28 @@ class IntersectionsTestCase(unittest.TestCase):
         self.assertEqual(comps.point, point(0, 0, -1))
         self.assertEqual(comps.eyev, vector(0, 0, -1))
         self.assertEqual(comps.normalv, vector(0, 0, -1))
-        
-        
+
+    def test_hit_when_intersection_occurs_on_outside(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = spheres.sphere()
+        i = intersection(4, s)
+
+        comps = prepare_computations(i, r)
+
+        self.assertFalse(comps.inside)
+
+    def test_hit_when_intersection_occurs_on_inside(self):
+        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        s = spheres.sphere()
+        i = intersection(1, s)
+
+        comps = prepare_computations(i, r)
+
+        self.assertEqual(comps.point, point(0, 0, 1))
+        self.assertEqual(comps.eyev, vector(0, 0, -1))
+        self.assertTrue(comps.inside)
+        self.assertEqual(comps.normalv, vector(0, 0, -1))
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
