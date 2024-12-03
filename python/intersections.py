@@ -2,6 +2,8 @@
 
 import unittest
 import spheres
+from rays import ray
+from tuple import point, vector
 
 class Intersection:
     def __init__(self, t, obj):
@@ -22,6 +24,17 @@ def hit(xs):
     for i in xs:
         if i.t >=0:
             return i
+
+class Computation:
+    def __init__(self, intersect, ray):
+        self.t = intersect.t
+        self.object = intersect.object
+        self.point = ray.position(self.t)
+        self.eyev = -ray.direction
+        self.normalv = self.object.normal_at(self.point)
+
+def prepare_computations(intersect, ray):
+    return Computation(intersect, ray)
 
 class IntersectionsTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
@@ -84,6 +97,20 @@ class IntersectionsTestCase(unittest.TestCase):
         i = hit(xs)
 
         self.assertEqual(i, i4)
+
+    def test_precomputing_the_state_of_an_intersection(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = spheres.sphere()
+        i = intersection(4, s)
+
+        comps = prepare_computations(i, r)
+
+        self.assertEqual(comps.t, i.t)
+        self.assertEqual(comps.object, i.object)
+        self.assertEqual(comps.point, point(0, 0, -1))
+        self.assertEqual(comps.eyev, vector(0, 0, -1))
+        self.assertEqual(comps.normalv, vector(0, 0, -1))
+        
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
