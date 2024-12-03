@@ -1,17 +1,25 @@
 # to run tests: python -m unittest -v world
 
 import unittest
-from tuple import point
+from tuple import point, vector
 from color import color
 from lights import point_light
 from spheres import sphere
 from materials import material
 from transformations import scaling
+from rays import ray
 
 class World:
     def __init__(self):
         self.objects = []
         self.light = None
+
+    def intersect(self, ray):
+        xs = []
+        for obj in self.objects:
+            xs += obj.intersect(ray)
+        xs.sort(key=lambda x: x.t)
+        return xs
 
 def world():
     return World()
@@ -61,6 +69,18 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(w.light, light)
         self.assertTrue(s1 in w.objects)
         self.assertTrue(s2 in w.objects)
+
+    def test_intersect_a_world_with_a_ray(self):
+        w = default_world()
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+
+        xs = w.intersect(r)
+
+        self.assertEqual(len(xs), 4)
+        self.assertEqual(xs[0].t, 4)
+        self.assertEqual(xs[1].t, 4.5)
+        self.assertEqual(xs[2].t, 5.5)
+        self.assertEqual(xs[3].t, 6)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
