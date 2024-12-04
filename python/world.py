@@ -8,7 +8,7 @@ from spheres import sphere
 from materials import material, lighting
 from transformations import scaling
 from rays import ray
-from intersections import intersection, prepare_computations
+from intersections import intersection, prepare_computations, hit
 
 class World:
     def __init__(self):
@@ -29,8 +29,14 @@ class World:
                         comps.eyev,
                         comps.normalv)
 
-    def color_at(self, ray):
-        return color(0, 0, 0)
+    def color_at(self, r):
+        xs = self.intersect(r)
+        h = hit(xs)
+        if h:
+            comps = prepare_computations(h, r)
+            return self.shade_hit(comps)
+        else:
+            return color(0, 0, 0)
 
 def world():
     return World()
@@ -123,6 +129,27 @@ class WorldTestCase(unittest.TestCase):
         c = w.color_at(r)
 
         self.assertEqual(c, color(0, 0, 0))
+
+    def test_the_color_when_a_ray_hits(self):
+        w = default_world()
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+
+        c = w.color_at(r)
+
+        self.assertEqual(c, color(0.38066, 0.47583, 0.2855))
+
+    def test_the_color_with_intersection_behind_ray(self):
+        w = default_world()
+        outer = w.objects[0]
+        outer.material.ambient = 1
+        inner = w.objects[1]
+        inner.material.ambient = 1
+        r = ray(point(0, 0, 0.75), vector(0, 0, -1))
+
+        c = w.color_at(r)
+
+        self.assertEqual(c, inner.material.color)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
