@@ -3,7 +3,7 @@
 import unittest
 import math
 from tuple import point, vector
-from matrix import identity
+from matrix import identity, matrix
 
 def translation(dx, dy, dz):
     result = identity()
@@ -54,8 +54,17 @@ def shearing(xy, xz, yx, yz, zx, zy):
     return result
 
 def view_transform(frm, to, up):     # 'from' is a keyword in Python...
-    return identity()
+    forward = (to - frm).normalize()
+    left = forward.cross(up.normalize())
+    true_up = left.cross(forward)
 
+    orientation = matrix()
+    orientation.data[0] = [    left.x,     left.y,     left.z, 0]
+    orientation.data[1] = [ true_up.x,  true_up.y,  true_up.z, 0]
+    orientation.data[2] = [-forward.x, -forward.y, -forward.z, 0]
+    orientation.data[3] = [         0,          0,          0, 1]
+
+    return orientation * translation(-frm.x, -frm.y, -frm.z)
 
 class TransformationsTestCase(unittest.TestCase):
     def test_multiplying_by_a_translation_matrix(self):
@@ -206,6 +215,40 @@ class TransformationsTestCase(unittest.TestCase):
         t = view_transform(frm, to, up)
 
         self.assertEqual(t, identity())
+
+    def test_transformation_matrix_looking_positive_z(self):
+        frm = point(0, 0, 0)
+        to = point(0, 0, 1)
+        up = vector(0, 1, 0)
+
+        t = view_transform(frm, to, up)
+
+        self.assertEqual(t, scaling(-1, 1, -1))
+
+    def test_view_transformation_moves_the_world(self):
+        frm = point(0, 0, 8)
+        to = point(0, 0, 0)
+        up = vector(0, 1, 0)
+
+        t = view_transform(frm, to, up)
+
+        self.assertEqual(t, translation(0, 0, -8))
+
+    def test_arbitrary_view_transformation(self):
+        frm = point(1, 3, 2)
+        to = point(4, -2, 8)
+        up = vector(1, 1, 0)
+
+        t = view_transform(frm, to, up)
+
+        result = matrix()
+        result.data[0] = [-0.50709, 0.50709,  0.67612, -2.36643]
+        result.data[1] = [ 0.76772, 0.60609,  0.12122, -2.82843]
+        result.data[2] = [-0.35857, 0.59761, -0.71714,  0.00000]
+        result.data[3] = [ 0.00000, 0.00000,  0.00000,  1.00000]
+
+        self.assertEqual(t, result)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
