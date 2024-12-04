@@ -5,7 +5,7 @@ from tuple import point, vector
 from color import color
 from lights import point_light
 from spheres import sphere
-from materials import material
+from materials import material, lighting
 from transformations import scaling
 from rays import ray
 from intersections import intersection, prepare_computations
@@ -23,7 +23,11 @@ class World:
         return xs
 
     def shade_hit(self, comps):
-        return color(0.38066, 0.47583, 0.2855)
+        return lighting(comps.object.material,
+                        self.light,
+                        comps.point,
+                        comps.eyev,
+                        comps.normalv)
 
 def world():
     return World()
@@ -96,6 +100,18 @@ class WorldTestCase(unittest.TestCase):
         c = w.shade_hit(comps)
 
         self.assertEqual(c, color(0.38066, 0.47583, 0.2855))
+
+    def test_shading_an_intersection(self):
+        w = default_world()
+        w.light = point_light(point(0, 0.25, 0), color(1, 1, 1))
+        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        shape = w.objects[1]
+        i = intersection(0.5, shape)
+        comps = prepare_computations(i, r)
+
+        c = w.shade_hit(comps)
+
+        self.assertEqual(c, color(0.90498, 0.90498, 0.90498))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
