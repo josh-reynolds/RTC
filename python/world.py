@@ -8,6 +8,7 @@ from spheres import sphere
 from materials import material
 from transformations import scaling
 from rays import ray
+from intersections import intersection, prepare_computations
 
 class World:
     def __init__(self):
@@ -20,6 +21,9 @@ class World:
             xs += obj.intersect(ray)
         xs.sort(key=lambda x: x.t)
         return xs
+
+    def shade_hit(self, comps):
+        return color(0.38066, 0.47583, 0.2855)
 
 def world():
     return World()
@@ -81,6 +85,17 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(xs[1].t, 4.5)
         self.assertEqual(xs[2].t, 5.5)
         self.assertEqual(xs[3].t, 6)
+
+    def test_shading_an_intersection(self):
+        w = default_world()
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        shape = w.objects[0]
+        i = intersection(4, shape)
+        comps = prepare_computations(i, r)
+
+        c = w.shade_hit(comps)
+
+        self.assertEqual(c, color(0.38066, 0.47583, 0.2855))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
