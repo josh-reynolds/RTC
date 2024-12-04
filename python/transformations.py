@@ -53,6 +53,10 @@ def shearing(xy, xz, yx, yz, zx, zy):
     result.data[2][1] = zy
     return result
 
+def view_transform(frm, to, up):     # 'from' is a keyword in Python...
+    return identity()
+
+
 class TransformationsTestCase(unittest.TestCase):
     def test_multiplying_by_a_translation_matrix(self):
         transform = translation(5, -3, 2)
@@ -194,6 +198,14 @@ class TransformationsTestCase(unittest.TestCase):
 
         self.assertEqual(t * p, point(15, 0, 7))
 
+    def test_transformation_matrix_for_default_view(self):
+        frm = point(0, 0, 0)
+        to = point(0, 0, -1)
+        up = vector(0, 1, 0)
+
+        t = view_transform(frm, to, up)
+
+        self.assertEqual(t, identity())
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
