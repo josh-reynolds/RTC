@@ -29,6 +29,9 @@ class World:
                         comps.eyev,
                         comps.normalv)
 
+    def color_at(self, ray):
+        return color(0, 0, 0)
+
 def world():
     return World()
 
@@ -113,6 +116,13 @@ class WorldTestCase(unittest.TestCase):
 
         self.assertEqual(c, color(0.90498, 0.90498, 0.90498))
 
+    def test_the_color_when_a_ray_misses(self):
+        w = default_world()
+        r = ray(point(0, 0, -5), vector(0, 1, 0))
+
+        c = w.color_at(r)
+
+        self.assertEqual(c, color(0, 0, 0))
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
