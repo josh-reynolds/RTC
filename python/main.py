@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 from tuple import point, vector
 from color import color
 from spheres import sphere
@@ -6,6 +7,8 @@ from world import world
 from lights import point_light
 from camera import camera
 from transformations import view_transform, translation, rotation_y, rotation_x, scaling
+
+start_time = datetime.now()
 
 floor = sphere()
 floor.transform = scaling(10, 0.01, 10)
@@ -55,7 +58,7 @@ w.objects.append(left)
 
 w.light = point_light(point(-10, 10, -10), color(1, 1, 1))
 
-cam = camera(100, 50, math.pi/3)
+cam = camera(300, 150, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
@@ -68,3 +71,6 @@ for line in lines:
     f.write(line + "\n")
 f.close()
 
+end_time = datetime.now()
+print("Image size: {} x {}".format(cam.hsize, cam.vsize))
+print('Render time: {}'.format(end_time - start_time))
