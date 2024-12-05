@@ -6,6 +6,7 @@ from matrix import identity
 from utils import flequal
 from tuple import point, vector
 from rays import ray
+from transformations import rotation_y, translation
 
 class Camera:
     def __init__(self, hsize, vsize, field_of_view):
@@ -26,8 +27,18 @@ class Camera:
 
         self.pixel_size = (self.half_width * 2) / self.hsize
 
-    def ray_for_pixel(self, x, y):
-        return ray(point(0, 0, 0), vector(0, 0, -1))
+    def ray_for_pixel(self, px, py):
+        xoffset = (px + 0.5) * self.pixel_size
+        yoffset = (py + 0.5) * self.pixel_size
+
+        world_x = self.half_width - xoffset
+        world_y = self.half_height - yoffset
+
+        pixel = self.transform.inverse() * point(world_x, world_y, -1)
+        origin = self.transform.inverse() * point(0, 0, 0)
+        direction = (pixel - origin).normalize()
+
+        return ray(origin, direction)
 
 def camera(hsize, vsize, field_of_view):
     return Camera(hsize, vsize, field_of_view)
@@ -63,6 +74,22 @@ class CameraTestCase(unittest.TestCase):
         self.assertEqual(r.origin, point(0, 0, 0))
         self.assertEqual(r.direction, vector(0, 0, -1))
         
+    def test_constructing_ray_through_corner_of_canvas(self):
+        c = camera(201, 101, math.pi/2)
+
+        r = c.ray_for_pixel(0, 0)
+
+        self.assertEqual(r.origin, point(0, 0, 0))
+        self.assertEqual(r.direction, vector(0.66519, 0.33259, -0.66851))
+
+    def test_constructing_ray_when_camera_is_transformed(self):
+        c = camera(201, 101, math.pi/2)
+        c.transform = rotation_y(math.pi/4) * translation(0, -2, 5)
+
+        r = c.ray_for_pixel(100, 50)
+
+        self.assertEqual(r.origin, point(0, 2, -5))
+        self.assertEqual(r.direction, vector(math.sqrt(2)/2, 0, -math.sqrt(2)/2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
