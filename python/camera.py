@@ -4,6 +4,8 @@ import unittest
 import math
 from matrix import identity
 from utils import flequal
+from tuple import point, vector
+from rays import ray
 
 class Camera:
     def __init__(self, hsize, vsize, field_of_view):
@@ -23,6 +25,9 @@ class Camera:
             self.half_height = half_view
 
         self.pixel_size = (self.half_width * 2) / self.hsize
+
+    def ray_for_pixel(self, x, y):
+        return ray(point(0, 0, 0), vector(0, 0, -1))
 
 def camera(hsize, vsize, field_of_view):
     return Camera(hsize, vsize, field_of_view)
@@ -49,6 +54,15 @@ class CameraTestCase(unittest.TestCase):
         c = camera(125, 200, math.pi/2)
 
         self.assertTrue(flequal(c.pixel_size, 0.01))
+
+    def test_constructing_ray_through_center_of_canvas(self):
+        c = camera(201, 101, math.pi/2)
+
+        r = c.ray_for_pixel(100, 50)
+
+        self.assertEqual(r.origin, point(0, 0, 0))
+        self.assertEqual(r.direction, vector(0, 0, -1))
+        
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
