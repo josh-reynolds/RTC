@@ -40,7 +40,15 @@ class World:
             return color(0, 0, 0)
 
     def is_shadowed(self, pt):
-        return False
+        shadow_vector = self.light.position - pt
+        distance = shadow_vector.magnitude()
+        r = ray(pt, shadow_vector.normalize())
+        xs = self.intersect(r)
+        h = hit(xs)
+        if h and h.t < distance:
+            return True
+        else:
+            return False
 
 def world():
     return World()
@@ -157,6 +165,24 @@ class WorldTestCase(unittest.TestCase):
     def test_no_shadow_when_nothing_collinear_with_point_and_light(self):
         w = default_world()
         p = point(0, 10, 0)
+
+        self.assertFalse(w.is_shadowed(p))
+
+    def test_shadow_when_object_between_point_and_light(self):
+        w = default_world()
+        p = point(10, -10, 10)
+
+        self.assertTrue(w.is_shadowed(p))
+
+    def test_no_shadow_when_object_behind_light(self):
+        w = default_world()
+        p = point(-20, 20, -20)
+
+        self.assertFalse(w.is_shadowed(p))
+
+    def test_no_shadow_when_object_behind_point(self):
+        w = default_world()
+        p = point(-2, 2, -2)
 
         self.assertFalse(w.is_shadowed(p))
 
