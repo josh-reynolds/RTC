@@ -7,12 +7,12 @@ import unittest
 #import intersections
 from matrix import identity
 from transformations import translation
-#from materials import material
+from materials import material
 
 class Shape:
     def __init__(self):
         self.transform = identity()
-        #self.material = material()
+        self.material = material()
 
     #def __eq__(self, other):
         #if isinstance(other, self.__class__):
@@ -66,6 +66,20 @@ class ShapeTestCase(unittest.TestCase):
         s.set_transform(translation(2, 3, 4))
 
         self.assertEqual(s.transform, translation(2, 3, 4))
+
+    def test_a_shapes_default_material(self):
+        s = test_shape()
+
+        self.assertEqual(s.material, material())
+
+    def test_assigning_a_material(self):
+        s = test_shape()
+        m = material()
+        m.ambient = 1
+
+        s.material = m
+
+        self.assertEqual(s.material, m)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
