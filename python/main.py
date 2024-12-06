@@ -58,7 +58,7 @@ w.objects.append(left)
 
 w.light = point_light(point(-10, 10, -10), color(1, 1, 1))
 
-cam = camera(100, 50, math.pi/3)
+cam = camera(600, 300, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
@@ -74,16 +74,3 @@ f.close()
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
 print('Render time: {}'.format(end_time - start_time))
-
-
-# Rust -------------------------------
-# Project start: March 13, 2024
-# End of Chapter 7: July 1, 2024 (110 days)
-# Resolution: 600 x 300
-# Render time: 2m 45s
-
-# Python -----------------------------
-# Project start: November 11, 2024
-# End of Chapter 7: December 4, 2024 (23 days)
-# Resolution: 600 x 300
-# Render time: 10m 54s
