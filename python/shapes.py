@@ -6,7 +6,7 @@ import unittest
 #from tuple import point, vector
 #import intersections
 from matrix import identity
-#from transformations import translation, scaling, rotation_z
+from transformations import translation
 #from materials import material
 
 class Shape:
@@ -40,10 +40,10 @@ class Shape:
             #result.append(intersections.intersection(t2, self))
 #
         #return result
-    #
-    #def set_transform(self, t):
-        #self.transform = t
-#
+    
+    def set_transform(self, t):
+        self.transform = t
+
     #def normal_at(self, pt):
         #object_point = self.transform.inverse() * pt
         #object_normal = object_point - point(0, 0, 0)
@@ -59,6 +59,13 @@ class ShapeTestCase(unittest.TestCase):
         s = test_shape()
 
         self.assertEqual(s.transform, identity())
+
+    def test_assigning_a_transformation(self):
+        s = test_shape()
+
+        s.set_transform(translation(2, 3, 4))
+
+        self.assertEqual(s.transform, translation(2, 3, 4))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
