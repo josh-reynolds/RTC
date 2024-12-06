@@ -11,6 +11,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('materials'))
     suite.addTests(loader.loadTestsFromName('matrix'))
     suite.addTests(loader.loadTestsFromName('rays'))
+    suite.addTests(loader.loadTestsFromName('shapes'))
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('transformations'))
     suite.addTests(loader.loadTestsFromName('tuple'))
