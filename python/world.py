@@ -39,6 +39,9 @@ class World:
         else:
             return color(0, 0, 0)
 
+    def is_shadowed(self, pt):
+        return False
+
 def world():
     return World()
 
@@ -150,6 +153,12 @@ class WorldTestCase(unittest.TestCase):
         c = w.color_at(r)
 
         self.assertEqual(c, inner.material.color)
+
+    def test_no_shadow_when_nothing_collinear_with_point_and_light(self):
+        w = default_world()
+        p = point(0, 10, 0)
+
+        self.assertFalse(w.is_shadowed(p))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
