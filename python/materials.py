@@ -28,7 +28,7 @@ class Material:
 def material():
     return Material()
 
-def lighting(material, light, position, eyev, normalv):
+def lighting(material, light, position, eyev, normalv, in_shadow):
     effective_color = material.color * light.intensity
     lightv = (light.position - position).normalize()
     ambient = effective_color * material.ambient
@@ -48,7 +48,10 @@ def lighting(material, light, position, eyev, normalv):
             factor = reflect_dot_eye ** material.shininess
             specular = light.intensity * material.specular * factor
 
-    return ambient + diffuse + specular
+    if in_shadow:
+        return ambient
+    else:
+        return ambient + diffuse + specular
 
 
 class MaterialTestCase(unittest.TestCase):
@@ -68,7 +71,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv)
+        result = lighting(m, light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.9, 1.9, 1.9))
 
@@ -79,7 +82,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, math.sqrt(2)/2, -math.sqrt(2)/2)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv)
+        result = lighting(m, light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.0, 1.0, 1.0))
 
@@ -90,7 +93,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv)
+        result = lighting(m, light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(0.7364, 0.7364, 0.7364))
 
@@ -101,7 +104,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, -math.sqrt(2)/2, -math.sqrt(2)/2)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv)
+        result = lighting(m, light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.6364, 1.6364, 1.6364))
 
@@ -112,7 +115,19 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv)
+        result = lighting(m, light, position, eyev, normalv, False)
+
+        self.assertEqual(result, color(0.1, 0.1, 0.1))
+
+    def test_lighting_with_surface_in_shadow(self):
+        m = material()
+        light = point_light(point(0, 0, -10), color(1, 1, 1))
+        position = point(0, 0, 0)
+        eyev = vector(0, 0, -1)
+        normalv = vector(0, 0, -1)
+        in_shadow = True
+
+        result = lighting(m, light, position, eyev, normalv, in_shadow)
 
         self.assertEqual(result, color(0.1, 0.1, 0.1))
 

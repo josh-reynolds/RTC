@@ -27,7 +27,8 @@ class World:
                         self.light,
                         comps.point,
                         comps.eyev,
-                        comps.normalv)
+                        comps.normalv,
+                        False)
 
     def color_at(self, r):
         xs = self.intersect(r)
