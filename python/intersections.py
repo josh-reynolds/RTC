@@ -4,6 +4,8 @@ import unittest
 import spheres
 from rays import ray
 from tuple import point, vector
+from transformations import translation
+from utils import EPSILON
 
 class Intersection:
     def __init__(self, t, obj):
@@ -38,6 +40,8 @@ class Computation:
             self.normalv = -self.normalv
         else:
             self.inside = False
+
+        self.over_point = self.point + self.normalv * EPSILON
 
 def prepare_computations(intersect, ray):
     return Computation(intersect, ray)
@@ -137,6 +141,17 @@ class IntersectionsTestCase(unittest.TestCase):
         self.assertEqual(comps.eyev, vector(0, 0, -1))
         self.assertTrue(comps.inside)
         self.assertEqual(comps.normalv, vector(0, 0, -1))
+
+    def test_hit_should_offset_point(self):
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s = spheres.sphere()
+        s.transform = translation(0, 0, 1)
+        i = intersection(5, s)
+
+        comps = prepare_computations(i, r)
+
+        self.assertTrue(comps.over_point.z < -EPSILON/2)
+        self.assertTrue(comps.point.z > comps.over_point.z)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
