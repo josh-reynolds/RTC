@@ -6,7 +6,7 @@ from color import color
 from lights import point_light
 from spheres import sphere
 from materials import material, lighting
-from transformations import scaling
+from transformations import scaling, translation
 from rays import ray
 from intersections import intersection, prepare_computations, hit
 
@@ -185,6 +185,25 @@ class WorldTestCase(unittest.TestCase):
         p = point(-2, 2, -2)
 
         self.assertFalse(w.is_shadowed(p))
+
+    def test_shade_hit_given_intersection_in_shadow(self):
+        w = world()
+        w.light = point_light(point(0, 0, -10), color(1, 1, 1))
+
+        s1 = sphere()
+        w.objects.append(s1)
+
+        s2 = sphere()
+        s2.transform = translation(0, 0, 10)
+        w.objects.append(s2)
+
+        r = ray(point(0, 0, 5), vector(0, 0, 1))
+        i = intersection(9, s2)      # book typo? it has (4, s2)
+        comps = prepare_computations(i, r)
+
+        c = w.shade_hit(comps)
+
+        self.assertEqual(c, color(0.1, 0.1, 0.1))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
