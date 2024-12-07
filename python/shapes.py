@@ -1,42 +1,37 @@
 # to run tests: python -m unittest -v shapes
 
 import unittest
-#import math
+import math
 from rays import ray
 from tuple import point, vector
-#import intersections
 from matrix import identity
-from transformations import translation, scaling
+from transformations import translation, scaling, rotation_z
 from materials import material
 
-class Shape:
+class Shape:                                          # 'abstract' base class
     def __init__(self):
         self.transform = identity()
         self.material = material()
 
-    #def __eq__(self, other):
-        #if isinstance(other, self.__class__):
-            #return (self.transform == other.transform and
-                    #self.material == other.material)
-        #else:
-            #return False
-#
     def intersect(self, r):
         local_ray = r.transform(self.transform.inverse())
         return self.local_intersect(local_ray)
 
-    def local_intersect(self, r):
-        self.saved_ray = r
+    def local_intersect(self, r):                     # override in child classes
+        self.saved_ray = r                            # this implementation for test purposes only
     
     def set_transform(self, t):
         self.transform = t
 
-    #def normal_at(self, pt):
-        #object_point = self.transform.inverse() * pt
-        #object_normal = object_point - point(0, 0, 0)
-        #world_normal = self.transform.inverse().transpose() * object_normal
-        #world_normal.w = 0
-        #return world_normal.normalize()
+    def normal_at(self, pt):
+        local_point = self.transform.inverse() * pt
+        local_normal = self.local_normal_at(local_point)
+        world_normal = self.transform.inverse().transpose() * local_normal
+        world_normal.w = 0
+        return world_normal.normalize()
+
+    def local_normal_at(self, pt):                    # override in child classes
+        return vector(pt.x, pt.y, pt.z)               # this implementation for test purposes only
 
 def test_shape():
     return Shape()
@@ -87,6 +82,23 @@ class ShapeTestCase(unittest.TestCase):
 
         self.assertEqual(s.saved_ray.origin, point(-5, 0, -5))
         self.assertEqual(s.saved_ray.direction, vector(0, 0, 1))
+
+    def test_computing_normal_on_translated_shape(self):
+        s = test_shape()
+        s.set_transform(translation(0, 1, 0))
+
+        n = s.normal_at(point(0, 1.70711, -0.70711))
+
+        self.assertEqual(n, vector(0, 0.70711, -0.70711))
+
+    def test_computing_normal_on_transformed_shape(self):
+        s = test_shape()
+        m = scaling(1, 0.5, 1) * rotation_z(math.pi/5)
+        s.set_transform(m)
+
+        n = s.normal_at(point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+
+        self.assertEqual(n, vector(0, 0.97014, -0.24254))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
