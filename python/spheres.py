@@ -8,8 +8,9 @@ import intersections
 from matrix import identity
 from transformations import translation, scaling, rotation_z
 from materials import material
+from shapes import Shape
 
-class Sphere:
+class Sphere(Shape):
     def __init__(self):
         self.transform = identity()
         self.material = material()
@@ -209,6 +210,11 @@ class SpheresTestCase(unittest.TestCase):
         s.material = m
 
         self.assertEqual(s.material, m)
+
+    def test_a_sphere_is_a_shape(self):
+        s = sphere()
+
+        self.assertTrue(isinstance(s, Shape))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
