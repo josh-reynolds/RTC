@@ -12,8 +12,9 @@ from shapes import Shape
 
 class Sphere(Shape):
     def __init__(self):
-        self.transform = identity()
-        self.material = material()
+        Shape.__init__(self)
+        #self.transform = identity()
+        #self.material = material()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
