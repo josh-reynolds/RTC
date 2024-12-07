@@ -21,13 +21,13 @@ class Sphere(Shape):
         else:
             return False
 
-    def intersect(self, r):
+    def local_intersect(self, r):
         result = []
-        r2 = r.transform(self.transform.inverse())
-        sphere_to_ray = r2.origin - point(0, 0, 0)
+        #r2 = r.transform(self.transform.inverse())
+        sphere_to_ray = r.origin - point(0, 0, 0)
 
-        a = r2.direction.dot(r2.direction)
-        b = 2 * r2.direction.dot(sphere_to_ray)
+        a = r.direction.dot(r.direction)
+        b = 2 * r.direction.dot(sphere_to_ray)
         c = sphere_to_ray.dot(sphere_to_ray) - 1
 
         discriminant = (b ** 2) - (4 * a * c)
