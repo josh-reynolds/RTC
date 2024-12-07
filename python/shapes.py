@@ -13,6 +13,13 @@ class Shape:                                          # 'abstract' base class
         self.transform = identity()
         self.material = material()
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.transform == other.transform and
+                    self.material == other.material)
+        else:
+            return False
+
     def intersect(self, r):
         local_ray = r.transform(self.transform.inverse())
         return self.local_intersect(local_ray)

@@ -14,13 +14,6 @@ class Sphere(Shape):
     def __init__(self):
         Shape.__init__(self)
 
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return (self.transform == other.transform and
-                    self.material == other.material)
-        else:
-            return False
-
     def local_intersect(self, r):
         result = []
         sphere_to_ray = r.origin - point(0, 0, 0)
