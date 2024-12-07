@@ -54,6 +54,26 @@ class PlaneTestCase(unittest.TestCase):
 
         self.assertEqual(len(xs), 0)
 
+    def test_ray_intersecting_from_above(self):
+        p = plane()
+        r = ray(point(0, 1, 0), vector(0, -1, 0))
+
+        xs = p.intersect(r)
+
+        self.assertEqual(len(xs), 1)
+        self.assertEqual(xs[0].t, 1)
+        self.assertEqual(xs[0].object, p)
+
+    def test_ray_intersecting_from_below(self):
+        p = plane()
+        r = ray(point(0, -1, 0), vector(0, 1, 0))
+
+        xs = p.intersect(r)
+
+        self.assertEqual(len(xs), 1)
+        self.assertEqual(xs[0].t, 1)
+        self.assertEqual(xs[0].object, p)
+
     def test_plane_returns_unique_instances(self):
         p1 = plane()
         p2 = plane()
