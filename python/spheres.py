@@ -23,7 +23,6 @@ class Sphere(Shape):
 
     def local_intersect(self, r):
         result = []
-        #r2 = r.transform(self.transform.inverse())
         sphere_to_ray = r.origin - point(0, 0, 0)
 
         a = r.direction.dot(r.direction)
@@ -41,12 +40,8 @@ class Sphere(Shape):
 
         return result
 
-    def normal_at(self, pt):
-        object_point = self.transform.inverse() * pt
-        object_normal = object_point - point(0, 0, 0)
-        world_normal = self.transform.inverse().transpose() * object_normal
-        world_normal.w = 0
-        return world_normal.normalize()
+    def local_normal_at(self, pt):
+        return pt - point(0, 0, 0)
 
 def sphere():
     return Sphere()
