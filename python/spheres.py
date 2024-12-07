@@ -13,8 +13,6 @@ from shapes import Shape
 class Sphere(Shape):
     def __init__(self):
         Shape.__init__(self)
-        #self.transform = identity()
-        #self.material = material()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -42,9 +40,6 @@ class Sphere(Shape):
             result.append(intersections.intersection(t2, self))
 
         return result
-    
-    def set_transform(self, t):
-        self.transform = t
 
     def normal_at(self, pt):
         object_point = self.transform.inverse() * pt
