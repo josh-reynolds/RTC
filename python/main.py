@@ -7,27 +7,14 @@ from world import world
 from lights import point_light
 from camera import camera
 from transformations import view_transform, translation, rotation_y, rotation_x, scaling
+from planes import plane
 
 start_time = datetime.now()
 
-floor = sphere()
-floor.transform = scaling(10, 0.01, 10)
-floor.material.color = color(1, 0.9, 0.9)
-floor.material.specular = 0
-
-left_wall = sphere()
-left_wall.transform = (translation(0, 0, 5) * 
-                       rotation_y(-math.pi/4) * 
-                       rotation_x(math.pi/2) * 
-                       scaling(10, 0.01, 10))
-left_wall.material = floor.material
-
-right_wall = sphere()
-right_wall.transform = (translation(0, 0, 5) * 
-                        rotation_y(math.pi/4) * 
-                        rotation_x(math.pi/2) * 
-                        scaling(10, 0.01, 10))
-right_wall.material = floor.material
+floor = plane()
+#floor.transform = scaling(10, 0.01, 10)
+#floor.material.color = color(1, 0.9, 0.9)
+#floor.material.specular = 0
 
 middle = sphere()
 middle.transform = translation(-0.5, 1, 0.5)
@@ -50,22 +37,20 @@ left.material.specular = 0.3
 w = world()
 
 w.objects.append(floor)
-w.objects.append(left_wall)
-w.objects.append(right_wall)
 w.objects.append(middle)
 w.objects.append(right)
 w.objects.append(left)
 
 w.light = point_light(point(-10, 10, -10), color(1, 1, 1))
 
-cam = camera(600, 300, math.pi/3)
+cam = camera(200, 100, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
 
-f = open("shadow_world_render.ppm", "w")
+f = open("plane_render.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
