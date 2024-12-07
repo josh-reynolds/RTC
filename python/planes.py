@@ -1,13 +1,9 @@
 # to run tests: python -m unittest -v planes
 
 import unittest
-#import math
 from rays import ray
 from tuple import point, vector
-#import intersections
-#from matrix import identity
-#from transformations import translation, scaling, rotation_z
-#from materials import material
+import intersections
 from shapes import Shape
 from utils import EPSILON
 
@@ -18,8 +14,11 @@ class Plane(Shape):
     def local_intersect(self, r):
         result = []
 
-        if abs(r.direction.y) < EPSILON:
-            return result
+        if abs(r.direction.y) >= EPSILON:
+            t = -r.origin.y / r.direction.y
+            result.append(intersections.intersection(t, self))
+
+        return result
 
     def local_normal_at(self, pt):
         return vector(0, 1, 0)
