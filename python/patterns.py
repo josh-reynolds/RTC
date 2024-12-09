@@ -11,6 +11,7 @@ class Stripe():
     def __init__(self, color1, color2):
         self.a = color1
         self.b = color2
+        self.transform = None
 
     def stripe_at(self, pt):
         if math.floor(pt.x) % 2 == 0:
@@ -20,6 +21,9 @@ class Stripe():
 
     def stripe_at_object(self, obj, pt):
         return WHITE
+
+    def set_transform(self, transform):
+        self.transform = transform
 
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
@@ -66,6 +70,15 @@ class PatternsTestCase(unittest.TestCase):
         obj = spheres.sphere()
         obj.set_transform(scaling(2, 2, 2))
         pattern = stripe_pattern(WHITE, BLACK)
+
+        c = pattern.stripe_at_object(obj, point(1.5, 0, 0))
+
+        self.assertEqual(c, WHITE)
+
+    def test_stripes_with_a_pattern_transformation(self):
+        obj = spheres.sphere()
+        pattern = stripe_pattern(WHITE, BLACK)
+        pattern.set_transform(scaling(2, 2, 2))
 
         c = pattern.stripe_at_object(obj, point(1.5, 0, 0))
 
