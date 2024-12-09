@@ -4,6 +4,8 @@ import unittest
 import math
 from color import color
 from tuple import point
+import spheres
+from transformations import scaling
 
 class Stripe():
     def __init__(self, color1, color2):
@@ -15,6 +17,9 @@ class Stripe():
             return self.a
         else:
             return self.b
+
+    def stripe_at_object(self, obj, pt):
+        return WHITE
 
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
@@ -56,6 +61,15 @@ class PatternsTestCase(unittest.TestCase):
         self.assertEqual(pattern.stripe_at(point(-0.1, 0, 0)), BLACK)
         self.assertEqual(pattern.stripe_at(point(  -1, 0, 0)), BLACK)
         self.assertEqual(pattern.stripe_at(point(-1.1, 0, 0)), WHITE)
+
+    def test_stripes_with_an_object_transformation(self):
+        obj = spheres.sphere()
+        obj.set_transform(scaling(2, 2, 2))
+        pattern = stripe_pattern(WHITE, BLACK)
+
+        c = pattern.stripe_at_object(obj, point(1.5, 0, 0))
+
+        self.assertEqual(c, WHITE)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
