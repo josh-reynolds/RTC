@@ -8,19 +8,19 @@ from lights import point_light
 from camera import camera
 from transformations import view_transform, translation, rotation_y, rotation_x, scaling
 from planes import plane
+from patterns import stripe_pattern, WHITE, BLACK
 
 start_time = datetime.now()
 
 floor = plane()
-#floor.transform = scaling(10, 0.01, 10)
-#floor.material.color = color(1, 0.9, 0.9)
-#floor.material.specular = 0
+floor.material.pattern = stripe_pattern(WHITE, BLACK)
 
 middle = sphere()
 middle.transform = translation(-0.5, 1, 0.5)
 middle.material.color = color(0.1, 1, 0.5)
 middle.material.diffuse = 0.7
 middle.material.specular = 0.3
+middle.material.pattern = stripe_pattern(WHITE, BLACK)
 
 right = sphere()
 right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
@@ -50,7 +50,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("plane_render.ppm", "w")
+f = open("pattern_render.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
