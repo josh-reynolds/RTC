@@ -1,6 +1,7 @@
 # to run tests: python -m unittest -v patterns
 
 import unittest
+import math
 from color import color
 from tuple import point
 
@@ -10,7 +11,10 @@ class Stripe():
         self.b = color2
 
     def stripe_at(self, pt):
-        return WHITE
+        if math.floor(pt.x) % 2 == 0:
+            return self.a
+        else:
+            return self.b
 
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
@@ -35,6 +39,23 @@ class PatternsTestCase(unittest.TestCase):
         self.assertEqual(pattern.stripe_at(point(0, 0, 0)), WHITE)
         self.assertEqual(pattern.stripe_at(point(0, 1, 0)), WHITE)
         self.assertEqual(pattern.stripe_at(point(0, 2, 0)), WHITE)
+
+    def test_a_stripe_pattern_is_constant_in_z(self):
+        pattern = stripe_pattern(WHITE, BLACK)
+
+        self.assertEqual(pattern.stripe_at(point(0, 0, 0)), WHITE)
+        self.assertEqual(pattern.stripe_at(point(0, 0, 1)), WHITE)
+        self.assertEqual(pattern.stripe_at(point(0, 0, 2)), WHITE)
+
+    def test_a_stripe_pattern_alternates_in_x(self):
+        pattern = stripe_pattern(WHITE, BLACK)
+
+        self.assertEqual(pattern.stripe_at(point(   0, 0, 0)), WHITE)
+        self.assertEqual(pattern.stripe_at(point( 0.9, 0, 0)), WHITE)
+        self.assertEqual(pattern.stripe_at(point(   1, 0, 0)), BLACK)
+        self.assertEqual(pattern.stripe_at(point(-0.1, 0, 0)), BLACK)
+        self.assertEqual(pattern.stripe_at(point(  -1, 0, 0)), BLACK)
+        self.assertEqual(pattern.stripe_at(point(-1.1, 0, 0)), WHITE)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
