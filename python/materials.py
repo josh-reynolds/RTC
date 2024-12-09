@@ -6,6 +6,7 @@ from color import color
 from utils import flequal
 from lights import point_light
 from tuple import point, vector
+from patterns import stripe_pattern
 
 class Material:
     def __init__(self):
@@ -14,6 +15,7 @@ class Material:
         self.diffuse = 0.9        # range 0 - 1
         self.specular = 0.9       # range 0 - 1
         self.shininess = 200.0    # range 10 - 200
+        self.pattern = None
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -29,7 +31,12 @@ def material():
     return Material()
 
 def lighting(material, light, position, eyev, normalv, in_shadow):
-    effective_color = material.color * light.intensity
+    if material.pattern:
+        col = material.pattern.stripe_at(position)
+    else:
+        col = material.color
+
+    effective_color = col * light.intensity
     lightv = (light.position - position).normalize()
     ambient = effective_color * material.ambient
 
@@ -131,6 +138,22 @@ class MaterialTestCase(unittest.TestCase):
 
         self.assertEqual(result, color(0.1, 0.1, 0.1))
 
+    def test_lighting_with_a_pattern_applied(self):
+        m = material()
+        m.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0))
+        m.ambient = 1
+        m.diffuse = 0
+        m.specular = 0
+
+        light = point_light(point(0, 0, -10), color(1, 1, 1))
+        eyev = vector(0, 0, -1)
+        normalv = vector(0, 0, -1)
+
+        c1 = lighting(m, light, point(0.9, 0, 0), eyev, normalv, False)
+        c2 = lighting(m, light, point(1.1, 0, 0), eyev, normalv, False)
+
+        self.assertEqual(c1, color(1, 1, 1))
+        self.assertEqual(c2, color(0, 0, 0))
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
