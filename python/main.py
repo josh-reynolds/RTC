@@ -50,7 +50,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("pattern_render.ppm", "w")
+f = open("./output/pattern_render.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
