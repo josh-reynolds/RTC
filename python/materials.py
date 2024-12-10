@@ -6,7 +6,8 @@ from color import color
 from utils import flequal
 from lights import point_light
 from tuple import point, vector
-from patterns import stripe_pattern
+import patterns
+import spheres
 
 class Material:
     def __init__(self):
@@ -30,9 +31,9 @@ class Material:
 def material():
     return Material()
 
-def lighting(material, light, position, eyev, normalv, in_shadow):
+def lighting(material, obj, light, position, eyev, normalv, in_shadow):
     if material.pattern:
-        col = material.pattern.stripe_at(position)
+        col = material.pattern.stripe_at_object(obj, position)
     else:
         col = material.color
 
@@ -78,7 +79,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv, False)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.9, 1.9, 1.9))
 
@@ -89,7 +90,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, math.sqrt(2)/2, -math.sqrt(2)/2)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv, False)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.0, 1.0, 1.0))
 
@@ -100,7 +101,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv, False)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(0.7364, 0.7364, 0.7364))
 
@@ -111,7 +112,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, -math.sqrt(2)/2, -math.sqrt(2)/2)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv, False)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(1.6364, 1.6364, 1.6364))
 
@@ -122,7 +123,7 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
         
-        result = lighting(m, light, position, eyev, normalv, False)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
         self.assertEqual(result, color(0.1, 0.1, 0.1))
 
@@ -134,13 +135,13 @@ class MaterialTestCase(unittest.TestCase):
         normalv = vector(0, 0, -1)
         in_shadow = True
 
-        result = lighting(m, light, position, eyev, normalv, in_shadow)
+        result = lighting(m, spheres.sphere(), light, position, eyev, normalv, in_shadow)
 
         self.assertEqual(result, color(0.1, 0.1, 0.1))
 
     def test_lighting_with_a_pattern_applied(self):
         m = material()
-        m.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0))
+        m.pattern = patterns.stripe_pattern(color(1, 1, 1), color(0, 0, 0))
         m.ambient = 1
         m.diffuse = 0
         m.specular = 0
@@ -149,8 +150,8 @@ class MaterialTestCase(unittest.TestCase):
         eyev = vector(0, 0, -1)
         normalv = vector(0, 0, -1)
 
-        c1 = lighting(m, light, point(0.9, 0, 0), eyev, normalv, False)
-        c2 = lighting(m, light, point(1.1, 0, 0), eyev, normalv, False)
+        c1 = lighting(m, spheres.sphere(), light, point(0.9, 0, 0), eyev, normalv, False)
+        c2 = lighting(m, spheres.sphere(), light, point(1.1, 0, 0), eyev, normalv, False)
 
         self.assertEqual(c1, color(1, 1, 1))
         self.assertEqual(c2, color(0, 0, 0))
