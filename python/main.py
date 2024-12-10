@@ -6,17 +6,17 @@ from spheres import sphere
 from world import world
 from lights import point_light
 from camera import camera
-from transformations import view_transform, translation, rotation_y, rotation_x, scaling
+from transformations import view_transform, translation, rotation_z, scaling
 from planes import plane
 from patterns import stripe_pattern, WHITE, BLACK
 
 start_time = datetime.now()
 
 floor = plane()
-floor.material.pattern = stripe_pattern(WHITE, BLACK)
+floor.material.pattern = stripe_pattern(color(0.7, 0, 0.7), color(0, 0.7, 0))
 
 middle = sphere()
-middle.transform = translation(-0.5, 1, 0.5)
+middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
 middle.material.color = color(0.1, 1, 0.5)
 middle.material.diffuse = 0.7
 middle.material.specular = 0.3
@@ -43,14 +43,14 @@ w.objects.append(left)
 
 w.light = point_light(point(-10, 10, -10), color(1, 1, 1))
 
-cam = camera(200, 100, math.pi/3)
+cam = camera(300, 150, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
 
-f = open("./output/pattern_render.ppm", "w")
+f = open("./output/pattern_render_2.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
