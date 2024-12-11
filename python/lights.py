@@ -19,7 +19,7 @@ class Light:
 def point_light(position, intensity):
     return Light(position, intensity)
 
-class LightsTestCase(unittest.TestCase):
+class LightTestCase(unittest.TestCase):
     def test_a_point_light_has_a_position_and_intensity(self):
         position = point(0, 0, 0)
         intensity = color(1, 1, 1)

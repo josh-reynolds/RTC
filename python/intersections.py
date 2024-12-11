@@ -46,7 +46,7 @@ class Computation:
 def prepare_computations(intersect, ray):
     return Computation(intersect, ray)
 
-class IntersectionsTestCase(unittest.TestCase):
+class IntersectionTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
         s = spheres.sphere()
 

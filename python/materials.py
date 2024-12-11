@@ -6,7 +6,6 @@ from colors import color
 from utils import flequal
 from lights import point_light
 from tuples import point, vector
-#import patterns
 import spheres
 from stripes import stripe_pattern
 

@@ -20,7 +20,7 @@ class Ray:
 def ray(origin, direction):
     return Ray(origin, direction)
 
-class RaysTestCase(unittest.TestCase):
+class RayTestCase(unittest.TestCase):
     def test_creating_and_querying_a_ray(self):
         origin = point(1, 2, 3)
         direction = vector(4, 5, 6)

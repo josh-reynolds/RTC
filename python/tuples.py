@@ -1,4 +1,4 @@
-# to run tests: python -m unittest -v tuple
+# to run tests: python -m unittest -v tuples
 
 import unittest
 import math

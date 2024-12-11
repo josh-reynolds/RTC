@@ -39,7 +39,7 @@ class Sphere(Shape):
 def sphere():
     return Sphere()
 
-class SpheresTestCase(unittest.TestCase):
+class SphereTestCase(unittest.TestCase):
     def test_a_ray_intersects_a_sphere_at_two_points(self):
         r = ray(point(0, 0, -5), vector(0, 0, 1))
         s = sphere()

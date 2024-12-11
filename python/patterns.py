@@ -27,7 +27,7 @@ class Pattern():                                        # 'abstract' base class
 def test_pattern():
     return Pattern()
 
-class PatternsTestCase(unittest.TestCase):
+class PatternTestCase(unittest.TestCase):
     def test_default_pattern_transformation(self):
         pattern = test_pattern()
 
