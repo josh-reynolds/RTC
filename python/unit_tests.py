@@ -19,7 +19,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('transformations'))
     suite.addTests(loader.loadTestsFromName('tuples'))
     suite.addTests(loader.loadTestsFromName('utils'))
-    suite.addTests(loader.loadTestsFromName('world'))
+    suite.addTests(loader.loadTestsFromName('worlds'))
     return suite
 
 # ---------------------------------------------------------------------------

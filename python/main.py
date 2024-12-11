@@ -3,7 +3,7 @@ from datetime import datetime
 from tuples import point, vector
 from colors import color, WHITE, BLACK
 from spheres import sphere
-from world import world
+from worlds import world
 from lights import point_light
 from cameras import camera
 from transformations import view_transform, translation, rotation_z, scaling

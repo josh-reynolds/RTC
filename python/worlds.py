@@ -1,4 +1,4 @@
-# to run tests: python -m unittest -v world
+# to run tests: python -m unittest -v worlds
 
 import unittest
 from tuples import point, vector

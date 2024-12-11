@@ -1,4 +1,4 @@
-# to run tests: python -m unittest -v camera
+# to run tests: python -m unittest -v cameras
 
 import unittest
 import math
@@ -7,7 +7,7 @@ from utils import flequal
 from tuples import point, vector
 from rays import ray
 from transformations import rotation_y, translation, view_transform
-from world import default_world
+from worlds import default_world
 from canvases import canvas
 from colors import color
 
