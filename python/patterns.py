@@ -12,6 +12,9 @@ class Pattern():
     def __init__(self):
         self.transform = identity()
 
+    def set_transform(self, transform):
+        self.transform = transform
+
 class Stripe():
     def __init__(self, color1, color2):
         self.a = color1
@@ -109,6 +112,12 @@ class PatternsTestCase(unittest.TestCase):
         pattern = test_pattern()
 
         self.assertEqual(pattern.transform, identity())
+
+    def test_assigning_a_pattern_transformation(self):
+        pattern = test_pattern()
+        pattern.set_transform(translation(1, 2, 3))
+
+        self.assertEqual(pattern.transform, translation(1, 2, 3))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
