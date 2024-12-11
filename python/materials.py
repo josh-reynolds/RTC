@@ -5,7 +5,7 @@ import math
 from color import color
 from utils import flequal
 from lights import point_light
-from tuple import point, vector
+from tuples import point, vector
 import patterns
 import spheres
 

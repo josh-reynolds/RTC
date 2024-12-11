@@ -2,7 +2,7 @@
 
 import unittest
 from rays import ray
-from tuple import point, vector
+from tuples import point, vector
 import intersections
 from shapes import Shape
 from utils import EPSILON

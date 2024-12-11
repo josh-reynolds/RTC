@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v rays
 
 import unittest
-from tuple import point, vector
+from tuples import point, vector
 from transformations import translation, scaling
 
 class Ray:

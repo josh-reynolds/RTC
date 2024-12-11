@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v matrix
 
 import unittest
-from tuple import Tuple
+from tuples import Tuple
 from utils import flequal
 
 class Matrix():

@@ -3,7 +3,7 @@
 import unittest
 import spheres
 from rays import ray
-from tuple import point, vector
+from tuples import point, vector
 from transformations import translation
 from utils import EPSILON
 

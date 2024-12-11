@@ -16,7 +16,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('shapes'))
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('transformations'))
-    suite.addTests(loader.loadTestsFromName('tuple'))
+    suite.addTests(loader.loadTestsFromName('tuples'))
     suite.addTests(loader.loadTestsFromName('utils'))
     suite.addTests(loader.loadTestsFromName('world'))
     return suite

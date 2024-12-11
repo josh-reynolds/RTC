@@ -1,6 +1,6 @@
 import math
 from datetime import datetime
-from tuple import point, vector
+from tuples import point, vector
 from color import color, WHITE, BLACK
 from spheres import sphere
 from world import world

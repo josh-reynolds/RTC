@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v world
 
 import unittest
-from tuple import point, vector
+from tuples import point, vector
 from color import color
 from lights import point_light
 from spheres import sphere

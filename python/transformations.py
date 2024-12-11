@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from tuple import point, vector
+from tuples import point, vector
 from matrix import identity, matrix
 
 def translation(dx, dy, dz):

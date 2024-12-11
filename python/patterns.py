@@ -3,7 +3,7 @@
 import unittest
 import math
 from color import color, WHITE, BLACK
-from tuple import point
+from tuples import point
 import spheres
 from transformations import scaling, translation
 from matrix import identity

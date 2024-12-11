@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v lights
 
 import unittest
-from tuple import point
+from tuples import point
 from color import color
 
 class Light:

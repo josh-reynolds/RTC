@@ -4,7 +4,7 @@ import unittest
 import math
 from matrix import identity
 from utils import flequal
-from tuple import point, vector
+from tuples import point, vector
 from rays import ray
 from transformations import rotation_y, translation, view_transform
 from world import default_world
