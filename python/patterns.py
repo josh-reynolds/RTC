@@ -8,6 +8,10 @@ import spheres
 from transformations import scaling, translation
 from matrix import identity
 
+class Pattern():
+    def __init__(self):
+        self.transform = identity()
+
 class Stripe():
     def __init__(self, color1, color2):
         self.a = color1
@@ -31,6 +35,9 @@ class Stripe():
 
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
+
+def test_pattern():
+    return Pattern()
 
 BLACK = color(0, 0, 0)
 WHITE = color(1, 1, 1)
@@ -97,6 +104,11 @@ class PatternsTestCase(unittest.TestCase):
         c = pattern.stripe_at_object(obj, point(2.5, 0, 0))
 
         self.assertEqual(c, WHITE)
+
+    def test_default_pattern_transformation(self):
+        pattern = test_pattern()
+
+        self.assertEqual(pattern.transform, identity())
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
