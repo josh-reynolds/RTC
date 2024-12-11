@@ -81,6 +81,10 @@ class ColorTestCase(unittest.TestCase):
         self.assertEqual(c1 * c2, color(0.9, 0.2, 0.04))
         self.assertEqual(c2 * c1, color(0.9, 0.2, 0.04))
 
+    def test_color_constants(self):
+        self.assertEqual(BLACK, color(0, 0, 0))
+        self.assertEqual(WHITE, color(1, 1, 1))
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
