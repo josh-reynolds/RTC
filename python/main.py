@@ -5,7 +5,7 @@ from color import color, WHITE, BLACK
 from spheres import sphere
 from world import world
 from lights import point_light
-from camera import camera
+from cameras import camera
 from transformations import view_transform, translation, rotation_z, scaling
 from planes import plane
 from patterns import stripe_pattern

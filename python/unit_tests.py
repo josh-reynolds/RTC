@@ -3,7 +3,7 @@ import unittest
 def suite():
     suite = unittest.TestSuite()
     loader = unittest.TestLoader()
-    suite.addTests(loader.loadTestsFromName('camera'))
+    suite.addTests(loader.loadTestsFromName('cameras'))
     suite.addTests(loader.loadTestsFromName('canvas'))
     suite.addTests(loader.loadTestsFromName('color'))
     suite.addTests(loader.loadTestsFromName('intersections'))
