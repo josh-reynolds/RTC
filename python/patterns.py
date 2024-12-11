@@ -24,32 +24,23 @@ class Pattern():                                        # 'abstract' base class
     def pattern_at(self, pt):                           # override in child classes
         return color(pt.x, pt.y, pt.z)                  # this implementation for test purposes only
 
-class Stripe():
+def test_pattern():
+    return Pattern()
+
+class Stripe(Pattern):
     def __init__(self, color1, color2):
         self.a = color1
         self.b = color2
-        self.transform = identity()
+        Pattern.__init__(self)
 
-    def stripe_at(self, pt):
+    def pattern_at(self, pt):
         if math.floor(pt.x) % 2 == 0:
             return self.a
         else:
             return self.b
 
-    def stripe_at_object(self, obj, world_pt):
-        obj_pt = obj.transform.inverse() *  world_pt
-        pat_pt = self.transform.inverse() * obj_pt
-
-        return self.stripe_at(pat_pt)
-
-    def set_transform(self, transform):
-        self.transform = transform
-
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
-
-def test_pattern():
-    return Pattern()
 
 BLACK = color(0, 0, 0)
 WHITE = color(1, 1, 1)
@@ -68,33 +59,33 @@ class PatternsTestCase(unittest.TestCase):
     def test_a_stripe_pattern_is_constant_in_y(self):
         pattern = stripe_pattern(WHITE, BLACK)
 
-        self.assertEqual(pattern.stripe_at(point(0, 0, 0)), WHITE)
-        self.assertEqual(pattern.stripe_at(point(0, 1, 0)), WHITE)
-        self.assertEqual(pattern.stripe_at(point(0, 2, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 1, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 2, 0)), WHITE)
 
     def test_a_stripe_pattern_is_constant_in_z(self):
         pattern = stripe_pattern(WHITE, BLACK)
 
-        self.assertEqual(pattern.stripe_at(point(0, 0, 0)), WHITE)
-        self.assertEqual(pattern.stripe_at(point(0, 0, 1)), WHITE)
-        self.assertEqual(pattern.stripe_at(point(0, 0, 2)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 0, 1)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0, 0, 2)), WHITE)
 
     def test_a_stripe_pattern_alternates_in_x(self):
         pattern = stripe_pattern(WHITE, BLACK)
 
-        self.assertEqual(pattern.stripe_at(point(   0, 0, 0)), WHITE)
-        self.assertEqual(pattern.stripe_at(point( 0.9, 0, 0)), WHITE)
-        self.assertEqual(pattern.stripe_at(point(   1, 0, 0)), BLACK)
-        self.assertEqual(pattern.stripe_at(point(-0.1, 0, 0)), BLACK)
-        self.assertEqual(pattern.stripe_at(point(  -1, 0, 0)), BLACK)
-        self.assertEqual(pattern.stripe_at(point(-1.1, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(   0, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point( 0.9, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(   1, 0, 0)), BLACK)
+        self.assertEqual(pattern.pattern_at(point(-0.1, 0, 0)), BLACK)
+        self.assertEqual(pattern.pattern_at(point(  -1, 0, 0)), BLACK)
+        self.assertEqual(pattern.pattern_at(point(-1.1, 0, 0)), WHITE)
 
     def test_stripes_with_an_object_transformation(self):
         obj = spheres.sphere()
         obj.set_transform(scaling(2, 2, 2))
         pattern = stripe_pattern(WHITE, BLACK)
 
-        c = pattern.stripe_at_object(obj, point(1.5, 0, 0))
+        c = pattern.pattern_at_shape(obj, point(1.5, 0, 0))
 
         self.assertEqual(c, WHITE)
 
@@ -103,7 +94,7 @@ class PatternsTestCase(unittest.TestCase):
         pattern = stripe_pattern(WHITE, BLACK)
         pattern.set_transform(scaling(2, 2, 2))
 
-        c = pattern.stripe_at_object(obj, point(1.5, 0, 0))
+        c = pattern.pattern_at_shape(obj, point(1.5, 0, 0))
 
         self.assertEqual(c, WHITE)
 
@@ -113,7 +104,7 @@ class PatternsTestCase(unittest.TestCase):
         pattern = stripe_pattern(WHITE, BLACK)
         pattern.set_transform(translation(0.5, 0, 0))
 
-        c = pattern.stripe_at_object(obj, point(2.5, 0, 0))
+        c = pattern.pattern_at_shape(obj, point(2.5, 0, 0))
 
         self.assertEqual(c, WHITE)
 

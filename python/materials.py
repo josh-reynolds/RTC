@@ -33,7 +33,7 @@ def material():
 
 def lighting(material, obj, light, position, eyev, normalv, in_shadow):
     if material.pattern:
-        col = material.pattern.stripe_at_object(obj, position)
+        col = material.pattern.pattern_at_shape(obj, position)
     else:
         col = material.color
 
