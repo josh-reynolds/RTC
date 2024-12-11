@@ -8,7 +8,7 @@ from tuples import point, vector
 from rays import ray
 from transformations import rotation_y, translation, view_transform
 from world import default_world
-from canvas import canvas
+from canvases import canvas
 from colors import color
 
 class Camera:

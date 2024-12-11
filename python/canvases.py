@@ -1,4 +1,4 @@
-# to run tests: python -m unittest -v color
+# to run tests: python -m unittest -v canvases
 
 import unittest
 from colors import color
