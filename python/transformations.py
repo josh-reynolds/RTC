@@ -3,7 +3,7 @@
 import unittest
 import math
 from tuples import point, vector
-from matrix import identity, matrix
+from matrices import identity, matrix
 
 def translation(dx, dy, dz):
     result = identity()

@@ -5,7 +5,7 @@ import math
 from rays import ray
 from tuples import point, vector
 import intersections
-from matrix import identity
+from matrices import identity
 from transformations import translation, scaling, rotation_z
 from materials import material
 from shapes import Shape

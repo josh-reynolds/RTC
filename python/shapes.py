@@ -4,7 +4,7 @@ import unittest
 import math
 from rays import ray
 from tuples import point, vector
-from matrix import identity
+from matrices import identity
 from transformations import translation, scaling, rotation_z
 from materials import material
 

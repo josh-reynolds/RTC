@@ -6,7 +6,7 @@ from colors import color, WHITE, BLACK
 from tuples import point
 import spheres
 from transformations import scaling, translation
-from matrix import identity
+from matrices import identity
 
 class Pattern():                                        # 'abstract' base class
     def __init__(self):

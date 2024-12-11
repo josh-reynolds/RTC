@@ -1,4 +1,4 @@
-# to run tests: python -m unittest -v matrix
+# to run tests: python -m unittest -v matrices
 
 import unittest
 from tuples import Tuple

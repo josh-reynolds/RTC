@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from matrix import identity
+from matrices import identity
 from utils import flequal
 from tuples import point, vector
 from rays import ray
