@@ -50,6 +50,9 @@ class Color():
 def color(r, g, b):
     return Color(r, g, b)
 
+BLACK = color(0, 0, 0)
+WHITE = color(1, 1, 1)
+
 class ColorTestCase(unittest.TestCase):
     def test_colors_are_r_g_b_tuples(self):
         c = color(-0.5, 0.4, 1.7)

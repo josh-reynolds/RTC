@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from color import color
+from color import color, WHITE, BLACK
 from tuple import point
 import spheres
 from transformations import scaling, translation
@@ -41,9 +41,6 @@ class Stripe(Pattern):
 
 def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
-
-BLACK = color(0, 0, 0)
-WHITE = color(1, 1, 1)
 
 class PatternsTestCase(unittest.TestCase):
     def test_color_constants(self):

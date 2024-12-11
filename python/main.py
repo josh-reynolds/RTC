@@ -1,14 +1,14 @@
 import math
 from datetime import datetime
 from tuple import point, vector
-from color import color
+from color import color, WHITE, BLACK
 from spheres import sphere
 from world import world
 from lights import point_light
 from camera import camera
 from transformations import view_transform, translation, rotation_z, scaling
 from planes import plane
-from patterns import stripe_pattern, WHITE, BLACK
+from patterns import stripe_pattern
 
 start_time = datetime.now()
 
