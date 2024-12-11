@@ -8,7 +8,7 @@ import spheres
 from transformations import scaling, translation
 from matrix import identity
 
-class Pattern():
+class Pattern():                                        # 'abstract' base class
     def __init__(self):
         self.transform = identity()
 
@@ -16,7 +16,13 @@ class Pattern():
         self.transform = transform
 
     def pattern_at_shape(self, obj, world_pt):
-        return color(1, 1.5, 2)
+        obj_pt = obj.transform.inverse() * world_pt
+        pat_pt = self.transform.inverse() * obj_pt
+
+        return self.pattern_at(pat_pt)
+
+    def pattern_at(self, pt):                           # override in child classes
+        return color(pt.x, pt.y, pt.z)                  # this implementation for test purposes only
 
 class Stripe():
     def __init__(self, color1, color2):
@@ -130,6 +136,25 @@ class PatternsTestCase(unittest.TestCase):
         c = pattern.pattern_at_shape(obj, point(2, 3, 4))
 
         self.assertEqual(c, color(1, 1.5, 2))
+
+    def test_pattern_with_a_pattern_transformation(self):
+        obj = spheres.sphere()
+        pattern = test_pattern()
+        pattern.set_transform(scaling(2, 2, 2))
+
+        c = pattern.pattern_at_shape(obj, point(2, 3, 4))
+
+        self.assertEqual(c, color(1, 1.5, 2))
+
+    def test_stripes_with_both_pattern_and_object_transformations(self):
+        obj = spheres.sphere()
+        obj.set_transform(scaling(2, 2, 2))
+        pattern = test_pattern()
+        pattern.set_transform(translation(0.5, 1, 1.5))
+
+        c = pattern.pattern_at_shape(obj, point(2.5, 3, 3.5))
+
+        self.assertEqual(c, color(0.75, 0.5, 0.25))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
