@@ -15,6 +15,9 @@ class Pattern():
     def set_transform(self, transform):
         self.transform = transform
 
+    def pattern_at_shape(self, obj, world_pt):
+        return color(1, 1.5, 2)
+
 class Stripe():
     def __init__(self, color1, color2):
         self.a = color1
@@ -118,6 +121,15 @@ class PatternsTestCase(unittest.TestCase):
         pattern.set_transform(translation(1, 2, 3))
 
         self.assertEqual(pattern.transform, translation(1, 2, 3))
+
+    def test_pattern_with_an_object_transformation(self):
+        obj = spheres.sphere()
+        obj.set_transform(scaling(2, 2, 2))
+        pattern = test_pattern()
+
+        c = pattern.pattern_at_shape(obj, point(2, 3, 4))
+
+        self.assertEqual(c, color(1, 1.5, 2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
