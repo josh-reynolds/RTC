@@ -1,7 +1,7 @@
 # to run tests: python -m unittest -v color
 
 import unittest
-from color import color
+from colors import color
 
 class Canvas():
     def __init__(self, width, height):

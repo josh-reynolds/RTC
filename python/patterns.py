@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from color import color, WHITE, BLACK
+from colors import color, WHITE, BLACK
 from tuples import point
 import spheres
 from transformations import scaling, translation

@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from color import color
+from colors import color
 from utils import flequal
 from lights import point_light
 from tuples import point, vector

@@ -2,7 +2,7 @@
 
 import unittest
 from tuples import point, vector
-from color import color
+from colors import color
 from lights import point_light
 from spheres import sphere
 from materials import material, lighting

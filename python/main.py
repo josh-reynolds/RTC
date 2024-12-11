@@ -1,7 +1,7 @@
 import math
 from datetime import datetime
 from tuples import point, vector
-from color import color, WHITE, BLACK
+from colors import color, WHITE, BLACK
 from spheres import sphere
 from world import world
 from lights import point_light

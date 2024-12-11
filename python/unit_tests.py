@@ -5,7 +5,7 @@ def suite():
     loader = unittest.TestLoader()
     suite.addTests(loader.loadTestsFromName('cameras'))
     suite.addTests(loader.loadTestsFromName('canvas'))
-    suite.addTests(loader.loadTestsFromName('color'))
+    suite.addTests(loader.loadTestsFromName('colors'))
     suite.addTests(loader.loadTestsFromName('intersections'))
     suite.addTests(loader.loadTestsFromName('lights'))
     suite.addTests(loader.loadTestsFromName('materials'))

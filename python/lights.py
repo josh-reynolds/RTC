@@ -2,7 +2,7 @@
 
 import unittest
 from tuples import point
-from color import color
+from colors import color
 
 class Light:
     def __init__(self, position, intensity):
