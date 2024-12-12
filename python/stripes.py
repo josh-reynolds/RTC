@@ -7,13 +7,13 @@ from tuples import point
 import spheres
 from transformations import scaling, translation
 from matrices import identity
-from patterns import Pattern
+import patterns
 
-class Stripe(Pattern):
+class Stripe(patterns.Pattern):
     def __init__(self, color1, color2):
         self.a = color1
         self.b = color2
-        Pattern.__init__(self)
+        patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
         if math.floor(pt.x) % 2 == 0:

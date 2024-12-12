@@ -7,7 +7,7 @@ from utils import flequal
 from lights import point_light
 from tuples import point, vector
 import spheres
-from stripes import stripe_pattern
+import stripes
 
 class Material:
     def __init__(self):
@@ -141,7 +141,7 @@ class MaterialTestCase(unittest.TestCase):
 
     def test_lighting_with_a_pattern_applied(self):
         m = material()
-        m.pattern = stripe_pattern(color(1, 1, 1), color(0, 0, 0))
+        m.pattern = stripes.stripe_pattern(color(1, 1, 1), color(0, 0, 0))
         m.ambient = 1
         m.diffuse = 0
         m.specular = 0

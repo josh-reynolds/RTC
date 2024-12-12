@@ -7,7 +7,7 @@ from tuples import point, vector
 import intersections
 from matrices import identity
 from transformations import translation, scaling, rotation_z
-from materials import material
+import materials
 from shapes import Shape
 
 class Sphere(Shape):
@@ -182,13 +182,13 @@ class SphereTestCase(unittest.TestCase):
 
     def test_a_sphere_has_a_default_material(self):
         s = sphere()
-        m = material()
+        m = materials.material()
 
         self.assertEqual(s.material, m)
 
     def test_a_sphere_may_be_assigned_a_material(self):
         s = sphere()
-        m = material()
+        m = materials.material()
         m.ambient = 1
 
         s.material = m
