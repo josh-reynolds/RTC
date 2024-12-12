@@ -15,9 +15,9 @@ class Checker(patterns.Pattern):
 
     def pattern_at(self, pt):
         if (math.floor(pt.x) + math.floor(pt.y) + math.floor(pt.z)) % 2 == 0:
-            return WHITE
+            return self.a
         else:
-            return BLACK
+            return self.b
 
 def checker_pattern(color1, color2):
     return Checker(color1, color2)
