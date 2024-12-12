@@ -1,9 +1,10 @@
 # to run tests: python -m unittest -v checkers
 
 import unittest
-from colors import WHITE, BLACK
+from colors import WHITE, BLACK, color
 import spheres
 import patterns
+from tuples import point
 
 class Checker(patterns.Pattern):
     def __init__(self, color1, color2):
@@ -12,7 +13,10 @@ class Checker(patterns.Pattern):
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
-        pass
+        if pt.x <= 1:
+            return WHITE
+        else:
+            return BLACK
 
 def checker_pattern(color1, color2):
     return Checker(color1, color2)
@@ -23,6 +27,13 @@ class CheckerTestCase(unittest.TestCase):
 
         self.assertEqual(pattern.a, WHITE)
         self.assertEqual(pattern.b, BLACK)
+
+    def test_checkers_should_repeat_in_x(self):
+        pattern = checker_pattern(WHITE, BLACK)
+
+        self.assertEqual(pattern.pattern_at(point(0, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(0.99, 0, 0)), WHITE)
+        self.assertEqual(pattern.pattern_at(point(1.01, 0, 0)), BLACK)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
