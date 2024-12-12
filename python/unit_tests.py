@@ -14,6 +14,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('patterns'))
     suite.addTests(loader.loadTestsFromName('planes'))
     suite.addTests(loader.loadTestsFromName('rays'))
+    suite.addTests(loader.loadTestsFromName('rings'))
     suite.addTests(loader.loadTestsFromName('shapes'))
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('stripes'))
