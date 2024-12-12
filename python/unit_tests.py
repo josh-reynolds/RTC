@@ -5,6 +5,7 @@ def suite():
     loader = unittest.TestLoader()
     suite.addTests(loader.loadTestsFromName('cameras'))
     suite.addTests(loader.loadTestsFromName('canvases'))
+    suite.addTests(loader.loadTestsFromName('checkers'))
     suite.addTests(loader.loadTestsFromName('colors'))
     suite.addTests(loader.loadTestsFromName('gradients'))
     suite.addTests(loader.loadTestsFromName('intersections'))
