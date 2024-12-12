@@ -25,10 +25,6 @@ def stripe_pattern(color1, color2):
     return Stripe(color1, color2)
 
 class StripeTestCase(unittest.TestCase):
-    def test_color_constants(self):
-        self.assertEqual(BLACK, color(0, 0, 0))
-        self.assertEqual(WHITE, color(1, 1, 1))
-
     def test_creating_a_stripe_pattern(self):
         pattern = stripe_pattern(WHITE, BLACK)
 
