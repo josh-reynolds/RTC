@@ -17,6 +17,7 @@ start_time = datetime.now()
 
 floor = plane()
 floor.material.pattern = checker_pattern(color(1, 0, 0), color(0, 0, 1))
+floor.material.pattern.set_transform(translation(0, 0.1, 0))
 
 middle = sphere()
 middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
@@ -55,7 +56,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("./output/pattern_render_3.ppm", "w")
+f = open("./output/pattern_render_4.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
