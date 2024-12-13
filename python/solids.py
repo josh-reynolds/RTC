@@ -10,15 +10,21 @@ from matrices import identity
 import patterns
 
 class Solid(patterns.Pattern):
-    def __init__(self, color1):
-        self.a = color1
+    def __init__(self, color):
+        self.a = color
         patterns.Pattern.__init__(self)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.a == other.a)
+        else:
+            return False
 
     def pattern_at(self, pt):
         return self.a
 
-def solid_pattern(color1):
-    return Solid(color1)
+def solid_pattern(color):
+    return Solid(color)
 
 class GradientTestCase(unittest.TestCase):
     def test_creating_a_solid_pattern(self):
@@ -36,6 +42,7 @@ class GradientTestCase(unittest.TestCase):
         self.assertEqual(pattern1.pattern_at(point(0.25, 0, 0.25)), WHITE)
         self.assertEqual(pattern1.pattern_at(point(0.5, 0.5, 0)), WHITE)
         self.assertEqual(pattern1.pattern_at(point(1, 1, 1)), WHITE)
+
         self.assertEqual(pattern2.pattern_at(point(0, 0, 0)), BLACK)
         self.assertEqual(pattern2.pattern_at(point(0.25, 0, 0.25)), BLACK)
         self.assertEqual(pattern2.pattern_at(point(0.5, 0.5, 0)), BLACK)

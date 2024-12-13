@@ -13,6 +13,13 @@ class Checker(patterns.Pattern):
         self.b = color2
         patterns.Pattern.__init__(self)
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (self.a == other.a and
+                    self.b == other.b)
+        else:
+            return False
+
     def pattern_at(self, pt):
         if (math.floor(pt.x) + math.floor(pt.y) + math.floor(pt.z)) % 2 == 0:
             return self.a
