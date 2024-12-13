@@ -15,13 +15,6 @@ class Solid(patterns.Pattern):
         self.b = None
         patterns.Pattern.__init__(self)
 
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return (self.a == other.a and
-                    self.b == other.b)
-        else:
-            return False
-
     def pattern_at(self, pt):
         return self.a
 

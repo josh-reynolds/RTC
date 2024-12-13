@@ -17,13 +17,6 @@ class Ring(patterns.Pattern):
         self.b = pattern2
         patterns.Pattern.__init__(self)
 
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return (self.a == other.a and
-                    self.b == other.b)
-        else:
-            return False
-
     def pattern_at(self, pt):
         if math.floor(math.sqrt(pt.x ** 2 + pt.z ** 2)) % 2 == 0:
             return self.a.pattern_at(pt)

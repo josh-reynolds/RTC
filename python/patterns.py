@@ -12,6 +12,13 @@ class Pattern():                                        # 'abstract' base class
     def __init__(self):
         self.transform = identity()
 
+    def __eq__(self, other):                            # fields are defined in concrete classes
+        if isinstance(other, self.__class__):           # should we move up?
+            return (self.a == other.a and               # initially didn't want to limit this abstract
+                    self.b == other.b)                  # class to exactly two colors
+        else:
+            return False
+
     def set_transform(self, transform):
         self.transform = transform
 
