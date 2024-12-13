@@ -49,14 +49,14 @@ w.objects.append(right)
 w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), color(1, 1, 1))
 
-cam = camera(200, 100, math.pi/3)
+cam = camera(600, 300, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
 
-f = open("./output/pattern_render_4.ppm", "w")
+f = open("./output/pattern_render_5.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
