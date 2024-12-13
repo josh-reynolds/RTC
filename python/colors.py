@@ -51,7 +51,16 @@ def color(r, g, b):
     return Color(r, g, b)
 
 BLACK = color(0, 0, 0)
+DARK_GREY = color(0.25, 0.25, 0.25)
+GREY = color(0.5, 0.5, 0.5)
+LIGHT_GREY = color(0.75, 0.75, 0.75)
 WHITE = color(1, 1, 1)
+RED = color(1, 0, 0)
+GREEN = color(0, 1, 0)
+BLUE = color(0, 0, 1)
+CYAN = color(0, 1, 1)
+MAGENTA = color(1, 0, 1)
+YELLOW = color(1, 1, 0)
 
 class ColorTestCase(unittest.TestCase):
     def test_colors_are_r_g_b_tuples(self):
@@ -83,7 +92,16 @@ class ColorTestCase(unittest.TestCase):
 
     def test_color_constants(self):
         self.assertEqual(BLACK, color(0, 0, 0))
+        self.assertEqual(DARK_GREY, color(0.25, 0.25, 0.25))
+        self.assertEqual(GREY, color(0.5, 0.5, 0.5))
+        self.assertEqual(LIGHT_GREY, color(0.75, 0.75, 0.75))
         self.assertEqual(WHITE, color(1, 1, 1))
+        self.assertEqual(RED, color(1, 0, 0))
+        self.assertEqual(GREEN, color(0, 1, 0))
+        self.assertEqual(BLUE, color(0, 0, 1))
+        self.assertEqual(CYAN, color(0, 1, 1))
+        self.assertEqual(MAGENTA, color(1, 0, 1))
+        self.assertEqual(YELLOW, color(1, 1, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

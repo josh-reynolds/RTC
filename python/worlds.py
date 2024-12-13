@@ -2,7 +2,7 @@
 
 import unittest
 from tuples import point, vector
-from colors import color
+from colors import color, BLACK, WHITE
 from lights import point_light
 from spheres import sphere
 from materials import material, lighting
@@ -40,7 +40,7 @@ class World:
             comps = prepare_computations(h, r)
             return self.shade_hit(comps)
         else:
-            return color(0, 0, 0)
+            return BLACK
 
     def is_shadowed(self, pt):
         shadow_vector = self.light.position - pt
@@ -59,7 +59,7 @@ def world():
 def default_world():
     w = World()
 
-    light = point_light(point(-10, 10, -10), color(1, 1, 1))
+    light = point_light(point(-10, 10, -10), WHITE)
     w.light = light
 
     s1 = sphere()
@@ -84,7 +84,7 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(w.light, None)
 
     def test_the_default_world(self):
-        light = point_light(point(-10, 10, -10), color(1, 1, 1))
+        light = point_light(point(-10, 10, -10), WHITE)
 
         s1 = sphere()
         m1 = material()
@@ -127,7 +127,7 @@ class WorldTestCase(unittest.TestCase):
 
     def test_shading_an_intersection(self):
         w = default_world()
-        w.light = point_light(point(0, 0.25, 0), color(1, 1, 1))
+        w.light = point_light(point(0, 0.25, 0), WHITE)
         r = ray(point(0, 0, 0), vector(0, 0, 1))
         shape = w.objects[1]
         i = intersection(0.5, shape)
@@ -143,7 +143,7 @@ class WorldTestCase(unittest.TestCase):
 
         c = w.color_at(r)
 
-        self.assertEqual(c, color(0, 0, 0))
+        self.assertEqual(c, BLACK)
 
     def test_the_color_when_a_ray_hits(self):
         w = default_world()
@@ -191,7 +191,7 @@ class WorldTestCase(unittest.TestCase):
 
     def test_shade_hit_given_intersection_in_shadow(self):
         w = world()
-        w.light = point_light(point(0, 0, -10), color(1, 1, 1))
+        w.light = point_light(point(0, 0, -10), WHITE)
 
         s1 = sphere()
         w.objects.append(s1)

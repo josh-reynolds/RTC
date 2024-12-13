@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from colors import WHITE, BLACK, color
+from colors import color, WHITE, BLACK, LIGHT_GREY, GREY, DARK_GREY
 from tuples import point
 import spheres
 from transformations import scaling, translation
@@ -34,9 +34,9 @@ class GradientTestCase(unittest.TestCase):
         pattern = gradient_pattern(WHITE, BLACK)
 
         self.assertEqual(pattern.pattern_at(point(0, 0, 0)), WHITE)
-        self.assertEqual(pattern.pattern_at(point(0.25, 0, 0)), color(0.75, 0.75, 0.75))
-        self.assertEqual(pattern.pattern_at(point(0.5, 0, 0)), color(0.5, 0.5, 0.5))
-        self.assertEqual(pattern.pattern_at(point(0.75, 0, 0)), color(0.25, 0.25, 0.25))
+        self.assertEqual(pattern.pattern_at(point(0.25, 0, 0)), LIGHT_GREY)
+        self.assertEqual(pattern.pattern_at(point(0.5, 0, 0)), GREY)
+        self.assertEqual(pattern.pattern_at(point(0.75, 0, 0)), DARK_GREY)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

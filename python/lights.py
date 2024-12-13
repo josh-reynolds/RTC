@@ -2,7 +2,7 @@
 
 import unittest
 from tuples import point
-from colors import color
+from colors import color, WHITE
 
 class Light:
     def __init__(self, position, intensity):
@@ -22,12 +22,12 @@ def point_light(position, intensity):
 class LightTestCase(unittest.TestCase):
     def test_a_point_light_has_a_position_and_intensity(self):
         position = point(0, 0, 0)
-        intensity = color(1, 1, 1)
+        intensity = WHITE
         
         light = point_light(position, intensity)
 
         self.assertEqual(light.position, point(0, 0, 0))
-        self.assertEqual(light.intensity, color(1, 1, 1))
+        self.assertEqual(light.intensity, WHITE)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

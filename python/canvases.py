@@ -1,13 +1,13 @@
 # to run tests: python -m unittest -v canvases
 
 import unittest
-from colors import color
+from colors import color, BLACK, RED
 
 class Canvas():
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pixels = [[color(0,0,0) for x in range(width)] for x in range(height)]
+        self.pixels = [[BLACK for x in range(width)] for x in range(height)]
 
     def write_pixel(self, x, y, color):
         self.pixels[y][x] = color
@@ -64,16 +64,15 @@ class CanvasTestCase(unittest.TestCase):
         self.assertEqual(c.width, 10)
         self.assertEqual(c.height, 20)
 
-        default = color(0,0,0)
+        default = BLACK
         for row in c.pixels:
             for pixel in row:
                 self.assertEqual(pixel, default)
 
     def test_writing_pixels_to_canvas(self):
         c = canvas(10, 20)
-        red = color(1, 0, 0)
-        c.write_pixel(2, 3, red)
-        self.assertEqual(c.pixel_at(2, 3), red)
+        c.write_pixel(2, 3, RED)
+        self.assertEqual(c.pixel_at(2, 3), RED)
 
     def test_constructing_ppm_header(self):
         c = canvas(5, 3)
