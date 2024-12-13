@@ -12,11 +12,13 @@ import patterns
 class Solid(patterns.Pattern):
     def __init__(self, color):
         self.a = color
+        self.b = None
         patterns.Pattern.__init__(self)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return (self.a == other.a)
+            return (self.a == other.a and
+                    self.b == other.b)
         else:
             return False
 
