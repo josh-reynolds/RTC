@@ -37,7 +37,8 @@ left = sphere()
 left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
 left.material.diffuse = 0.7
 left.material.specular = 0.3
-left.material.pattern = ring_pattern(YELLOW, BLUE)
+left.material.pattern = ring_pattern(checker_pattern(WHITE, BLACK), 
+                                     YELLOW)
 left.material.pattern.set_transform(scaling(0.1, 0.1, 0.1) * rotation_x(math.pi/2))
 
 w = world()
@@ -47,14 +48,14 @@ w.objects.append(right)
 w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(200, 100, math.pi/3)
+cam = camera(600, 300, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
 
-f = open("./output/pattern_render_7.ppm", "w")
+f = open("./output/pattern_render_8.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
