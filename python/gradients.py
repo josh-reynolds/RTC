@@ -17,9 +17,10 @@ class Gradient(patterns.Pattern):
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
-        distance = self.b.pattern_at(pt) - self.a.pattern_at(pt)
-        fraction = pt.x - math.floor(pt.x)
-        return self.a.pattern_at(pt) + distance * fraction
+        pat_pt = self.transform.inverse() * pt
+        distance = self.b.pattern_at(pat_pt) - self.a.pattern_at(pat_pt)
+        fraction = pat_pt.x - math.floor(pat_pt.x)
+        return self.a.pattern_at(pat_pt) + distance * fraction
 
 def gradient_pattern(first, second):
     if isinstance(first, Color):

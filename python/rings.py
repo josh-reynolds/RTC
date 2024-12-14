@@ -18,10 +18,11 @@ class Ring(patterns.Pattern):
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
-        if math.floor(math.sqrt(pt.x ** 2 + pt.z ** 2)) % 2 == 0:
-            return self.a.pattern_at(pt)
+        pat_pt = self.transform.inverse() * pt
+        if math.floor(math.sqrt(pat_pt.x ** 2 + pat_pt.z ** 2)) % 2 == 0:
+            return self.a.pattern_at(pat_pt)
         else:
-            return self.b.pattern_at(pt)
+            return self.b.pattern_at(pat_pt)
 
 def ring_pattern(first, second):
     if isinstance(first, Color):
