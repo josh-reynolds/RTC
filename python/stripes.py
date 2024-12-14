@@ -2,34 +2,39 @@
 
 import unittest
 import math
-from colors import color, WHITE, BLACK
+from colors import color, Color, WHITE, BLACK
 from tuples import point
 import spheres
 from transformations import scaling, translation
 from matrices import identity
 import patterns
+from solids import solid_pattern
 
 class Stripe(patterns.Pattern):
-    def __init__(self, color1, color2):
-        self.a = color1
-        self.b = color2
+    def __init__(self, pattern1, pattern2):
+        self.a = pattern1
+        self.b = pattern2
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
         if math.floor(pt.x) % 2 == 0:
-            return self.a
+            return self.a.pattern_at(pt)
         else:
-            return self.b
+            return self.b.pattern_at(pt)
 
-def stripe_pattern(color1, color2):
-    return Stripe(color1, color2)
+def stripe_pattern(first, second):
+    if isinstance(first, Color):
+        first = solid_pattern(first)
+    if isinstance(second, Color):
+        second = solid_pattern(second)
+    return Stripe(first, second)
 
 class StripeTestCase(unittest.TestCase):
     def test_creating_a_stripe_pattern(self):
         pattern = stripe_pattern(WHITE, BLACK)
 
-        self.assertEqual(pattern.a, WHITE)
-        self.assertEqual(pattern.b, BLACK)
+        self.assertEqual(pattern.a, solid_pattern(WHITE))
+        self.assertEqual(pattern.b, solid_pattern(BLACK))
 
     def test_a_stripe_pattern_is_constant_in_y(self):
         pattern = stripe_pattern(WHITE, BLACK)

@@ -2,33 +2,38 @@
 
 import unittest
 import math
-from colors import color, WHITE, BLACK, LIGHT_GREY, GREY, DARK_GREY
+from colors import color, Color, WHITE, BLACK, LIGHT_GREY, GREY, DARK_GREY
 from tuples import point
 import spheres
 from transformations import scaling, translation
 from matrices import identity
 import patterns
+from solids import solid_pattern
 
 class Gradient(patterns.Pattern):
-    def __init__(self, color1, color2):
-        self.a = color1
-        self.b = color2
+    def __init__(self, pattern1, pattern2):
+        self.a = pattern1
+        self.b = pattern2
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
-        distance = self.b - self.a
+        distance = self.b.pattern_at(pt) - self.a.pattern_at(pt)
         fraction = pt.x - math.floor(pt.x)
-        return self.a + distance * fraction
+        return self.a.pattern_at(pt) + distance * fraction
 
-def gradient_pattern(color1, color2):
-    return Gradient(color1, color2)
+def gradient_pattern(first, second):
+    if isinstance(first, Color):
+        first = solid_pattern(first)
+    if isinstance(second, Color):
+        second = solid_pattern(second)
+    return Gradient(first, second)
 
 class GradientTestCase(unittest.TestCase):
     def test_creating_a_gradient_pattern(self):
         pattern = gradient_pattern(WHITE, BLACK)
 
-        self.assertEqual(pattern.a, WHITE)
-        self.assertEqual(pattern.b, BLACK)
+        self.assertEqual(pattern.a, solid_pattern(WHITE))
+        self.assertEqual(pattern.b, solid_pattern(BLACK))
 
     def test_a_gradient_linearly_interpolates_between_colors(self):
         pattern = gradient_pattern(WHITE, BLACK)
