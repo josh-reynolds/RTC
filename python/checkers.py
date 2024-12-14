@@ -15,10 +15,11 @@ class Checker(patterns.Pattern):
         patterns.Pattern.__init__(self)
 
     def pattern_at(self, pt):
-        if (math.floor(pt.x) + math.floor(pt.y) + math.floor(pt.z)) % 2 == 0:
-            return self.a.pattern_at(pt)
+        pat_pt = self.transform.inverse() * pt
+        if (math.floor(pat_pt.x) + math.floor(pat_pt.y) + math.floor(pat_pt.z)) % 2 == 0:
+            return self.a.pattern_at(pat_pt)
         else:
-            return self.b.pattern_at(pt)
+            return self.b.pattern_at(pat_pt)
 
 def checker_pattern(first, second):
     if isinstance(first, Color):

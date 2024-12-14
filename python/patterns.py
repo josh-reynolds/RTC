@@ -24,12 +24,11 @@ class Pattern():                                        # 'abstract' base class
 
     def pattern_at_shape(self, obj, world_pt):
         obj_pt = obj.transform.inverse() * world_pt
-        pat_pt = self.transform.inverse() * obj_pt
-
-        return self.pattern_at(pat_pt)
+        return self.pattern_at(obj_pt)
 
     def pattern_at(self, pt):                           # override in child classes
-        return color(pt.x, pt.y, pt.z)                  # this implementation for test purposes only
+        pat_pt = self.transform.inverse() * pt
+        return color(pat_pt.x, pat_pt.y, pat_pt.z)      # this implementation for test purposes only
 
 def test_pattern():
     return Pattern()

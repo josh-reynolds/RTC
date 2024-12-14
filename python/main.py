@@ -52,7 +52,7 @@ w.objects.append(floor)
 #w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(200, 100, math.pi/3)
+cam = camera(300, 150, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
