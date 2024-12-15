@@ -1,11 +1,13 @@
 # to run tests: python -m unittest -v intersections
 
 import unittest
+import math
 import spheres
 from rays import ray
 from tuples import point, vector
 from transformations import translation
 from utils import EPSILON
+from planes import plane
 
 class Intersection:
     def __init__(self, t, obj):
@@ -42,6 +44,7 @@ class Computation:
             self.inside = False
 
         self.over_point = self.point + self.normalv * EPSILON
+        self.reflectv = ray.direction.reflect(self.normalv)
 
 def prepare_computations(intersect, ray):
     return Computation(intersect, ray)
@@ -152,6 +155,15 @@ class IntersectionTestCase(unittest.TestCase):
 
         self.assertTrue(comps.over_point.z < -EPSILON/2)
         self.assertTrue(comps.point.z > comps.over_point.z)
+
+    def test_precomputing_reflection_vector(self):
+        shape = plane()
+        r = ray(point(0, 1, -1), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
+        i = intersection(math.sqrt(2), shape)
+
+        comps = prepare_computations(i, r)
+
+        self.assertEqual(comps.reflectv, vector(0, math.sqrt(2)/2, math.sqrt(2)/2))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
