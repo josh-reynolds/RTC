@@ -24,7 +24,7 @@ class World:
         xs.sort(key=lambda x: x.t)
         return xs
 
-    def shade_hit(self, comps):
+    def shade_hit(self, comps, remaining=4):
         shadowed = self.is_shadowed(comps.over_point)
 
         surface =  lighting(comps.object.material,
@@ -35,16 +35,16 @@ class World:
                             comps.normalv,
                             shadowed)
 
-        reflected = self.reflected_color(comps)
+        reflected = self.reflected_color(comps, remaining)
 
         return surface + reflected
 
-    def color_at(self, r):
+    def color_at(self, r, remaining=4):
         xs = self.intersect(r)
         h = hit(xs)
         if h:
             comps = prepare_computations(h, r)
-            return self.shade_hit(comps)
+            return self.shade_hit(comps, remaining)
         else:
             return BLACK
 
@@ -59,12 +59,12 @@ class World:
         else:
             return False
 
-    def reflected_color(self, comps):
-        if comps.object.material.reflective == 0:
+    def reflected_color(self, comps, remaining=4):
+        if comps.object.material.reflective == 0 or remaining < 1:
             return BLACK
         
         reflect_ray = ray(comps.over_point, comps.reflectv)
-        col = self.color_at(reflect_ray)
+        col = self.color_at(reflect_ray, remaining-1)
 
         return col * comps.object.material.reflective
 
@@ -266,6 +266,41 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(c, color(0.87676, 0.92434, 0.82917))
         # text has (0.87677, 0.92436, 0.82918) which fails
         # had to tweak values slightly
+
+    def test_color_at_with_mutually_reflective_surfaces(self):
+        w = world()
+        w.light = point_light(point(0, 0, 0), color(1, 1, 1))
+
+        lower = plane()
+        lower.material.reflective = 1
+        lower.set_transform(translation(0, -1, 0))
+        w.objects.append(lower)
+
+        upper = plane()
+        upper.material.reflective = 1
+        upper.set_transform(translation(0, 1, 0))
+        w.objects.append(upper)
+        
+        r = ray(point(0, 0, 0), vector(0, 1, 0))
+
+        try:
+            w.color_at(r)
+        except RecursionError:
+            self.fail("Recursion error in color_at")
+
+    def test_reflected_color_at_max_recursion_depth(self):
+        w = default_world()
+        shape = plane()
+        shape.material.reflective = 0.5
+        shape.set_transform(translation(0, -1, 0))
+        w.objects.append(shape)
+        r = ray(point(0, 0, -3), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
+        i = intersection(math.sqrt(2), shape)
+        comps = prepare_computations(i, r)
+
+        c = w.reflected_color(comps, 0)
+
+        self.assertEqual(c, BLACK)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
