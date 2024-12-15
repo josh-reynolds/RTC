@@ -53,6 +53,9 @@ class World:
         else:
             return False
 
+    def reflected_color(self, comps):
+        return BLACK
+
 def world():
     return World()
 
@@ -207,6 +210,18 @@ class WorldTestCase(unittest.TestCase):
         c = w.shade_hit(comps)
 
         self.assertEqual(c, color(0.1, 0.1, 0.1))
+
+    def test_reflected_color_for_nonreflective_material(self):
+        w = default_world()
+        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        shape = w.objects[1]
+        shape.material.ambient = 1
+        i = intersection(1, shape)
+        comps = prepare_computations(i, r)
+
+        c = w.reflected_color(comps)
+
+        self.assertEqual(c, BLACK)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
