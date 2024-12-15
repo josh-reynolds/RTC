@@ -17,6 +17,7 @@ class Material:
         self.specular = 0.9       # range 0 - 1
         self.shininess = 200.0    # range 10 - 200
         self.pattern = None
+        self.reflective = 0.0
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -155,6 +156,11 @@ class MaterialTestCase(unittest.TestCase):
 
         self.assertEqual(c1, WHITE)
         self.assertEqual(c2, BLACK)
+
+    def test_reflectivity_for_default_material(self):
+        m = material()
+
+        self.assertEqual(m.reflective, 0.0)
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
