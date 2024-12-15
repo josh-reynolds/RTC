@@ -13,16 +13,16 @@ from gradients import gradient_pattern
 from rings import ring_pattern
 from checkers import checker_pattern
 from radial_gradients import radial_gradient_pattern
+from blended_patterns import blend_pattern
 
 start_time = datetime.now()
 
 floor = plane()
-p1 = stripe_pattern(BLACK, WHITE)
-p1.set_transform(rotation_y(math.pi/4))
+p1 = stripe_pattern(GREEN, WHITE)
+p1.set_transform(rotation_y(math.pi/2))
 p2 = stripe_pattern(YELLOW, BLUE)
-p2.set_transform(rotation_y(-math.pi/4))
-floor.material.pattern = checker_pattern(p1, p2)
-floor.material.pattern.set_transform(translation(0, 0.1, 0))
+floor.material.pattern = blend_pattern(p1, p2)
+floor.material.pattern.set_transform(rotation_y(math.pi/4) * translation(0, 0.1, 0))
 
 #middle = sphere()
 #middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
@@ -59,7 +59,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("./output/pattern_render_9.ppm", "w")
+f = open("./output/pattern_render_10.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
