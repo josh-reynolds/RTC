@@ -24,12 +24,13 @@ p2 = stripe_pattern(YELLOW, BLUE)
 floor.material.pattern = blend_pattern(p1, p2)
 floor.material.pattern.set_transform(rotation_y(math.pi/4) * translation(0, 0.1, 0))
 
-#middle = sphere()
-#middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
-#middle.material.diffuse = 0.7
-#middle.material.specular = 0.3
-#middle.material.pattern = stripe_pattern(WHITE, BLACK)
-#
+middle = sphere()
+middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
+middle.material.diffuse = 0.7
+middle.material.specular = 0.3
+middle.material.reflective = 1
+middle.material.color = WHITE
+
 #right = sphere()
 #right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
 #right.material.diffuse = 0.7
@@ -47,7 +48,7 @@ floor.material.pattern.set_transform(rotation_y(math.pi/4) * translation(0, 0.1,
 
 w = world()
 w.objects.append(floor)
-#w.objects.append(middle)
+w.objects.append(middle)
 #w.objects.append(right)
 #w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), WHITE)
@@ -59,7 +60,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("./output/pattern_render_10.ppm", "w")
+f = open("./output/reflections.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
