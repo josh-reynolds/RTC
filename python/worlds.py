@@ -9,7 +9,7 @@ from spheres import sphere
 from materials import material, lighting
 from transformations import scaling, translation
 from rays import ray
-from intersections import intersection, prepare_computations, hit
+from intersections import intersection, prepare_computations, hit, intersections
 from planes import plane
 
 class World:
@@ -67,6 +67,12 @@ class World:
         col = self.color_at(reflect_ray, remaining-1)
 
         return col * comps.object.material.reflective
+
+    def refracted_color(self, comps, remaining=4):
+        if comps.object.material.transparency == 0:
+            return BLACK
+
+        return WHITE
 
 def world():
     return World()
@@ -299,6 +305,18 @@ class WorldTestCase(unittest.TestCase):
         comps = prepare_computations(i, r)
 
         c = w.reflected_color(comps, 0)
+
+        self.assertEqual(c, BLACK)
+
+    def test_refracted_color_with_opaque_surface(self):
+        w = default_world()
+        shape = w.objects[0]
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        xs = intersections(intersection(4, shape),
+                           intersection(6, shape))
+        comps = prepare_computations(xs[0], r, xs)
+
+        c = w.refracted_color(comps, 5)
 
         self.assertEqual(c, BLACK)
 
