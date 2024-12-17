@@ -39,6 +39,12 @@ class Sphere(Shape):
 def sphere():
     return Sphere()
 
+def glass_sphere():
+    s = sphere()
+    s.material.transparency = 1.0
+    s.material.refractive_index = 1.5
+    return s
+
 class SphereTestCase(unittest.TestCase):
     def test_a_ray_intersects_a_sphere_at_two_points(self):
         r = ray(point(0, 0, -5), vector(0, 0, 1))
@@ -199,6 +205,13 @@ class SphereTestCase(unittest.TestCase):
         s = sphere()
 
         self.assertTrue(isinstance(s, Shape))
+
+    def test_glass_sphere_helper(self):
+        s = glass_sphere()
+
+        self.assertEqual(s.transform, identity())
+        self.assertEqual(s.material.transparency, 1.0)
+        self.assertEqual(s.material.refractive_index, 1.5)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

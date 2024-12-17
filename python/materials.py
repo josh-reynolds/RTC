@@ -176,6 +176,7 @@ class MaterialTestCase(unittest.TestCase):
 
         self.assertEqual(m.transparency, 0.0)
         self.assertEqual(m.refractive_index, 1.0)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
