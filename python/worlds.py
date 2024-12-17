@@ -69,7 +69,7 @@ class World:
         return col * comps.object.material.reflective
 
     def refracted_color(self, comps, remaining=4):
-        if comps.object.material.transparency == 0:
+        if comps.object.material.transparency == 0 or remaining < 1:
             return BLACK
 
         return WHITE
@@ -317,6 +317,20 @@ class WorldTestCase(unittest.TestCase):
         comps = prepare_computations(xs[0], r, xs)
 
         c = w.refracted_color(comps, 5)
+
+        self.assertEqual(c, BLACK)
+
+    def test_refracted_color_at_max_recursive_depth(self):
+        w = default_world()
+        shape = w.objects[0]
+        shape.material.transparency = 1.0
+        shape.material.refractive_index = 1.5
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        xs = intersections(intersection(4, shape),
+                           intersection(6, shape))
+        comps = prepare_computations(xs[0], r, xs)
+
+        c = w.refracted_color(comps, 0)
 
         self.assertEqual(c, BLACK)
 
