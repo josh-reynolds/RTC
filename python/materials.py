@@ -9,6 +9,13 @@ from tuples import point, vector
 import spheres
 import stripes
 
+# sample refractive indices:
+#  vacuum  - 1
+#  air     - 1.00029
+#  water   - 1.333
+#  glass   - 1.52
+#  diamond - 2.417
+
 class Material:
     def __init__(self):
         self.color = WHITE
@@ -18,6 +25,8 @@ class Material:
         self.shininess = 200.0    # range 10 - 200
         self.pattern = None
         self.reflective = 0.0
+        self.transparency = 0.0
+        self.refractive_index = 1.0
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -161,6 +170,12 @@ class MaterialTestCase(unittest.TestCase):
         m = material()
 
         self.assertEqual(m.reflective, 0.0)
+
+    def test_transparency_and_refractive_index_for_default_material(self):
+        m = material()
+
+        self.assertEqual(m.transparency, 0.0)
+        self.assertEqual(m.refractive_index, 1.0)
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
