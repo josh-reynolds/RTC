@@ -47,6 +47,7 @@ class Computation:
             self.inside = False
 
         self.over_point = self.point + self.normalv * EPSILON
+        self.under_point = self.point - self.normalv * EPSILON
         self.reflectv = ray.direction.reflect(self.normalv)
         self.n1 = 1.0
         self.n2 = 1.0
@@ -233,6 +234,17 @@ class IntersectionTestCase(unittest.TestCase):
         comps = prepare_computations(xs[5], r, xs)
         self.assertEqual(comps.n1, 1.5)
         self.assertEqual(comps.n2, 1.0)
+
+    def test_under_point_is_offset_below_surface(self):
+        shape = spheres.glass_sphere()
+        shape.set_transform(translation(0, 0, 1))
+
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        xs = intersections(intersection(5, shape))
+        comps = prepare_computations(xs[0], r, xs)
+
+        self.assertTrue(comps.under_point.z > EPSILON/2)
+        self.assertTrue(comps.point.z < comps.under_point.z)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
