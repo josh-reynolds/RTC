@@ -5,7 +5,7 @@ import math
 import spheres
 from rays import ray
 from tuples import point, vector
-from transformations import translation
+from transformations import translation, scaling
 from utils import EPSILON
 from planes import plane
 
@@ -13,6 +13,9 @@ class Intersection:
     def __init__(self, t, obj):
         self.t = t
         self.object = obj
+
+    def __repr__(self):
+        return "Intersection(%r, %r)" % (self.t, self.object)
 
 def intersection(t, obj):
     return Intersection(t, obj)
@@ -45,9 +48,30 @@ class Computation:
 
         self.over_point = self.point + self.normalv * EPSILON
         self.reflectv = ray.direction.reflect(self.normalv)
+        self.n1 = 1.0
+        self.n2 = 1.0
 
-def prepare_computations(intersect, ray):
-    return Computation(intersect, ray)
+def prepare_computations(intersect, ray, xs=None):
+    comp = Computation(intersect, ray)
+
+    if xs:
+        containers = []
+        for i in xs:
+            if i == intersect:
+                if containers:
+                    comp.n1 = containers[-1].material.refractive_index
+
+            if i.object in containers:
+                containers.remove(i.object)
+            else:
+                containers.append(i.object)
+
+            if i == intersect:
+                if containers:
+                    comp.n2 = containers[-1].material.refractive_index
+                break
+
+    return comp
 
 class IntersectionTestCase(unittest.TestCase):
     def test_an_intersection_encapsulates_t_and_object(self):
@@ -164,6 +188,51 @@ class IntersectionTestCase(unittest.TestCase):
         comps = prepare_computations(i, r)
 
         self.assertEqual(comps.reflectv, vector(0, math.sqrt(2)/2, math.sqrt(2)/2))
+
+    def test_finding_n1_and_n2_at_various_intersections(self):
+        a = spheres.glass_sphere()
+        a.set_transform(scaling(2, 2, 2))
+        a.material.refractive_index = 1.5
+
+        b = spheres.glass_sphere()
+        b.set_transform(translation(0, 0, -0.25))
+        b.material.refractive_index = 2.0
+
+        c = spheres.glass_sphere()
+        c.set_transform(translation(0, 0, 0.25))
+        c.material.refractive_index = 2.5
+
+        r = ray(point(0, 0, -4), vector(0, 0, 1))
+        xs = intersections(intersection(2, a),
+                           intersection(2.75, b),
+                           intersection(3.25, c),
+                           intersection(4.75, b),
+                           intersection(5.25, c),
+                           intersection(6, a))
+        
+        comps = prepare_computations(xs[0], r, xs)
+        self.assertEqual(comps.n1, 1.0)
+        self.assertEqual(comps.n2, 1.5)
+        
+        comps = prepare_computations(xs[1], r, xs)
+        self.assertEqual(comps.n1, 1.5)
+        self.assertEqual(comps.n2, 2.0)
+
+        comps = prepare_computations(xs[2], r, xs)
+        self.assertEqual(comps.n1, 2.0)
+        self.assertEqual(comps.n2, 2.5)
+
+        comps = prepare_computations(xs[3], r, xs)
+        self.assertEqual(comps.n1, 2.5)
+        self.assertEqual(comps.n2, 2.5)
+
+        comps = prepare_computations(xs[4], r, xs)
+        self.assertEqual(comps.n1, 2.5)
+        self.assertEqual(comps.n2, 1.5)
+
+        comps = prepare_computations(xs[5], r, xs)
+        self.assertEqual(comps.n1, 1.5)
+        self.assertEqual(comps.n2, 1.0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
