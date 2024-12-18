@@ -3,7 +3,7 @@
 import unittest
 import math
 from tuples import point, vector
-from colors import color, BLACK, WHITE
+from colors import color, BLACK, WHITE, RED
 from lights import point_light
 from spheres import sphere
 from materials import material, lighting
@@ -37,8 +37,9 @@ class World:
                             shadowed)
 
         reflected = self.reflected_color(comps, remaining)
+        refracted = self.refracted_color(comps, remaining)
 
-        return surface + reflected
+        return surface + reflected + refracted
 
     def color_at(self, r, remaining=4):
         xs = self.intersect(r)
@@ -384,6 +385,29 @@ class WorldTestCase(unittest.TestCase):
         self.assertEqual(c, color(0, 0.99887, 0.04722))
         # text has (0, 0.99888, 0.04725) which fails
         # need to tweak slightly
+
+    def test_shade_hit_with_transparent_material(self):
+        w = default_world()
+
+        floor = plane()
+        floor.set_transform(translation(0, -1, 0))
+        floor.material.transparency = 0.5
+        floor.material.refractive_index = 1.5
+        w.objects.append(floor)
+
+        ball = sphere()
+        ball.set_transform(translation(0, -3.5, -0.5))
+        ball.material.color = RED
+        ball.material.ambient = 0.5
+        w.objects.append(ball)
+
+        r = ray(point(0, 0, -3), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
+        xs = intersections(intersection(math.sqrt(2), floor))
+        comps = prepare_computations(xs[0], r, xs)
+
+        col = w.shade_hit(comps, 5)
+
+        self.assertEqual(col, color(0.93642, 0.68642, 0.68642))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
