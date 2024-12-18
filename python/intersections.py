@@ -6,7 +6,7 @@ import spheres
 from rays import ray
 from tuples import point, vector
 from transformations import translation, scaling
-from utils import EPSILON
+from utils import flequal, EPSILON
 from planes import plane
 
 class Intersection:
@@ -41,7 +41,11 @@ def schlick(comps):
         if sin2_t > 1.0:
             return 1.0
 
-    return 0.0
+        cos_t = math.sqrt(1.0 - sin2_t)
+        cos = cos_t
+
+    r0 = ((comps.n1 - comps.n2)/(comps.n1 + comps.n2)) ** 2
+    return r0 + (1 - r0) * (1 - cos) ** 5
 
 class Computation:
     def __init__(self, intersect, ray):
@@ -279,7 +283,7 @@ class IntersectionTestCase(unittest.TestCase):
 
         reflectance = schlick(comps)
 
-        self.assertEqual(reflectance, 0.04)
+        self.assertTrue(flequal(reflectance, 0.04))
 
     def test_schlick_approximation_with_small_angle_and_n2_gt_n1(self):
         shape = spheres.glass_sphere()
@@ -290,7 +294,7 @@ class IntersectionTestCase(unittest.TestCase):
 
         reflectance = schlick(comps)
 
-        self.assertEqual(reflectance, 0.48874)
+        self.assertTrue(flequal(reflectance, 0.48874))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
