@@ -32,6 +32,16 @@ def hit(xs):
         if i.t >=0:
             return i
 
+def schlick(comps):
+    cos = comps.eyev.dot(comps.normalv)
+    if comps.n1 > comps.n2:
+        n = comps.n1 / comps.n2
+        sin2_t = n ** 2 * (1.0 - cos ** 2)
+        if sin2_t > 1.0:
+            return 1.0
+
+    return 0.0
+
 class Computation:
     def __init__(self, intersect, ray):
         self.t = intersect.t
@@ -245,6 +255,21 @@ class IntersectionTestCase(unittest.TestCase):
 
         self.assertTrue(comps.under_point.z > EPSILON/2)
         self.assertTrue(comps.point.z < comps.under_point.z)
+
+    def test_schlick_approximation_under_total_internal_reflection(self):
+        shape = spheres.glass_sphere()
+
+        r = ray(point(0, 0, math.sqrt(2)/2), vector(0, 1, 0))
+        xs = intersections(intersection(-math.sqrt(2)/2, shape),
+                           intersection( math.sqrt(2)/2, shape))
+        comps = prepare_computations(xs[1], r, xs)
+
+        reflectance = schlick(comps)
+
+        self.assertEqual(reflectance, 1.0)
+
+
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
