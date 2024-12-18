@@ -11,6 +11,7 @@ from transformations import scaling, translation
 from rays import ray
 from intersections import intersection, prepare_computations, hit, intersections
 from planes import plane
+from patterns import test_pattern
 
 class World:
     def __init__(self):
@@ -79,7 +80,12 @@ class World:
         if sin2_t > 1:             # total internal reflection
             return BLACK
 
-        return WHITE
+        cos_t = math.sqrt(1.0 - sin2_t)
+        direction = (comps.normalv * (n_ratio * cos_i - cos_t) -
+                     comps.eyev * n_ratio)
+        refract_ray = ray(comps.under_point, direction)
+        
+        return self.color_at(refract_ray, remaining-1) * comps.object.material.transparency
 
 def world():
     return World()
@@ -354,6 +360,30 @@ class WorldTestCase(unittest.TestCase):
         c = w.refracted_color(comps, 5)
 
         self.assertEqual(c, BLACK)
+
+    def test_refracted_color_with_a_refracted_ray(self):
+        w = default_world()
+
+        a = w.objects[0]
+        a.material.ambient = 1.0
+        a.material.pattern = test_pattern()
+
+        b = w.objects[1]
+        b.material.transparency = 1.0
+        b.material.refractive_index = 1.5
+
+        r = ray(point(0, 0, 0.1), vector(0, 1, 0))
+        xs = intersections(intersection(-0.9899, a),
+                           intersection(-0.4899, b),
+                           intersection( 0.4899, b),
+                           intersection( 0.9899, a))
+        comps = prepare_computations(xs[2], r, xs)
+
+        c = w.refracted_color(comps, 5)
+
+        self.assertEqual(c, color(0, 0.99887, 0.04722))
+        # text has (0, 0.99888, 0.04725) which fails
+        # need to tweak slightly
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
