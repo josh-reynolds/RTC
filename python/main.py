@@ -28,8 +28,10 @@ middle = sphere()
 middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
 middle.material.diffuse = 0.7
 middle.material.specular = 0.3
-middle.material.reflective = 1
-middle.material.color = WHITE
+#middle.material.reflective = 1
+middle.material.transparency = 0.75
+middle.material.refractive_index = 1.5
+middle.material.color = BLUE
 
 #right = sphere()
 #right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
@@ -60,7 +62,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
 
 image = cam.render(w)
 
-f = open("./output/reflections.ppm", "w")
+f = open("./output/refraction.ppm", "w")
 lines = image.to_ppm()
 for line in lines:
     f.write(line + "\n")
