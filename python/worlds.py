@@ -9,7 +9,7 @@ from spheres import sphere
 from materials import material, lighting
 from transformations import scaling, translation
 from rays import ray
-from intersections import intersection, prepare_computations, hit, intersections
+from intersections import intersection, prepare_computations, hit, intersections, schlick
 from planes import plane
 from patterns import test_pattern
 
@@ -39,7 +39,13 @@ class World:
         reflected = self.reflected_color(comps, remaining)
         refracted = self.refracted_color(comps, remaining)
 
-        return surface + reflected + refracted
+        mat = comps.object.material
+        if mat.reflective > 0 and mat.transparency > 0:
+            reflectance = schlick(comps)
+            return (surface + reflected * reflectance +
+                              refracted * (1 - reflectance))
+        else:
+            return surface + reflected + refracted
 
     def color_at(self, r, remaining=4):
         xs = self.intersect(r)
@@ -408,6 +414,30 @@ class WorldTestCase(unittest.TestCase):
         col = w.shade_hit(comps, 5)
 
         self.assertEqual(col, color(0.93642, 0.68642, 0.68642))
+
+    def test_shade_hit_with_reflective_transparent_material(self):
+        w = default_world()
+
+        floor = plane()
+        floor.set_transform(translation(0, -1, 0))
+        floor.material.reflective = 0.5
+        floor.material.transparency = 0.5
+        floor.material.refractive_index = 1.5
+        w.objects.append(floor)
+
+        ball = sphere()
+        ball.set_transform(translation(0, -3.5, -0.5))
+        ball.material.color = RED
+        ball.material.ambient = 0.5
+        w.objects.append(ball)
+
+        r = ray(point(0, 0, -3), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
+        xs = intersections(intersection(math.sqrt(2), floor))
+        comps = prepare_computations(xs[0], r, xs)
+
+        col = w.shade_hit(comps, 5)
+
+        self.assertEqual(col, color(0.93391, 0.69643, 0.69243))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
