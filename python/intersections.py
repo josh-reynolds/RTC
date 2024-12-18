@@ -34,6 +34,7 @@ def hit(xs):
 
 def schlick(comps):
     cos = comps.eyev.dot(comps.normalv)
+
     if comps.n1 > comps.n2:
         n = comps.n1 / comps.n2
         sin2_t = n ** 2 * (1.0 - cos ** 2)
@@ -268,8 +269,28 @@ class IntersectionTestCase(unittest.TestCase):
 
         self.assertEqual(reflectance, 1.0)
 
+    def test_schlick_approximation_with_perpendicular_viewing_angle(self):
+        shape = spheres.glass_sphere()
 
+        r = ray(point(0, 0, 0), vector(0, 1, 0))
+        xs = intersections(intersection(-1, shape),
+                           intersection( 1, shape))
+        comps = prepare_computations(xs[1], r, xs)
 
+        reflectance = schlick(comps)
+
+        self.assertEqual(reflectance, 0.04)
+
+    def test_schlick_approximation_with_small_angle_and_n2_gt_n1(self):
+        shape = spheres.glass_sphere()
+
+        r = ray(point(0, 0.99, -2), vector(0, 0, 1))
+        xs = intersections(intersection(1.8589, shape))
+        comps = prepare_computations(xs[0], r, xs)
+
+        reflectance = schlick(comps)
+
+        self.assertEqual(reflectance, 0.48874)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
