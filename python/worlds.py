@@ -72,6 +72,13 @@ class World:
         if comps.object.material.transparency == 0 or remaining < 1:
             return BLACK
 
+        n_ratio = comps.n1/comps.n2
+        cos_i = comps.eyev.dot(comps.normalv)
+        sin2_t = (n_ratio ** 2) * (1 - cos_i ** 2)
+
+        if sin2_t > 1:             # total internal reflection
+            return BLACK
+
         return WHITE
 
 def world():
@@ -331,6 +338,20 @@ class WorldTestCase(unittest.TestCase):
         comps = prepare_computations(xs[0], r, xs)
 
         c = w.refracted_color(comps, 0)
+
+        self.assertEqual(c, BLACK)
+
+    def test_refracted_color_under_total_internal_reflection(self):
+        w = default_world()
+        shape = w.objects[0]
+        shape.material.transparency = 1.0
+        shape.material.refractive_index = 1.5
+        r = ray(point(0, 0, math.sqrt(2)/2), vector(0, 1, 0))
+        xs = intersections(intersection(-math.sqrt(2)/2, shape),
+                           intersection( math.sqrt(2)/2, shape))
+        comps = prepare_computations(xs[1], r, xs)
+
+        c = w.refracted_color(comps, 5)
 
         self.assertEqual(c, BLACK)
 
