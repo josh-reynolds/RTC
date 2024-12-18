@@ -47,6 +47,11 @@ class Color():
                      str(self.green) + ", " +
                      str(self.blue) + ")")
 
+    def __repr__(self):
+        return "Color(" + (str(self.red) + ", " +
+                           str(self.green) + ", " +
+                           str(self.blue) + ")")
+
 def color(r, g, b):
     return Color(r, g, b)
 
