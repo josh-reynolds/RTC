@@ -15,6 +15,7 @@ from checkers import checker_pattern
 from radial_gradients import radial_gradient_pattern
 from blended_patterns import blend_pattern
 from utils import image_to_file
+from cubes import cube
 
 start_time = datetime.now()
 
@@ -37,14 +38,14 @@ middle.material.transparency = 0.9
 middle.material.refractive_index = 1.5
 middle.material.color = color(0, 0, 0.1)
 
-right = sphere()
+right = cube()
 right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
 right.material.diffuse = 0.7
 right.material.specular = 0.3
 right.material.pattern = gradient_pattern(MAGENTA, GREEN)
 right.material.pattern.set_transform(translation(1, 0, 0) * scaling(2, 1, 1))
 
-left = sphere()
+left = cube()
 left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
 left.material.diffuse = 0.7
 left.material.specular = 0.3
@@ -60,13 +61,13 @@ w.objects.append(right)
 w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(100, 50, math.pi/3)
+cam = camera(300, 150, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/foo.ppm")
+image_to_file(image, "./output/cubes.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
