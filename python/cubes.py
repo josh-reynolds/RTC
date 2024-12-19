@@ -21,6 +21,9 @@ class Cube(shapes.Shape):
         tmin = max(xtmin, ytmin, ztmin)
         tmax = min(xtmax, ytmax, ztmax)
 
+        if tmin > tmax:
+            return []
+
         return intersections(intersection(tmin, self),
                              intersection(tmax, self))
 
@@ -96,6 +99,33 @@ class CubeTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, -1)
         self.assertEqual(xs[1].t, 1)
+
+    def test_a_ray_misses_a_cube(self):
+        c = cube()
+
+        r = ray(point(-2, 0, 0), vector(0.2673, 0.5345, 0.8018))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, -2, 0), vector(0.8018, 0.2673, 0.5345))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 0, -2), vector(0.5345, 0.8018, 0.2673))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(2, 0, 2), vector(0, 0, -1))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 2, 2), vector(0, -1, 0))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(2, 2, 0), vector(-1, 0, 0))
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
