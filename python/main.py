@@ -14,6 +14,7 @@ from rings import ring_pattern
 from checkers import checker_pattern
 from radial_gradients import radial_gradient_pattern
 from blended_patterns import blend_pattern
+from utils import image_to_file
 
 start_time = datetime.now()
 
@@ -59,18 +60,13 @@ w.objects.append(right)
 w.objects.append(left)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(300, 150, math.pi/3)
+cam = camera(100, 50, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-
-f = open("./output/refraction_2.ppm", "w")
-lines = image.to_ppm()
-for line in lines:
-    f.write(line + "\n")
-f.close()
+image_to_file(image, "./output/foo.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))

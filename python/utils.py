@@ -7,6 +7,13 @@ def flequal(a, b):
         return True
     return False
 
+def image_to_file(image, filename):
+    f = open(filename, "w")
+    lines = image.to_ppm()
+    for line in lines:
+        f.write(line + "\n")
+    f.close()
+
 class UtilsTestCase(unittest.TestCase):
     def test_almost_equal_floats_return_true(self):
         a = 0.12345
