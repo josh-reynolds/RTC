@@ -4,12 +4,12 @@ import unittest
 from rays import ray
 from tuples import point, vector
 import intersections
-from shapes import Shape
+import shapes
 from utils import EPSILON
 
-class Plane(Shape):
+class Plane(shapes.Shape):
     def __init__(self):
-        Shape.__init__(self)
+        shapes.Shape.__init__(self)
 
     def local_intersect(self, r):
         result = []
@@ -82,7 +82,7 @@ class PlaneTestCase(unittest.TestCase):
     def test_a_sphere_is_a_shape(self):
         p = plane()
 
-        self.assertTrue(isinstance(p, Shape))
+        self.assertTrue(isinstance(p, shapes.Shape))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -7,7 +7,7 @@ from rays import ray
 from tuples import point, vector
 from transformations import translation, scaling
 from utils import flequal, EPSILON
-from planes import plane
+import planes
 
 class Intersection:
     def __init__(self, t, obj):
@@ -197,7 +197,7 @@ class IntersectionTestCase(unittest.TestCase):
         self.assertTrue(comps.point.z > comps.over_point.z)
 
     def test_precomputing_reflection_vector(self):
-        shape = plane()
+        shape = planes.plane()
         r = ray(point(0, 1, -1), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
         i = intersection(math.sqrt(2), shape)
 

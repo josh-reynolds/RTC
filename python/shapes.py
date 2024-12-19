@@ -6,12 +6,12 @@ from rays import ray
 from tuples import point, vector
 from matrices import identity
 from transformations import translation, scaling, rotation_z
-from materials import material
+import materials
 
 class Shape:                                          # 'abstract' base class
     def __init__(self):
         self.transform = identity()
-        self.material = material()
+        self.material = materials.material()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -56,14 +56,14 @@ class ShapeTestCase(unittest.TestCase):
 
         self.assertEqual(s.transform, translation(2, 3, 4))
 
-    def test_a_shapes_default_material(self):
+    def test_a_shapes_default_materials(self):
         s = test_shape()
 
-        self.assertEqual(s.material, material())
+        self.assertEqual(s.material, materials.material())
 
-    def test_assigning_a_material(self):
+    def test_assigning_a_materials(self):
         s = test_shape()
-        m = material()
+        m = materials.material()
         m.ambient = 1
 
         s.material = m
