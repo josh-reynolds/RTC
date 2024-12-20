@@ -1,5 +1,6 @@
 # to run tests: python -m unittest -v cylinders
 
+import math
 import unittest
 import materials
 import shapes
@@ -23,11 +24,14 @@ class Cylinder(shapes.Shape):
         c = r.origin.x ** 2 + r.origin.z ** 2 - 1
         
         disc = b ** 2 - 4 * a * c
-
         if disc < 0:
             return []
 
-        return [intersection(1, self)]
+        t0 = (-b - math.sqrt(disc)) / (2 * a)
+        t1 = (-b + math.sqrt(disc)) / (2 * a)
+
+        return [intersection(t0, self),
+                intersection(t1, self)]
 
     def local_normal_at(self, pt):
         pass
@@ -55,6 +59,27 @@ class CylinderTestCase(unittest.TestCase):
         r = ray(point(0, 0, -5), vector(1, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
+
+    def test_a_ray_strikes_a_cylinder(self):
+        c = cylinder()
+
+        r = ray(point(1, 0, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 5)
+        self.assertEqual(xs[1].t, 5)
+
+        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 4)
+        self.assertEqual(xs[1].t, 6)
+
+        r = ray(point(0.5, 0, -5), vector(0.1, 1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertTrue(flequal(xs[0].t, 6.80798))
+        self.assertTrue(flequal(xs[1].t, 7.08872))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
