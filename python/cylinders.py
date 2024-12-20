@@ -34,7 +34,7 @@ class Cylinder(shapes.Shape):
                 intersection(t1, self)]
 
     def local_normal_at(self, pt):
-        pass
+        return vector(pt.x, 0, pt.z)
 
 def cylinder():
     return Cylinder()
@@ -80,6 +80,21 @@ class CylinderTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 2)
         self.assertTrue(flequal(xs[0].t, 6.80798))
         self.assertTrue(flequal(xs[1].t, 7.08872))
+
+    def test_normal_vector_on_a_cylinder(self):
+        c = cylinder()
+
+        n = c.local_normal_at(point(1, 0, 0))
+        self.assertEqual(n, vector(1, 0, 0))
+
+        n = c.local_normal_at(point(0, 5, -1))
+        self.assertEqual(n, vector(0, 0, -1))
+
+        n = c.local_normal_at(point(0, -2, 1))
+        self.assertEqual(n, vector(0, 0, 1))
+
+        n = c.local_normal_at(point(-1, 1, 0))
+        self.assertEqual(n, vector(-1, 0, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
