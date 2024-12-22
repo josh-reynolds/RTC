@@ -31,6 +31,7 @@ floor.material.reflective = 0.9
 middle = cylinder()
 middle.minimum = 0
 middle.maximum = 2
+middle.closed = True
 middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
 middle.material.diffuse = 0.2
 middle.material.ambient = 0.2
@@ -44,6 +45,7 @@ middle.material.color = color(0, 0, 0.1)
 right = cylinder()
 right.minimum = 1
 right.maximum = 4
+right.closed = True
 right.transform = translation(1.5, 0.5, -0.5) * scaling(0.5, 0.5, 0.5)
 right.material.diffuse = 0.7
 right.material.specular = 0.3
@@ -53,6 +55,7 @@ right.material.pattern.set_transform(translation(1, 0, 0) * scaling(2, 1, 1))
 left = cylinder()
 left.minimum = 0.5
 left.maximum = 0.9
+left.closed = True
 left.transform = translation(-1.5, 0.33, -0.75) * scaling(0.33, 0.33, 0.33)
 left.material.diffuse = 0.7
 left.material.specular = 0.3
@@ -74,7 +77,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/cylinders_2.ppm")
+image_to_file(image, "./output/cylinders_3.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
