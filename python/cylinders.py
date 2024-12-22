@@ -14,6 +14,7 @@ class Cylinder(shapes.Shape):
         shapes.Shape.__init__(self)
         self.minimum = -math.inf
         self.maximum = math.inf
+        self.closed = False
 
     def local_intersect(self, r):
         a = r.direction.x ** 2 + r.direction.z ** 2
@@ -143,6 +144,11 @@ class CylinderTestCase(unittest.TestCase):
         r = ray(point(0, 1.5, -2), vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
+
+    def test_default_closed_value_for_a_cylinder(self):
+        c = cylinder()
+
+        self.assertFalse(c.closed)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
