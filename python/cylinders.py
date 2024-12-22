@@ -12,6 +12,8 @@ from intersections import intersection
 class Cylinder(shapes.Shape):
     def __init__(self):
         shapes.Shape.__init__(self)
+        self.minimum = math.inf
+        self.maximum = math.inf
 
     def local_intersect(self, r):
         a = r.direction.x ** 2 + r.direction.z ** 2
@@ -95,6 +97,13 @@ class CylinderTestCase(unittest.TestCase):
 
         n = c.local_normal_at(point(-1, 1, 0))
         self.assertEqual(n, vector(-1, 0, 0))
+
+    def test_default_min_max_for_a_cylinder(self):
+        c = cylinder()
+
+        self.assertEqual(c.minimum, math.inf)
+        self.assertEqual(c.maximum, math.inf)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
