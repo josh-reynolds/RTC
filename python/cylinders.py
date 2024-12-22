@@ -17,41 +17,59 @@ class Cylinder(shapes.Shape):
         self.closed = False
 
     def local_intersect(self, r):
-        a = r.direction.x ** 2 + r.direction.z ** 2
-        if flequal(a, 0):
-            return []
-
-        b = (2 * r.origin.x * r.direction.x +
-             2 * r.origin.z * r.direction.z)
-
-        c = r.origin.x ** 2 + r.origin.z ** 2 - 1
-        
-        disc = b ** 2 - 4 * a * c
-        if disc < 0:
-            return []
-
-        t0 = (-b - math.sqrt(disc)) / (2 * a)
-        t1 = (-b + math.sqrt(disc)) / (2 * a)
-        if t0 > t1:
-            t0, t1 = t1, t0
-
         xs = []
 
-        y0 = r.origin.y + t0 * r.direction.y
-        if self.minimum < y0 and y0 < self.maximum:
-            xs.append(intersection(t0, self))
+        a = r.direction.x ** 2 + r.direction.z ** 2
+        if not flequal(a, 0):
+            b = (2 * r.origin.x * r.direction.x +
+                 2 * r.origin.z * r.direction.z)
+    
+            c = r.origin.x ** 2 + r.origin.z ** 2 - 1
+            
+            disc = b ** 2 - 4 * a * c
+            if disc < 0:
+                return []
+    
+            t0 = (-b - math.sqrt(disc)) / (2 * a)
+            t1 = (-b + math.sqrt(disc)) / (2 * a)
+            if t0 > t1:
+                t0, t1 = t1, t0
+    
+    
+            y0 = r.origin.y + t0 * r.direction.y
+            if self.minimum < y0 and y0 < self.maximum:
+                xs.append(intersection(t0, self))
+    
+            y1 = r.origin.y + t1 * r.direction.y
+            if self.minimum < y1 and y1 < self.maximum:
+                xs.append(intersection(t1, self))
 
-        y1 = r.origin.y + t1 * r.direction.y
-        if self.minimum < y1 and y1 < self.maximum:
-            xs.append(intersection(t1, self))
+        self.intersect_caps(r, xs)
 
         return xs
+
+    def intersect_caps(self, r, xs):
+        if not self.closed or flequal(r.direction.y, 0):
+            return
+
+        t = (self.minimum - r.origin.y) / r.direction.y
+        if check_cap(r, t):
+            xs.append(intersection(t, self))
+
+        t = (self.maximum - r.origin.y) / r.direction.y
+        if check_cap(r, t):
+            xs.append(intersection(t, self))
 
     def local_normal_at(self, pt):
         return vector(pt.x, 0, pt.z)
 
 def cylinder():
     return Cylinder()
+
+def check_cap(r, t):
+    x = r.origin.x + t * r.direction.x
+    z = r.origin.z + t * r.direction.z
+    return (x ** 2 + z ** 2) <= 1
 
 class CylinderTestCase(unittest.TestCase):
     def test_a_cylinder_is_a_shape(self):
@@ -149,6 +167,32 @@ class CylinderTestCase(unittest.TestCase):
         c = cylinder()
 
         self.assertFalse(c.closed)
+
+    def test_intersecting_caps_of_closed_cylinder(self):
+        c = cylinder()
+        c.minimum = 1
+        c.maximum = 2
+        c.closed = True
+
+        r = ray(point(0, 3, 0), vector(0, -1, 0).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+
+        r = ray(point(0, 3, -2), vector(0, -1, 2).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+
+        r = ray(point(0, 4, -2), vector(0, -1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+
+        r = ray(point(0, 0, -2), vector(0, 1, 2).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+
+        r = ray(point(0, -1, -2), vector(0, 1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
