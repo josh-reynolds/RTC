@@ -12,7 +12,7 @@ from intersections import intersection
 class Cylinder(shapes.Shape):
     def __init__(self):
         shapes.Shape.__init__(self)
-        self.minimum = math.inf
+        self.minimum = -math.inf
         self.maximum = math.inf
 
     def local_intersect(self, r):
@@ -31,9 +31,20 @@ class Cylinder(shapes.Shape):
 
         t0 = (-b - math.sqrt(disc)) / (2 * a)
         t1 = (-b + math.sqrt(disc)) / (2 * a)
+        if t0 > t1:
+            t0, t1 = t1, t0
 
-        return [intersection(t0, self),
-                intersection(t1, self)]
+        xs = []
+
+        y0 = r.origin.y + t0 * r.direction.y
+        if self.minimum < y0 and y0 < self.maximum:
+            xs.append(intersection(t0, self))
+
+        y1 = r.origin.y + t1 * r.direction.y
+        if self.minimum < y1 and y1 < self.maximum:
+            xs.append(intersection(t1, self))
+
+        return xs
 
     def local_normal_at(self, pt):
         return vector(pt.x, 0, pt.z)
@@ -101,9 +112,37 @@ class CylinderTestCase(unittest.TestCase):
     def test_default_min_max_for_a_cylinder(self):
         c = cylinder()
 
-        self.assertEqual(c.minimum, math.inf)
+        self.assertEqual(c.minimum, -math.inf)
         self.assertEqual(c.maximum, math.inf)
 
+    def test_intersecting_a_constrained_cylinder(self):
+        c = cylinder()
+        c.minimum = 1
+        c.maximum = 2
+
+        r = ray(point(0, 1.5, 0), vector(0.1, 1, 0).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 3, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 2, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 1, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 1.5, -2), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
