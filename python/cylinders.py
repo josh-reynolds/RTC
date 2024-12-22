@@ -6,7 +6,7 @@ import materials
 import shapes
 from rays import ray
 from tuples import point, vector
-from utils import flequal
+from utils import flequal, EPSILON
 from intersections import intersection
 
 class Cylinder(shapes.Shape):
@@ -61,6 +61,14 @@ class Cylinder(shapes.Shape):
             xs.append(intersection(t, self))
 
     def local_normal_at(self, pt):
+        dist = pt.x ** 2 + pt.z ** 2
+
+        if dist < 1 and pt.y >= self.maximum - EPSILON:
+            return vector(0, 1, 0)
+
+        if dist < 1 and pt.y <= self.minimum + EPSILON:
+            return vector(0, -1, 0)
+
         return vector(pt.x, 0, pt.z)
 
 def cylinder():
@@ -193,6 +201,30 @@ class CylinderTestCase(unittest.TestCase):
         r = ray(point(0, -1, -2), vector(0, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
+
+    def test_normal_vector_on_cylinder_end_caps(self):
+        c = cylinder()
+        c.minimum = 1
+        c.maximum = 2
+        c.closed = True
+
+        n = c.local_normal_at(point(0, 1, 0))
+        self.assertEqual(n, vector(0, -1, 0))
+
+        n = c.local_normal_at(point(0.5, 1, 0))
+        self.assertEqual(n, vector(0, -1, 0))
+
+        n = c.local_normal_at(point(0, 1, 0.5))
+        self.assertEqual(n, vector(0, -1, 0))
+
+        n = c.local_normal_at(point(0, 2, 0))
+        self.assertEqual(n, vector(0, 1, 0))
+
+        n = c.local_normal_at(point(0.5, 2, 0))
+        self.assertEqual(n, vector(0, 1, 0))
+
+        n = c.local_normal_at(point(0, 2, 0.5))
+        self.assertEqual(n, vector(0, 1, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
