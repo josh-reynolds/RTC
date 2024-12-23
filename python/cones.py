@@ -1,53 +1,62 @@
 # to run tests: python -m unittest -v cones
 
-#import math
+import math
 import unittest
 import materials
 import shapes
-#from rays import ray
-#from tuples import point, vector
-#from utils import flequal, EPSILON
-#from intersections import intersection
+from rays import ray
+from tuples import point, vector
+from intersections import intersection
+from utils import flequal, EPSILON
 
 class Cone(shapes.Shape):
     def __init__(self):
         shapes.Shape.__init__(self)
-        #self.minimum = -math.inf
-        #self.maximum = math.inf
+        self.minimum = -math.inf
+        self.maximum = math.inf
         #self.closed = False
 
     def local_intersect(self, r):
-        pass
-        #xs = []
-#
-        #a = r.direction.x ** 2 + r.direction.z ** 2
-        #if not flequal(a, 0):
-            #b = (2 * r.origin.x * r.direction.x +
-                 #2 * r.origin.z * r.direction.z)
-    #
-            #c = r.origin.x ** 2 + r.origin.z ** 2 - 1
-            #
-            #disc = b ** 2 - 4 * a * c
-            #if disc < 0:
-                #return []
-    #
-            #t0 = (-b - math.sqrt(disc)) / (2 * a)
-            #t1 = (-b + math.sqrt(disc)) / (2 * a)
-            #if t0 > t1:
-                #t0, t1 = t1, t0
-    #
-    #
-            #y0 = r.origin.y + t0 * r.direction.y
-            #if self.minimum < y0 and y0 < self.maximum:
-                #xs.append(intersection(t0, self))
-    #
-            #y1 = r.origin.y + t1 * r.direction.y
-            #if self.minimum < y1 and y1 < self.maximum:
-                #xs.append(intersection(t1, self))
-#
+        xs = []
+
+        a = (r.direction.x ** 2 - 
+             r.direction.y ** 2 + 
+             r.direction.z ** 2)
+
+        b = (2 * r.origin.x * r.direction.x -
+             2 * r.origin.y * r.direction.y +
+             2 * r.origin.z * r.direction.z)
+    
+        c = (r.origin.x ** 2 - 
+             r.origin.y ** 2 +
+             r.origin.z ** 2)
+
+        if flequal(a, 0):
+            if not flequal(b, 0):
+                t = -c / 2 * b
+                xs.append(intersection(t, self))
+        else:
+            disc = b ** 2 - 4 * a * c
+            if disc < 0:
+                return []
+    
+            t0 = (-b - math.sqrt(disc)) / (2 * a)
+            t1 = (-b + math.sqrt(disc)) / (2 * a)
+            if t0 > t1:
+                t0, t1 = t1, t0
+    
+    
+            y0 = r.origin.y + t0 * r.direction.y
+            if self.minimum < y0 and y0 < self.maximum:
+                xs.append(intersection(t0, self))
+    
+            y1 = r.origin.y + t1 * r.direction.y
+            if self.minimum < y1 and y1 < self.maximum:
+                xs.append(intersection(t1, self))
+
         #self.intersect_caps(r, xs)
-#
-        #return xs
+
+        return xs
 
     #def intersect_caps(self, r, xs):
         #if not self.closed or flequal(r.direction.y, 0):
@@ -87,42 +96,27 @@ class ConeTestCase(unittest.TestCase):
 
         self.assertTrue(isinstance(c, shapes.Shape))
 
-    #def test_a_ray_misses_a_cylinder(self):
-        #c = cylinder()
-#
-        #r = ray(point(1, 0, 0), vector(0, 1, 0).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 0, 0), vector(0, 1, 0).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 0, -5), vector(1, 1, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-    #def test_a_ray_strikes_a_cylinder(self):
-        #c = cylinder()
-#
-        #r = ray(point(1, 0, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-        #self.assertEqual(xs[0].t, 5)
-        #self.assertEqual(xs[1].t, 5)
-#
-        #r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-        #self.assertEqual(xs[0].t, 4)
-        #self.assertEqual(xs[1].t, 6)
-#
-        #r = ray(point(0.5, 0, -5), vector(0.1, 1, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-        #self.assertTrue(flequal(xs[0].t, 6.80798))
-        #self.assertTrue(flequal(xs[1].t, 7.08872))
-#
+    def test_intersecting_a_ray_with_a_cone(self):
+        c = cone()
+
+        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 5)
+        self.assertEqual(xs[1].t, 5)
+
+        r = ray(point(0, 0, -5), vector(1, 1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertTrue(flequal(xs[0].t, 8.66025))
+        self.assertTrue(flequal(xs[1].t, 8.66025))
+
+        r = ray(point(1, 1, -5), vector(-0.5, -1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertTrue(flequal(xs[0].t,  4.55006))
+        self.assertTrue(flequal(xs[1].t, 49.44994))
+
     #def test_normal_vector_on_a_cylinder(self):
         #c = cylinder()
 #
