@@ -22,63 +22,73 @@ from cones import cone
 start_time = datetime.now()
 
 floor = plane()
-p1 = stripe_pattern(GREEN, WHITE)
-p1.set_transform(rotation_y(math.pi/2))
-p2 = stripe_pattern(YELLOW, BLUE)
-floor.material.pattern = blend_pattern(p1, p2)
-floor.material.pattern.set_transform(rotation_y(math.pi/4) * translation(0, 0.1, 0))
-floor.material.reflective = 0.9
+floor.color = color(0.7, 0.4, 0.7)
 
-middle = cone()
-middle.minimum = -1
-middle.maximum = 0
-middle.closed = True
-middle.transform = translation(-0.5, 1, 0.5) * rotation_z(math.pi/4)
-middle.material.diffuse = 0.2
-middle.material.ambient = 0.2
-middle.material.specular = 1
-middle.material.shininess = 300
-middle.material.reflective = 0.9
-middle.material.transparency = 0.9
-middle.material.refractive_index = 1.5
-middle.material.color = color(0, 0, 0.1)
+wall = plane()
+wall.transform = rotation_x(math.pi/2) * translation(0, 15, 0)
+wall.material.color = color(0.9, 0.8, 0.7)
 
-right = cone()
-right.minimum = -1
-right.maximum = 0
-right.closed = True
-right.transform = translation(1.5, 1.5, -0.5) * scaling(0.5, 0.5, 0.5)
-right.material.diffuse = 0.7
-right.material.specular = 0.3
-right.material.pattern = gradient_pattern(MAGENTA, GREEN)
-right.material.pattern.set_transform(translation(1, 0, 0) * scaling(2, 1, 1))
+eraser = sphere()
+eraser.transform = translation(1.5, 1, 0) * scaling(0.5, 0.5, 0.5)
+eraser.material.color = color(0.8, 0.24, 0.51)
+eraser.material.diffuse = 1
+eraser.material.specular = 0.1
+eraser.material.shininess = 10
 
-left = cone()
-left.minimum = -1
-left.maximum = 0
-left.closed = True
-left.transform = translation(-1.5, 1.33, -0.75) * scaling(0.33, 0.33, 0.33)
-left.material.diffuse = 0.7
-left.material.specular = 0.3
-left.material.reflective = 0.5
-left.material.pattern = ring_pattern(checker_pattern(WHITE, BLACK), 
-                                     YELLOW)
-left.material.pattern.set_transform(scaling(0.1, 0.1, 0.1) * rotation_x(math.pi/2))
+pencil = cylinder()
+pencil.minimum = -2
+pencil.maximum = 2
+pencil.closed = True
+pencil.transform = translation(0, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
+pencil.material.color = color(0.73, 0.64, 0.08)
+pencil.material.diffuse = 1
+pencil.material.specular = 0.7
+pencil.material.shininess = 100
+
+ferrule = cylinder()
+ferrule.minimum = 0
+ferrule.maximum = 1
+ferrule.closed = True
+ferrule.transform = translation(1.5, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
+ferrule.material.color = color(0.06, 0.2, 0.05)
+ferrule.material.diffuse = 1
+ferrule.material.specular = 1
+ferrule.material.shininess = 300
+
+lead = cone()
+lead.minimum = -0.5
+lead.maximum = 0.0
+lead.transform = translation(-2, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 1, 0.5)
+lead.material.color = color (0.35, 0.35, 0.35)
+lead.material.diffuse = 0.7
+lead.material.specular = 0.3
+
+wood = cone()
+wood.minimum = -1.0
+wood.maximum = -0.5
+wood.transform = translation(-2, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 1, 0.5)
+wood.material.color = color(0.75, 0.54, 0.37)
+wood.material.diffuse = 0.7
+wood.material.specular = 0.3
+wood.material.shininess = 10
 
 w = world()
 w.objects.append(floor)
-w.objects.append(middle)
-w.objects.append(right)
-w.objects.append(left)
+w.objects.append(wall)
+w.objects.append(eraser)
+w.objects.append(pencil)
+w.objects.append(ferrule)
+w.objects.append(lead)
+w.objects.append(wood)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(300, 150, math.pi/3)
+cam = camera(600, 300, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/cones.ppm")
+image_to_file(image, "./output/pencil.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
