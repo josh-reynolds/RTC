@@ -14,7 +14,7 @@ class Cone(shapes.Shape):
         shapes.Shape.__init__(self)
         self.minimum = -math.inf
         self.maximum = math.inf
-        #self.closed = False
+        self.closed = False
 
     def local_intersect(self, r):
         xs = []
@@ -125,6 +125,17 @@ class ConeTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 1)
         self.assertTrue(flequal(xs[0].t, 0.35355))
 
+    def test_default_min_max_for_a_cone(self):
+        c = cone()
+
+        self.assertEqual(c.minimum, -math.inf)
+        self.assertEqual(c.maximum, math.inf)
+        
+    def test_default_closed_value_for_a_cone(self):
+        c = cone()
+
+        self.assertFalse(c.closed)
+        
     #def test_normal_vector_on_a_cylinder(self):
         #c = cylinder()
 #
@@ -140,11 +151,6 @@ class ConeTestCase(unittest.TestCase):
         #n = c.local_normal_at(point(-1, 1, 0))
         #self.assertEqual(n, vector(-1, 0, 0))
 #
-    #def test_default_min_max_for_a_cylinder(self):
-        #c = cylinder()
-#
-        #self.assertEqual(c.minimum, -math.inf)
-        #self.assertEqual(c.maximum, math.inf)
 #
     #def test_intersecting_a_constrained_cylinder(self):
         #c = cylinder()
@@ -175,10 +181,6 @@ class ConeTestCase(unittest.TestCase):
         #xs = c.local_intersect(r)
         #self.assertEqual(len(xs), 2)
 #
-    #def test_default_closed_value_for_a_cylinder(self):
-        #c = cylinder()
-#
-        #self.assertFalse(c.closed)
 #
     #def test_intersecting_caps_of_closed_cylinder(self):
         #c = cylinder()
