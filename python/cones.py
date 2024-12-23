@@ -33,7 +33,7 @@ class Cone(shapes.Shape):
 
         if flequal(a, 0):
             if not flequal(b, 0):
-                t = -c / 2 * b
+                t = -c / (2 * b)
                 xs.append(intersection(t, self))
         else:
             disc = b ** 2 - 4 * a * c
@@ -116,6 +116,14 @@ class ConeTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 2)
         self.assertTrue(flequal(xs[0].t,  4.55006))
         self.assertTrue(flequal(xs[1].t, 49.44994))
+
+    def test_intersecting_cone_with_ray_parallel_to_one_half(self):
+        c = cone()
+
+        r = ray(point(0, 0, -1), vector(0, 1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 1)
+        self.assertTrue(flequal(xs[0].t, 0.35355))
 
     #def test_normal_vector_on_a_cylinder(self):
         #c = cylinder()
