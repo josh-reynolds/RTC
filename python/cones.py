@@ -54,21 +54,22 @@ class Cone(shapes.Shape):
             if self.minimum < y1 and y1 < self.maximum:
                 xs.append(intersection(t1, self))
 
-        #self.intersect_caps(r, xs)
+        self.intersect_caps(r, xs)
 
         return xs
 
-    #def intersect_caps(self, r, xs):
-        #if not self.closed or flequal(r.direction.y, 0):
-            #return
-#
-        #t = (self.minimum - r.origin.y) / r.direction.y
-        #if check_cap(r, t):
-            #xs.append(intersection(t, self))
-#
-        #t = (self.maximum - r.origin.y) / r.direction.y
-        #if check_cap(r, t):
-            #xs.append(intersection(t, self))
+    def intersect_caps(self, r, xs):
+        pass
+        if not self.closed or flequal(r.direction.y, 0):
+            return
+
+        t = (self.minimum - r.origin.y) / r.direction.y
+        if check_cap(r, t, abs(self.minimum)):
+            xs.append(intersection(t, self))
+
+        t = (self.maximum - r.origin.y) / r.direction.y
+        if check_cap(r, t, abs(self.maximum)):
+            xs.append(intersection(t, self))
 
     def local_normal_at(self, pt):
         pass
@@ -85,10 +86,10 @@ class Cone(shapes.Shape):
 def cone():
     return Cone()
 
-#def check_cap(r, t):
-    #x = r.origin.x + t * r.direction.x
-    #z = r.origin.z + t * r.direction.z
-    #return (x ** 2 + z ** 2) <= 1
+def check_cap(r, t, radius):
+    x = r.origin.x + t * r.direction.x
+    z = r.origin.z + t * r.direction.z
+    return (x ** 2 + z ** 2) <= radius
 
 class ConeTestCase(unittest.TestCase):
     def test_a_cone_is_a_shape(self):
@@ -136,6 +137,24 @@ class ConeTestCase(unittest.TestCase):
 
         self.assertFalse(c.closed)
         
+    def test_intersecting_caps_of_closed_cone(self):
+        c = cone()
+        c.minimum = -0.5
+        c.maximum = 0.5
+        c.closed = True
+
+        r = ray(point(0, 0, -5), vector(0, 1, 0).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 0)
+
+        r = ray(point(0, 0, -0.25), vector(0, 1, 1).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+
+        r = ray(point(0, 0, -0.25), vector(0, 1, 0).normalize())
+        xs = c.local_intersect(r)
+        self.assertEqual(len(xs), 4)
+
     #def test_normal_vector_on_a_cylinder(self):
         #c = cylinder()
 #
@@ -150,63 +169,6 @@ class ConeTestCase(unittest.TestCase):
 #
         #n = c.local_normal_at(point(-1, 1, 0))
         #self.assertEqual(n, vector(-1, 0, 0))
-#
-#
-    #def test_intersecting_a_constrained_cylinder(self):
-        #c = cylinder()
-        #c.minimum = 1
-        #c.maximum = 2
-#
-        #r = ray(point(0, 1.5, 0), vector(0.1, 1, 0).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 3, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 2, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 1, -5), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 0)
-#
-        #r = ray(point(0, 1.5, -2), vector(0, 0, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-#
-#
-    #def test_intersecting_caps_of_closed_cylinder(self):
-        #c = cylinder()
-        #c.minimum = 1
-        #c.maximum = 2
-        #c.closed = True
-#
-        #r = ray(point(0, 3, 0), vector(0, -1, 0).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-#
-        #r = ray(point(0, 3, -2), vector(0, -1, 2).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-#
-        #r = ray(point(0, 4, -2), vector(0, -1, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-#
-        #r = ray(point(0, 0, -2), vector(0, 1, 2).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
-#
-        #r = ray(point(0, -1, -2), vector(0, 1, 1).normalize())
-        #xs = c.local_intersect(r)
-        #self.assertEqual(len(xs), 2)
 #
     #def test_normal_vector_on_cylinder_end_caps(self):
         #c = cylinder()
