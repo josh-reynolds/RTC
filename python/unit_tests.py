@@ -8,6 +8,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('canvases'))
     suite.addTests(loader.loadTestsFromName('checkers'))
     suite.addTests(loader.loadTestsFromName('colors'))
+    suite.addTests(loader.loadTestsFromName('cones'))
     suite.addTests(loader.loadTestsFromName('cubes'))
     suite.addTests(loader.loadTestsFromName('cylinders'))
     suite.addTests(loader.loadTestsFromName('gradients'))
