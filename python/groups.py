@@ -13,6 +13,16 @@ class Group(shapes.Shape):
     def __len__(self):
         return len(self.contents)
 
+    def __contains__(self, item):
+        for current_item in self.contents:
+            if item == current_item:
+                return True
+        return False
+    
+    def add_child(self, child):
+        self.contents.append(child)
+        child.parent = self
+
 def group():
     return Group()
 
@@ -27,6 +37,17 @@ class GroupTestCase(unittest.TestCase):
 
         self.assertEqual(g.transform, identity())
         self.assertEqual(len(g), 0)
+
+    def test_adding_child_to_group(self):
+        g = group()
+        s = shapes.test_shape()
+
+        g.add_child(s)
+
+        self.assertEqual(len(g), 1)
+        self.assertTrue(s in g)
+        self.assertEqual(s.parent, g)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
