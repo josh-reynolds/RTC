@@ -6,6 +6,8 @@ import shapes
 from matrices import identity
 from rays import ray
 from tuples import point, vector
+from spheres import sphere
+from transformations import translation
 
 class Group(shapes.Shape):
     def __init__(self):
@@ -27,6 +29,9 @@ class Group(shapes.Shape):
 
     def local_intersect(self, r):
         xs = []
+        for item in self.contents:
+            xs += item.intersect(r)
+        xs.sort(key=lambda x: x.t)
         return xs
 
 def group():
@@ -61,6 +66,29 @@ class GroupTestCase(unittest.TestCase):
         xs = g.local_intersect(r)
 
         self.assertEqual(len(xs), 0)
+
+    def test_intersecting_a_ray_with_a_nonempty_group(self):
+        g = group()
+
+        s1 = sphere()
+        g.add_child(s1)
+
+        s2 = sphere()
+        s2.set_transform(translation(0, 0, -3))
+        g.add_child(s2)
+
+        s3 = sphere()
+        s3.set_transform(translation(5, 0, 0))
+        g.add_child(s3)
+
+        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        xs = g.local_intersect(r)
+
+        self.assertEqual(len(xs), 4)
+        self.assertEqual(xs[0].object, s2)
+        self.assertEqual(xs[1].object, s2)
+        self.assertEqual(xs[2].object, s1)
+        self.assertEqual(xs[3].object, s1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
