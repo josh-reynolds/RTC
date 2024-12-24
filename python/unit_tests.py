@@ -12,6 +12,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('cubes'))
     suite.addTests(loader.loadTestsFromName('cylinders'))
     suite.addTests(loader.loadTestsFromName('gradients'))
+    suite.addTests(loader.loadTestsFromName('groups'))
     suite.addTests(loader.loadTestsFromName('intersections'))
     suite.addTests(loader.loadTestsFromName('lights'))
     suite.addTests(loader.loadTestsFromName('materials'))
