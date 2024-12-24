@@ -12,6 +12,7 @@ class Shape:                                          # 'abstract' base class
     def __init__(self):
         self.transform = identity()
         self.material = materials.material()
+        self.parent = None
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -106,6 +107,11 @@ class ShapeTestCase(unittest.TestCase):
         n = s.normal_at(point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
 
         self.assertEqual(n, vector(0, 0.97014, -0.24254))
+
+    def test_a_shape_has_a_parent_attribute(self):
+        s = test_shape()
+
+        self.assertEqual(s.parent, None)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
