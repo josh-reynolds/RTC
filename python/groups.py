@@ -4,6 +4,8 @@ import unittest
 import materials
 import shapes
 from matrices import identity
+from rays import ray
+from tuples import point, vector
 
 class Group(shapes.Shape):
     def __init__(self):
@@ -22,6 +24,10 @@ class Group(shapes.Shape):
     def add_child(self, child):
         self.contents.append(child)
         child.parent = self
+
+    def local_intersect(self, r):
+        xs = []
+        return xs
 
 def group():
     return Group()
@@ -48,6 +54,13 @@ class GroupTestCase(unittest.TestCase):
         self.assertTrue(s in g)
         self.assertEqual(s.parent, g)
 
+    def test_intersecting_a_ray_with_an_empty_group(self):
+        g = group()
+        r = ray(point(0, 0, 0), vector(0, 0, 1))
+
+        xs = g.local_intersect(r)
+
+        self.assertEqual(len(xs), 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
