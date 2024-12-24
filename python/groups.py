@@ -7,7 +7,7 @@ from matrices import identity
 from rays import ray
 from tuples import point, vector
 from spheres import sphere
-from transformations import translation
+from transformations import translation, scaling
 
 class Group(shapes.Shape):
     def __init__(self):
@@ -89,6 +89,19 @@ class GroupTestCase(unittest.TestCase):
         self.assertEqual(xs[1].object, s2)
         self.assertEqual(xs[2].object, s1)
         self.assertEqual(xs[3].object, s1)
+
+    def test_intersecting_a_transformed_group(self):
+        g = group()
+        g.set_transform(scaling(2, 2, 2))
+
+        s = sphere()
+        s.set_transform(translation(5, 0, 0))
+        g.add_child(s)
+
+        r = ray(point(10, 0, -10), vector(0, 0, 1))
+        xs = g.intersect(r)
+
+        self.assertEqual(len(xs), 2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
