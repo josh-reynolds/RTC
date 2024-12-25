@@ -41,7 +41,10 @@ class Shape:                                          # 'abstract' base class
         return tuples.vector(pt.x, pt.y, pt.z)        # this implementation for test purposes only
 
     def world_to_object(self, pt):
-        return tuples.point(0, 0, -1)
+        if self.parent:
+            pt = self.parent.world_to_object(pt)
+
+        return self.transform.inverse() * pt
 
 def test_shape():
     return Shape()
