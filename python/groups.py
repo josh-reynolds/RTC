@@ -3,11 +3,11 @@
 import unittest
 import materials
 import shapes
-from matrices import identity
-from rays import ray
-from tuples import point, vector
-from spheres import sphere
-from transformations import translation, scaling
+import matrices
+import rays
+import tuples
+import spheres
+import transformations
 
 class Group(shapes.Shape):
     def __init__(self):
@@ -46,7 +46,7 @@ class GroupTestCase(unittest.TestCase):
     def test_creating_a_group(self):
         g = group()
 
-        self.assertEqual(g.transform, identity())
+        self.assertEqual(g.transform, matrices.identity())
         self.assertEqual(len(g), 0)
 
     def test_adding_child_to_group(self):
@@ -61,7 +61,7 @@ class GroupTestCase(unittest.TestCase):
 
     def test_intersecting_a_ray_with_an_empty_group(self):
         g = group()
-        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, 0), tuples.vector(0, 0, 1))
 
         xs = g.local_intersect(r)
 
@@ -70,18 +70,18 @@ class GroupTestCase(unittest.TestCase):
     def test_intersecting_a_ray_with_a_nonempty_group(self):
         g = group()
 
-        s1 = sphere()
+        s1 = spheres.sphere()
         g.add_child(s1)
 
-        s2 = sphere()
-        s2.set_transform(translation(0, 0, -3))
+        s2 = spheres.sphere()
+        s2.set_transform(transformations.translation(0, 0, -3))
         g.add_child(s2)
 
-        s3 = sphere()
-        s3.set_transform(translation(5, 0, 0))
+        s3 = spheres.sphere()
+        s3.set_transform(transformations.translation(5, 0, 0))
         g.add_child(s3)
 
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
         xs = g.local_intersect(r)
 
         self.assertEqual(len(xs), 4)
@@ -92,13 +92,13 @@ class GroupTestCase(unittest.TestCase):
 
     def test_intersecting_a_transformed_group(self):
         g = group()
-        g.set_transform(scaling(2, 2, 2))
+        g.set_transform(transformations.scaling(2, 2, 2))
 
-        s = sphere()
-        s.set_transform(translation(5, 0, 0))
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(5, 0, 0))
         g.add_child(s)
 
-        r = ray(point(10, 0, -10), vector(0, 0, 1))
+        r = rays.ray(tuples.point(10, 0, -10), tuples.vector(0, 0, 1))
         xs = g.intersect(r)
 
         self.assertEqual(len(xs), 2)

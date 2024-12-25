@@ -3,10 +3,10 @@
 import unittest
 import math
 import spheres
-from rays import ray
-from tuples import point, vector
-from transformations import translation, scaling
-from utils import flequal, EPSILON
+import rays
+import tuples
+import transformations
+import utils
 import planes
 
 class Intersection:
@@ -61,8 +61,8 @@ class Computation:
         else:
             self.inside = False
 
-        self.over_point = self.point + self.normalv * EPSILON
-        self.under_point = self.point - self.normalv * EPSILON
+        self.over_point = self.point + self.normalv * utils.EPSILON
+        self.under_point = self.point - self.normalv * utils.EPSILON
         self.reflectv = ray.direction.reflect(self.normalv)
         self.n1 = 1.0
         self.n2 = 1.0
@@ -152,7 +152,7 @@ class IntersectionTestCase(unittest.TestCase):
         self.assertEqual(i, i4)
 
     def test_precomputing_the_state_of_an_intersection(self):
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
         s = spheres.sphere()
         i = intersection(4, s)
 
@@ -160,12 +160,12 @@ class IntersectionTestCase(unittest.TestCase):
 
         self.assertEqual(comps.t, i.t)
         self.assertEqual(comps.object, i.object)
-        self.assertEqual(comps.point, point(0, 0, -1))
-        self.assertEqual(comps.eyev, vector(0, 0, -1))
-        self.assertEqual(comps.normalv, vector(0, 0, -1))
+        self.assertEqual(comps.point, tuples.point(0, 0, -1))
+        self.assertEqual(comps.eyev, tuples.vector(0, 0, -1))
+        self.assertEqual(comps.normalv, tuples.vector(0, 0, -1))
 
     def test_hit_when_intersection_occurs_on_outside(self):
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
         s = spheres.sphere()
         i = intersection(4, s)
 
@@ -174,51 +174,51 @@ class IntersectionTestCase(unittest.TestCase):
         self.assertFalse(comps.inside)
 
     def test_hit_when_intersection_occurs_on_inside(self):
-        r = ray(point(0, 0, 0), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, 0), tuples.vector(0, 0, 1))
         s = spheres.sphere()
         i = intersection(1, s)
 
         comps = prepare_computations(i, r)
 
-        self.assertEqual(comps.point, point(0, 0, 1))
-        self.assertEqual(comps.eyev, vector(0, 0, -1))
+        self.assertEqual(comps.point, tuples.point(0, 0, 1))
+        self.assertEqual(comps.eyev, tuples.vector(0, 0, -1))
         self.assertTrue(comps.inside)
-        self.assertEqual(comps.normalv, vector(0, 0, -1))
+        self.assertEqual(comps.normalv, tuples.vector(0, 0, -1))
 
     def test_hit_should_offset_point(self):
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
         s = spheres.sphere()
-        s.transform = translation(0, 0, 1)
+        s.transform = transformations.translation(0, 0, 1)
         i = intersection(5, s)
 
         comps = prepare_computations(i, r)
 
-        self.assertTrue(comps.over_point.z < -EPSILON/2)
+        self.assertTrue(comps.over_point.z < -utils.EPSILON/2)
         self.assertTrue(comps.point.z > comps.over_point.z)
 
     def test_precomputing_reflection_vector(self):
         shape = planes.plane()
-        r = ray(point(0, 1, -1), vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
+        r = rays.ray(tuples.point(0, 1, -1), tuples.vector(0, -math.sqrt(2)/2, math.sqrt(2)/2))
         i = intersection(math.sqrt(2), shape)
 
         comps = prepare_computations(i, r)
 
-        self.assertEqual(comps.reflectv, vector(0, math.sqrt(2)/2, math.sqrt(2)/2))
+        self.assertEqual(comps.reflectv, tuples.vector(0, math.sqrt(2)/2, math.sqrt(2)/2))
 
     def test_finding_n1_and_n2_at_various_intersections(self):
         a = spheres.glass_sphere()
-        a.set_transform(scaling(2, 2, 2))
+        a.set_transform(transformations.scaling(2, 2, 2))
         a.material.refractive_index = 1.5
 
         b = spheres.glass_sphere()
-        b.set_transform(translation(0, 0, -0.25))
+        b.set_transform(transformations.translation(0, 0, -0.25))
         b.material.refractive_index = 2.0
 
         c = spheres.glass_sphere()
-        c.set_transform(translation(0, 0, 0.25))
+        c.set_transform(transformations.translation(0, 0, 0.25))
         c.material.refractive_index = 2.5
 
-        r = ray(point(0, 0, -4), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -4), tuples.vector(0, 0, 1))
         xs = intersections(intersection(2, a),
                            intersection(2.75, b),
                            intersection(3.25, c),
@@ -252,19 +252,19 @@ class IntersectionTestCase(unittest.TestCase):
 
     def test_under_point_is_offset_below_surface(self):
         shape = spheres.glass_sphere()
-        shape.set_transform(translation(0, 0, 1))
+        shape.set_transform(transformations.translation(0, 0, 1))
 
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
         xs = intersections(intersection(5, shape))
         comps = prepare_computations(xs[0], r, xs)
 
-        self.assertTrue(comps.under_point.z > EPSILON/2)
+        self.assertTrue(comps.under_point.z > utils.EPSILON/2)
         self.assertTrue(comps.point.z < comps.under_point.z)
 
     def test_schlick_approximation_under_total_internal_reflection(self):
         shape = spheres.glass_sphere()
 
-        r = ray(point(0, 0, math.sqrt(2)/2), vector(0, 1, 0))
+        r = rays.ray(tuples.point(0, 0, math.sqrt(2)/2), tuples.vector(0, 1, 0))
         xs = intersections(intersection(-math.sqrt(2)/2, shape),
                            intersection( math.sqrt(2)/2, shape))
         comps = prepare_computations(xs[1], r, xs)
@@ -276,25 +276,25 @@ class IntersectionTestCase(unittest.TestCase):
     def test_schlick_approximation_with_perpendicular_viewing_angle(self):
         shape = spheres.glass_sphere()
 
-        r = ray(point(0, 0, 0), vector(0, 1, 0))
+        r = rays.ray(tuples.point(0, 0, 0), tuples.vector(0, 1, 0))
         xs = intersections(intersection(-1, shape),
                            intersection( 1, shape))
         comps = prepare_computations(xs[1], r, xs)
 
         reflectance = schlick(comps)
 
-        self.assertTrue(flequal(reflectance, 0.04))
+        self.assertTrue(utils.flequal(reflectance, 0.04))
 
     def test_schlick_approximation_with_small_angle_and_n2_gt_n1(self):
         shape = spheres.glass_sphere()
 
-        r = ray(point(0, 0.99, -2), vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0.99, -2), tuples.vector(0, 0, 1))
         xs = intersections(intersection(1.8589, shape))
         comps = prepare_computations(xs[0], r, xs)
 
         reflectance = schlick(comps)
 
-        self.assertTrue(flequal(reflectance, 0.48874))
+        self.assertTrue(utils.flequal(reflectance, 0.48874))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -2,10 +2,10 @@
 
 import unittest
 import math
-from colors import color, BLACK, WHITE
-from utils import flequal
-from lights import point_light
-from tuples import point, vector
+import colors
+import utils
+import lights
+import tuples
 import spheres
 import stripes
 
@@ -18,7 +18,7 @@ import stripes
 
 class Material:
     def __init__(self):
-        self.color = WHITE
+        self.color = colors.WHITE
         self.ambient = 0.1        # range 0 - 1
         self.diffuse = 0.9        # range 0 - 1
         self.specular = 0.9       # range 0 - 1
@@ -31,10 +31,10 @@ class Material:
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return ((self.color == other.color) and
-                    flequal(self.ambient, other.ambient) and
-                    flequal(self.diffuse, other.diffuse) and
-                    flequal(self.specular, other.specular) and
-                    flequal(self.shininess, other.shininess))
+                    utils.flequal(self.ambient, other.ambient) and
+                    utils.flequal(self.diffuse, other.diffuse) and
+                    utils.flequal(self.specular, other.specular) and
+                    utils.flequal(self.shininess, other.shininess))
         else:
             return False
 
@@ -53,15 +53,15 @@ def lighting(material, obj, light, position, eyev, normalv, in_shadow):
 
     light_dot_normal = lightv.dot(normalv)
     if light_dot_normal < 0:
-        diffuse = BLACK
-        specular = BLACK
+        diffuse = colors.BLACK
+        specular = colors.BLACK
     else:
         diffuse = effective_color * material.diffuse * light_dot_normal
         reflectv = (-lightv).reflect(normalv)
         reflect_dot_eye = reflectv.dot(eyev)
 
         if reflect_dot_eye < 0:
-            specular = BLACK
+            specular = colors.BLACK
         else:
             factor = reflect_dot_eye ** material.shininess
             specular = light.intensity * material.specular * factor
@@ -76,7 +76,7 @@ class MaterialTestCase(unittest.TestCase):
     def test_the_default_material(self):
         m = material()
 
-        self.assertEqual(m.color, WHITE)
+        self.assertEqual(m.color, colors.WHITE)
         self.assertEqual(m.ambient, 0.1)
         self.assertEqual(m.diffuse, 0.9)
         self.assertEqual(m.specular, 0.9)
@@ -84,87 +84,87 @@ class MaterialTestCase(unittest.TestCase):
 
     def test_lighting_with_eye_between_light_and_surface(self):
         m = material()
-        light = point_light(point(0, 0, -10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, 0, -1)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 0, -10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, 0, -1)
+        normalv = tuples.vector(0, 0, -1)
         
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
-        self.assertEqual(result, color(1.9, 1.9, 1.9))
+        self.assertEqual(result, colors.color(1.9, 1.9, 1.9))
 
     def test_lighting_with_eye_between_light_and_surface_and_offset_45_degrees(self):
         m = material()
-        light = point_light(point(0, 0, -10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, math.sqrt(2)/2, -math.sqrt(2)/2)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 0, -10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, math.sqrt(2)/2, -math.sqrt(2)/2)
+        normalv = tuples.vector(0, 0, -1)
         
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
-        self.assertEqual(result, WHITE)
+        self.assertEqual(result, colors.WHITE)
 
     def test_lighting_with_eye_opposite_surface_and_light_offset_45_degrees(self):
         m = material()
-        light = point_light(point(0, 10, -10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, 0, -1)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 10, -10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, 0, -1)
+        normalv = tuples.vector(0, 0, -1)
         
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
-        self.assertEqual(result, color(0.7364, 0.7364, 0.7364))
+        self.assertEqual(result, colors.color(0.7364, 0.7364, 0.7364))
 
     def test_lighting_with_eye_in_path_of_reflection_vector(self):
         m = material()
-        light = point_light(point(0, 10, -10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, -math.sqrt(2)/2, -math.sqrt(2)/2)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 10, -10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, -math.sqrt(2)/2, -math.sqrt(2)/2)
+        normalv = tuples.vector(0, 0, -1)
         
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
-        self.assertEqual(result, color(1.6364, 1.6364, 1.6364))
+        self.assertEqual(result, colors.color(1.6364, 1.6364, 1.6364))
 
     def test_lighting_with_light_behind_surface(self):
         m = material()
-        light = point_light(point(0, 0, 10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, 0, -1)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 0, 10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, 0, -1)
+        normalv = tuples.vector(0, 0, -1)
         
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, False)
 
-        self.assertEqual(result, color(0.1, 0.1, 0.1))
+        self.assertEqual(result, colors.color(0.1, 0.1, 0.1))
 
     def test_lighting_with_surface_in_shadow(self):
         m = material()
-        light = point_light(point(0, 0, -10), WHITE)
-        position = point(0, 0, 0)
-        eyev = vector(0, 0, -1)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 0, -10), colors.WHITE)
+        position = tuples.point(0, 0, 0)
+        eyev = tuples.vector(0, 0, -1)
+        normalv = tuples.vector(0, 0, -1)
         in_shadow = True
 
         result = lighting(m, spheres.sphere(), light, position, eyev, normalv, in_shadow)
 
-        self.assertEqual(result, color(0.1, 0.1, 0.1))
+        self.assertEqual(result, colors.color(0.1, 0.1, 0.1))
 
     def test_lighting_with_a_pattern_applied(self):
         m = material()
-        m.pattern = stripes.stripe_pattern(WHITE, BLACK)
+        m.pattern = stripes.stripe_pattern(colors.WHITE, colors.BLACK)
         m.ambient = 1
         m.diffuse = 0
         m.specular = 0
 
-        light = point_light(point(0, 0, -10), WHITE)
-        eyev = vector(0, 0, -1)
-        normalv = vector(0, 0, -1)
+        light = lights.point_light(tuples.point(0, 0, -10), colors.WHITE)
+        eyev = tuples.vector(0, 0, -1)
+        normalv = tuples.vector(0, 0, -1)
 
-        c1 = lighting(m, spheres.sphere(), light, point(0.9, 0, 0), eyev, normalv, False)
-        c2 = lighting(m, spheres.sphere(), light, point(1.1, 0, 0), eyev, normalv, False)
+        c1 = lighting(m, spheres.sphere(), light, tuples.point(0.9, 0, 0), eyev, normalv, False)
+        c2 = lighting(m, spheres.sphere(), light, tuples.point(1.1, 0, 0), eyev, normalv, False)
 
-        self.assertEqual(c1, WHITE)
-        self.assertEqual(c2, BLACK)
+        self.assertEqual(c1, colors.WHITE)
+        self.assertEqual(c2, colors.BLACK)
 
     def test_reflectivity_for_default_material(self):
         m = material()

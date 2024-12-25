@@ -2,15 +2,14 @@
 
 import unittest
 import math
-from rays import ray
-from tuples import point, vector
-from matrices import identity
-from transformations import translation, scaling, rotation_z
+import matrices
 import materials
+import tuples
+
 
 class Shape:                                          # 'abstract' base class
     def __init__(self):
-        self.transform = identity()
+        self.transform = matrices.identity()
         self.material = materials.material()
         self.parent = None
 
@@ -39,23 +38,32 @@ class Shape:                                          # 'abstract' base class
         return world_normal.normalize()
 
     def local_normal_at(self, pt):                    # override in child classes
-        return vector(pt.x, pt.y, pt.z)               # this implementation for test purposes only
+        return tuples.vector(pt.x, pt.y, pt.z)        # this implementation for test purposes only
+
+    def world_to_object(self, pt):
+        return tuples.point(0, 0, -1)
 
 def test_shape():
     return Shape()
+
+import rays
+import transformations
+import spheres
+import groups
+import intersections
 
 class ShapeTestCase(unittest.TestCase):
     def test_a_shapes_default_transformation(self):
         s = test_shape()
 
-        self.assertEqual(s.transform, identity())
+        self.assertEqual(s.transform, matrices.identity())
 
     def test_assigning_a_transformation(self):
         s = test_shape()
 
-        s.set_transform(translation(2, 3, 4))
+        s.set_transform(transformations.translation(2, 3, 4))
 
-        self.assertEqual(s.transform, translation(2, 3, 4))
+        self.assertEqual(s.transform, transformations.translation(2, 3, 4))
 
     def test_a_shapes_default_materials(self):
         s = test_shape()
@@ -73,45 +81,61 @@ class ShapeTestCase(unittest.TestCase):
 
     def test_intersecting_a_scaled_shape_with_a_ray(self):
         s = test_shape()
-        s.set_transform(scaling(2, 2, 2))
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s.set_transform(transformations.scaling(2, 2, 2))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
 
         xs = s.intersect(r)
 
-        self.assertEqual(s.saved_ray.origin, point(0, 0, -2.5))
-        self.assertEqual(s.saved_ray.direction, vector(0, 0, 0.5))
+        self.assertEqual(s.saved_ray.origin, tuples.point(0, 0, -2.5))
+        self.assertEqual(s.saved_ray.direction, tuples.vector(0, 0, 0.5))
 
     def test_intersecting_a_translated_shape_with_a_ray(self):
         s = test_shape()
-        s.set_transform(translation(5, 0, 0))
-        r = ray(point(0, 0, -5), vector(0, 0, 1))
+        s.set_transform(transformations.translation(5, 0, 0))
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
 
         xs = s.intersect(r)
 
-        self.assertEqual(s.saved_ray.origin, point(-5, 0, -5))
-        self.assertEqual(s.saved_ray.direction, vector(0, 0, 1))
+        self.assertEqual(s.saved_ray.origin, tuples.point(-5, 0, -5))
+        self.assertEqual(s.saved_ray.direction, tuples.vector(0, 0, 1))
 
     def test_computing_normal_on_translated_shape(self):
         s = test_shape()
-        s.set_transform(translation(0, 1, 0))
+        s.set_transform(transformations.translation(0, 1, 0))
 
-        n = s.normal_at(point(0, 1.70711, -0.70711))
+        n = s.normal_at(tuples.point(0, 1.70711, -0.70711))
 
-        self.assertEqual(n, vector(0, 0.70711, -0.70711))
+        self.assertEqual(n, tuples.vector(0, 0.70711, -0.70711))
 
     def test_computing_normal_on_transformed_shape(self):
         s = test_shape()
-        m = scaling(1, 0.5, 1) * rotation_z(math.pi/5)
+        m = transformations.scaling(1, 0.5, 1) * transformations.rotation_z(math.pi/5)
         s.set_transform(m)
 
-        n = s.normal_at(point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+        n = s.normal_at(tuples.point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
 
-        self.assertEqual(n, vector(0, 0.97014, -0.24254))
+        self.assertEqual(n, tuples.vector(0, 0.97014, -0.24254))
 
     def test_a_shape_has_a_parent_attribute(self):
         s = test_shape()
 
         self.assertEqual(s.parent, None)
+
+    def test_converting_point_from_world_to_object_space(self):
+        g1 = groups.group()
+        g1.set_transform(transformations.rotation_y(math.pi/2))
+
+        g2 = groups.group()
+        g2.set_transform(transformations.scaling(2, 2, 2))
+        g1.add_child(g2)
+
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(5, 0, 0))
+        g2.add_child(s)
+
+        p = s.world_to_object(tuples.point(-2, 0, -10))
+
+        self.assertEqual(p, tuples.point(0, 0, -1))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -1,8 +1,8 @@
 # to run tests: python -m unittest -v matrices
 
 import unittest
-from tuples import Tuple
-from utils import flequal
+import tuples
+import utils
 
 class Matrix():
     def __init__(self, rows, columns):
@@ -77,7 +77,7 @@ class Matrix():
                 self.columns == other.columns):
                     for row in range(self.rows):
                         for col in range(self.columns):
-                            if not flequal(self.__getitem__((row,col)), other[row,col]):
+                            if not utils.flequal(self.__getitem__((row,col)), other[row,col]):
                                 result = False
         else:
             result = False
@@ -96,23 +96,23 @@ class Matrix():
                                         self.data[row][2] * rhs[2, col] +
                                         self.data[row][3] * rhs[3, col])
             return m
-        elif isinstance(rhs, Tuple):
-            result = Tuple(0, 0, 0, 0)
+        elif isinstance(rhs, tuples.Tuple):
+            result = tuples.Tuple(0, 0, 0, 0)
 
             r1 = self.data[0]
-            row1 = Tuple(r1[0], r1[1], r1[2], r1[3])
+            row1 = tuples.Tuple(r1[0], r1[1], r1[2], r1[3])
             result.x = row1.dot(rhs)
 
             r2 = self.data[1]
-            row2 = Tuple(r2[0], r2[1], r2[2], r2[3])
+            row2 = tuples.Tuple(r2[0], r2[1], r2[2], r2[3])
             result.y = row2.dot(rhs)
 
             r3 = self.data[2]
-            row3 = Tuple(r3[0], r3[1], r3[2], r3[3])
+            row3 = tuples.Tuple(r3[0], r3[1], r3[2], r3[3])
             result.z = row3.dot(rhs)
 
             r4 = self.data[3]
-            row4 = Tuple(r4[0], r4[1], r4[2], r4[3])
+            row4 = tuples.Tuple(r4[0], r4[1], r4[2], r4[3])
             result.w = row4.dot(rhs)
 
             return result
@@ -266,9 +266,9 @@ class MatrixTestCase(unittest.TestCase):
         a.data[2] = [8, 6, 4, 1]
         a.data[3] = [0, 0, 0, 1]
 
-        b = Tuple(1, 2, 3, 1)
+        b = tuples.Tuple(1, 2, 3, 1)
 
-        self.assertEqual(a * b, Tuple(18, 24, 33, 1))
+        self.assertEqual(a * b, tuples.Tuple(18, 24, 33, 1))
 
     def test_multiplying_matrix_by_identity(self):
         a = matrix()
@@ -280,7 +280,7 @@ class MatrixTestCase(unittest.TestCase):
         self.assertEqual(a * identity(), a)
 
     def test_multiplying_tuple_by_identity(self):
-        a = Tuple(1, 2, 3, 4)
+        a = tuples.Tuple(1, 2, 3, 4)
 
         self.assertEqual(identity() * a, a)
 

@@ -2,7 +2,7 @@
 
 import unittest
 import math
-from utils import flequal
+import utils
 
 class Tuple():
     def __init__(self, x, y, z, w):
@@ -46,10 +46,10 @@ class Tuple():
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return (flequal(self.x, other.x) and
-                    flequal(self.y, other.y) and
-                    flequal(self.z, other.z) and
-                    flequal(self.w, other.w))
+            return (utils.flequal(self.x, other.x) and
+                    utils.flequal(self.y, other.y) and
+                    utils.flequal(self.z, other.z) and
+                    utils.flequal(self.w, other.w))
         else:
             return False
 
