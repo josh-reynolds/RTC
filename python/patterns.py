@@ -23,7 +23,7 @@ class Pattern():                                        # 'abstract' base class
         self.transform = transform
 
     def pattern_at_shape(self, obj, world_pt):
-        obj_pt = obj.transform.inverse() * world_pt
+        obj_pt = obj.world_to_object(world_pt)
         return self.pattern_at(obj_pt)
 
     def pattern_at(self, pt):                           # override in child classes
