@@ -46,6 +46,17 @@ class Shape:                                          # 'abstract' base class
 
         return self.transform.inverse() * pt
 
+    def normal_to_world(self, normal):
+        normal = self.transform.inverse().transpose() * normal
+        normal.w = 0
+        normal = normal.normalize()
+
+        if self.parent:
+            normal = self.parent.normal_to_world(normal)
+
+        return normal
+
+
 def test_shape():
     return Shape()
 
@@ -139,6 +150,22 @@ class ShapeTestCase(unittest.TestCase):
         p = s.world_to_object(tuples.point(-2, 0, -10))
 
         self.assertEqual(p, tuples.point(0, 0, -1))
+
+    def test_converting_a_normal_from_object_to_world_space(self):
+        g1 = groups.group()
+        g1.set_transform(transformations.rotation_y(math.pi/2))
+
+        g2 = groups.group()
+        g2.set_transform(transformations.scaling(1, 2, 3))
+        g1.add_child(g2)
+
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(5, 0, 0))
+        g2.add_child(s)
+
+        n = s.normal_to_world(tuples.vector(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+
+        self.assertEqual(n, tuples.vector(0.28571, 0.42857, -0.85714))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
