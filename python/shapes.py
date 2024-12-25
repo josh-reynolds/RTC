@@ -31,11 +31,9 @@ class Shape:                                          # 'abstract' base class
         self.transform = t
 
     def normal_at(self, pt):
-        local_point = self.transform.inverse() * pt
+        local_point = self.world_to_object(pt)
         local_normal = self.local_normal_at(local_point)
-        world_normal = self.transform.inverse().transpose() * local_normal
-        world_normal.w = 0
-        return world_normal.normalize()
+        return self.normal_to_world(local_normal)
 
     def local_normal_at(self, pt):                    # override in child classes
         return tuples.vector(pt.x, pt.y, pt.z)        # this implementation for test purposes only
@@ -166,6 +164,23 @@ class ShapeTestCase(unittest.TestCase):
         n = s.normal_to_world(tuples.vector(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
 
         self.assertEqual(n, tuples.vector(0.28571, 0.42857, -0.85714))
+
+    def test_finding_normal_on_a_child_object(self):
+        g1 = groups.group()
+        g1.set_transform(transformations.rotation_y(math.pi/2))
+
+        g2 = groups.group()
+        g2.set_transform(transformations.scaling(1, 2, 3))
+        g1.add_child(g2)
+
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(5, 0, 0))
+        g2.add_child(s)
+
+        n = s.normal_at(tuples.point(1.7321, 1.1547, -5.5774))
+
+        self.assertEqual(n, tuples.vector(0.28570, 0.42854, -0.85716))
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
