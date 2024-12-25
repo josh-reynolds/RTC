@@ -18,6 +18,7 @@ from utils import image_to_file
 from cubes import cube
 from cylinders import cylinder
 from cones import cone
+from groups import group
 
 start_time = datetime.now()
 
@@ -35,15 +36,15 @@ eraser.material.diffuse = 1
 eraser.material.specular = 0.1
 eraser.material.shininess = 10
 
-pencil = cylinder()
-pencil.minimum = -2
-pencil.maximum = 2
-pencil.closed = True
-pencil.transform = translation(0, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
-pencil.material.color = color(0.73, 0.64, 0.08)
-pencil.material.diffuse = 1
-pencil.material.specular = 0.7
-pencil.material.shininess = 100
+body = cylinder()
+body.minimum = -2
+body.maximum = 2
+body.closed = True
+body.transform = translation(0, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
+body.material.color = color(0.73, 0.64, 0.08)
+body.material.diffuse = 1
+body.material.specular = 0.7
+body.material.shininess = 100
 
 ferrule = cylinder()
 ferrule.minimum = 0
@@ -72,23 +73,27 @@ wood.material.diffuse = 0.7
 wood.material.specular = 0.3
 wood.material.shininess = 10
 
+pencil = group()
+pencil.add_child(eraser)
+pencil.add_child(body)
+pencil.add_child(ferrule)
+pencil.add_child(lead)
+pencil.add_child(wood)
+pencil.set_transform(rotation_z(math.pi/5))
+
 w = world()
 w.objects.append(floor)
 w.objects.append(wall)
-w.objects.append(eraser)
 w.objects.append(pencil)
-w.objects.append(ferrule)
-w.objects.append(lead)
-w.objects.append(wood)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(600, 300, math.pi/3)
+cam = camera(300, 150, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/pencil.ppm")
+image_to_file(image, "./output/grouped_pencil.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
