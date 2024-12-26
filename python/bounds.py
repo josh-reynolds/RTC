@@ -9,6 +9,7 @@ import spheres
 import cubes
 import planes
 import cylinders
+import cones
 import utils
 
 class Bounds(shapes.Shape):
@@ -85,6 +86,16 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 1)
         self.assertEqual(b.maximum.y, 1)
         self.assertEqual(b.maximum.z, 1)
+
+    def test_bounds_calculated_from_a_cone(self):
+        b = bounds(cones.cone())
+
+        self.assertEqual(b.minimum.x, -math.inf)
+        self.assertEqual(b.minimum.y, -math.inf)
+        self.assertEqual(b.minimum.z, -math.inf)
+        self.assertEqual(b.maximum.x, math.inf)
+        self.assertEqual(b.maximum.y, math.inf)
+        self.assertEqual(b.maximum.z, math.inf)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

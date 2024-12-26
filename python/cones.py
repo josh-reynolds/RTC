@@ -5,7 +5,7 @@ import unittest
 import materials
 import shapes
 from rays import ray
-from tuples import point, vector
+import tuples
 from intersections import intersection
 from utils import flequal, EPSILON
 
@@ -75,16 +75,21 @@ class Cone(shapes.Shape):
         dist = pt.x ** 2 + pt.z ** 2
 
         if dist < 1 and pt.y >= self.maximum - EPSILON:
-            return vector(0, 1, 0)
+            return tuples.vector(0, 1, 0)
 
         if dist < 1 and pt.y <= self.minimum + EPSILON:
-            return vector(0, -1, 0)
+            return tuples.vector(0, -1, 0)
 
         y = math.sqrt(dist)
         if pt.y > 0:
             y = -y
 
-        return vector(pt.x, y, pt.z)
+        return tuples.vector(pt.x, y, pt.z)
+
+    def bounds(self):
+        max_radius = max(abs(self.minimum), abs(self.maximum))
+        return (tuples.point(-max_radius, self.minimum, -max_radius),
+                tuples.point(max_radius, self.maximum, max_radius))
 
 def cone():
     return Cone()
@@ -103,19 +108,19 @@ class ConeTestCase(unittest.TestCase):
     def test_intersecting_a_ray_with_a_cone(self):
         c = cone()
 
-        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 5)
         self.assertEqual(xs[1].t, 5)
 
-        r = ray(point(0, 0, -5), vector(1, 1, 1).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(1, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertTrue(flequal(xs[0].t, 8.66025))
         self.assertTrue(flequal(xs[1].t, 8.66025))
 
-        r = ray(point(1, 1, -5), vector(-0.5, -1, 1).normalize())
+        r = ray(tuples.point(1, 1, -5), tuples.vector(-0.5, -1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertTrue(flequal(xs[0].t,  4.55006))
@@ -124,7 +129,7 @@ class ConeTestCase(unittest.TestCase):
     def test_intersecting_cone_with_ray_parallel_to_one_half(self):
         c = cone()
 
-        r = ray(point(0, 0, -1), vector(0, 1, 1).normalize())
+        r = ray(tuples.point(0, 0, -1), tuples.vector(0, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 1)
         self.assertTrue(flequal(xs[0].t, 0.35355))
@@ -146,29 +151,29 @@ class ConeTestCase(unittest.TestCase):
         c.maximum = 0.5
         c.closed = True
 
-        r = ray(point(0, 0, -5), vector(0, 1, 0).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(0, 1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 0, -0.25), vector(0, 1, 1).normalize())
+        r = ray(tuples.point(0, 0, -0.25), tuples.vector(0, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
-        r = ray(point(0, 0, -0.25), vector(0, 1, 0).normalize())
+        r = ray(tuples.point(0, 0, -0.25), tuples.vector(0, 1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 4)
 
     def test_normal_vector_on_a_cone(self):
         c = cone()
 
-        n = c.local_normal_at(point(0, 0, 0))
-        self.assertEqual(n, vector(0, 0, 0))
+        n = c.local_normal_at(tuples.point(0, 0, 0))
+        self.assertEqual(n, tuples.vector(0, 0, 0))
 
-        n = c.local_normal_at(point(1, 1, 1))
-        self.assertEqual(n, vector(1, -math.sqrt(2), 1))
+        n = c.local_normal_at(tuples.point(1, 1, 1))
+        self.assertEqual(n, tuples.vector(1, -math.sqrt(2), 1))
 
-        n = c.local_normal_at(point(-1, -1, 0))
-        self.assertEqual(n, vector(-1, 1, 0))
+        n = c.local_normal_at(tuples.point(-1, -1, 0))
+        self.assertEqual(n, tuples.vector(-1, 1, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
