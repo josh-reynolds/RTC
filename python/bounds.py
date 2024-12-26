@@ -8,6 +8,7 @@ import tuples
 import spheres
 import cubes
 import planes
+import cylinders
 import utils
 
 class Bounds(shapes.Shape):
@@ -61,6 +62,16 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, math.inf)
         self.assertEqual(b.maximum.y, utils.EPSILON)
         self.assertEqual(b.maximum.z, math.inf)
+
+    def test_bounds_calculated_from_a_cylinder(self):
+        b = bounds(cylinders.cylinder())
+
+        self.assertEqual(b.minimum.x, -1)
+        self.assertEqual(b.minimum.y, -math.inf)
+        self.assertEqual(b.minimum.z, -1)
+        self.assertEqual(b.maximum.x, 1)
+        self.assertEqual(b.maximum.y, math.inf)
+        self.assertEqual(b.maximum.z, 1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

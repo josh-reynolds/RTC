@@ -5,7 +5,7 @@ import unittest
 import materials
 import shapes
 from rays import ray
-from tuples import point, vector
+import tuples
 from utils import flequal, EPSILON
 from intersections import intersection
 
@@ -64,12 +64,16 @@ class Cylinder(shapes.Shape):
         dist = pt.x ** 2 + pt.z ** 2
 
         if dist < 1 and pt.y >= self.maximum - EPSILON:
-            return vector(0, 1, 0)
+            return tuples.vector(0, 1, 0)
 
         if dist < 1 and pt.y <= self.minimum + EPSILON:
-            return vector(0, -1, 0)
+            return tuples.vector(0, -1, 0)
 
-        return vector(pt.x, 0, pt.z)
+        return tuples.vector(pt.x, 0, pt.z)
+
+    def bounds(self):
+        return (tuples.point(-1, -math.inf, -1),
+                tuples.point(1, math.inf, 1))
 
 def cylinder():
     return Cylinder()
@@ -88,34 +92,34 @@ class CylinderTestCase(unittest.TestCase):
     def test_a_ray_misses_a_cylinder(self):
         c = cylinder()
 
-        r = ray(point(1, 0, 0), vector(0, 1, 0).normalize())
+        r = ray(tuples.point(1, 0, 0), tuples.vector(0, 1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 0, 0), vector(0, 1, 0).normalize())
+        r = ray(tuples.point(0, 0, 0), tuples.vector(0, 1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 0, -5), vector(1, 1, 1).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(1, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
     def test_a_ray_strikes_a_cylinder(self):
         c = cylinder()
 
-        r = ray(point(1, 0, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(1, 0, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 5)
         self.assertEqual(xs[1].t, 5)
 
-        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0.5, 0, -5), vector(0.1, 1, 1).normalize())
+        r = ray(tuples.point(0.5, 0, -5), tuples.vector(0.1, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertTrue(flequal(xs[0].t, 6.80798))
@@ -124,17 +128,17 @@ class CylinderTestCase(unittest.TestCase):
     def test_normal_vector_on_a_cylinder(self):
         c = cylinder()
 
-        n = c.local_normal_at(point(1, 0, 0))
-        self.assertEqual(n, vector(1, 0, 0))
+        n = c.local_normal_at(tuples.point(1, 0, 0))
+        self.assertEqual(n, tuples.vector(1, 0, 0))
 
-        n = c.local_normal_at(point(0, 5, -1))
-        self.assertEqual(n, vector(0, 0, -1))
+        n = c.local_normal_at(tuples.point(0, 5, -1))
+        self.assertEqual(n, tuples.vector(0, 0, -1))
 
-        n = c.local_normal_at(point(0, -2, 1))
-        self.assertEqual(n, vector(0, 0, 1))
+        n = c.local_normal_at(tuples.point(0, -2, 1))
+        self.assertEqual(n, tuples.vector(0, 0, 1))
 
-        n = c.local_normal_at(point(-1, 1, 0))
-        self.assertEqual(n, vector(-1, 0, 0))
+        n = c.local_normal_at(tuples.point(-1, 1, 0))
+        self.assertEqual(n, tuples.vector(-1, 0, 0))
 
     def test_default_min_max_for_a_cylinder(self):
         c = cylinder()
@@ -147,27 +151,27 @@ class CylinderTestCase(unittest.TestCase):
         c.minimum = 1
         c.maximum = 2
 
-        r = ray(point(0, 1.5, 0), vector(0.1, 1, 0).normalize())
+        r = ray(tuples.point(0, 1.5, 0), tuples.vector(0.1, 1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 3, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 3, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 0, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 2, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 2, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 1, -5), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 1, -5), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 1.5, -2), vector(0, 0, 1).normalize())
+        r = ray(tuples.point(0, 1.5, -2), tuples.vector(0, 0, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
@@ -182,23 +186,23 @@ class CylinderTestCase(unittest.TestCase):
         c.maximum = 2
         c.closed = True
 
-        r = ray(point(0, 3, 0), vector(0, -1, 0).normalize())
+        r = ray(tuples.point(0, 3, 0), tuples.vector(0, -1, 0).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
-        r = ray(point(0, 3, -2), vector(0, -1, 2).normalize())
+        r = ray(tuples.point(0, 3, -2), tuples.vector(0, -1, 2).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
-        r = ray(point(0, 4, -2), vector(0, -1, 1).normalize())
+        r = ray(tuples.point(0, 4, -2), tuples.vector(0, -1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
-        r = ray(point(0, 0, -2), vector(0, 1, 2).normalize())
+        r = ray(tuples.point(0, 0, -2), tuples.vector(0, 1, 2).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
-        r = ray(point(0, -1, -2), vector(0, 1, 1).normalize())
+        r = ray(tuples.point(0, -1, -2), tuples.vector(0, 1, 1).normalize())
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
 
@@ -208,23 +212,23 @@ class CylinderTestCase(unittest.TestCase):
         c.maximum = 2
         c.closed = True
 
-        n = c.local_normal_at(point(0, 1, 0))
-        self.assertEqual(n, vector(0, -1, 0))
+        n = c.local_normal_at(tuples.point(0, 1, 0))
+        self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(point(0.5, 1, 0))
-        self.assertEqual(n, vector(0, -1, 0))
+        n = c.local_normal_at(tuples.point(0.5, 1, 0))
+        self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(point(0, 1, 0.5))
-        self.assertEqual(n, vector(0, -1, 0))
+        n = c.local_normal_at(tuples.point(0, 1, 0.5))
+        self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(point(0, 2, 0))
-        self.assertEqual(n, vector(0, 1, 0))
+        n = c.local_normal_at(tuples.point(0, 2, 0))
+        self.assertEqual(n, tuples.vector(0, 1, 0))
 
-        n = c.local_normal_at(point(0.5, 2, 0))
-        self.assertEqual(n, vector(0, 1, 0))
+        n = c.local_normal_at(tuples.point(0.5, 2, 0))
+        self.assertEqual(n, tuples.vector(0, 1, 0))
 
-        n = c.local_normal_at(point(0, 2, 0.5))
-        self.assertEqual(n, vector(0, 1, 0))
+        n = c.local_normal_at(tuples.point(0, 2, 0.5))
+        self.assertEqual(n, tuples.vector(0, 1, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
