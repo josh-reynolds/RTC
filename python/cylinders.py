@@ -72,8 +72,8 @@ class Cylinder(shapes.Shape):
         return tuples.vector(pt.x, 0, pt.z)
 
     def bounds(self):
-        return (tuples.point(-1, -math.inf, -1),
-                tuples.point(1, math.inf, 1))
+        return (tuples.point(-1, self.minimum, -1),
+                tuples.point(1, self.maximum, 1))
 
 def cylinder():
     return Cylinder()

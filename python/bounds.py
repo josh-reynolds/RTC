@@ -73,6 +73,19 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.y, math.inf)
         self.assertEqual(b.maximum.z, 1)
 
+    def test_bounds_calculated_from_a_constrained_cylinder(self):
+        c = cylinders.cylinder()
+        c.minimum = -1
+        c.maximum = 1
+        b = bounds(c)
+
+        self.assertEqual(b.minimum.x, -1)
+        self.assertEqual(b.minimum.y, -1)
+        self.assertEqual(b.minimum.z, -1)
+        self.assertEqual(b.maximum.x, 1)
+        self.assertEqual(b.maximum.y, 1)
+        self.assertEqual(b.maximum.z, 1)
+
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
