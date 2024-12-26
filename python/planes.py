@@ -1,5 +1,6 @@
 # to run tests: python -m unittest -v planes
 
+import math
 import unittest
 import rays
 import tuples
@@ -22,6 +23,10 @@ class Plane(shapes.Shape):
 
     def local_normal_at(self, pt):
         return tuples.vector(0, 1, 0)
+    
+    def bounds(self):
+        return (tuples.point(-math.inf, -utils.EPSILON, -math.inf),
+                tuples.point(math.inf, utils.EPSILON, math.inf))
 
 def plane():
     return Plane()

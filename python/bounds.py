@@ -1,11 +1,14 @@
 # to run tests: python -m unittest -v bounds
 
+import math
 import unittest
 import materials
 import shapes
 import tuples
 import spheres
 import cubes
+import planes
+import utils
 
 class Bounds(shapes.Shape):
     def __init__(self, minimum, maximum):
@@ -48,6 +51,16 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 1)
         self.assertEqual(b.maximum.y, 1)
         self.assertEqual(b.maximum.z, 1)
+
+    def test_bounds_calculated_from_a_plane(self):
+        b = bounds(planes.plane())
+
+        self.assertEqual(b.minimum.x, -math.inf)
+        self.assertEqual(b.minimum.y, -utils.EPSILON)
+        self.assertEqual(b.minimum.z, -math.inf)
+        self.assertEqual(b.maximum.x, math.inf)
+        self.assertEqual(b.maximum.y, utils.EPSILON)
+        self.assertEqual(b.maximum.z, math.inf)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
