@@ -5,6 +5,7 @@ import materials
 import shapes
 import tuples
 import spheres
+import cubes
 
 class Bounds(shapes.Shape):
     def __init__(self, minimum, maximum):
@@ -38,6 +39,15 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.y, 1)
         self.assertEqual(b.maximum.z, 1)
 
+    def test_bounds_calculated_from_a_cube(self):
+        b = bounds(cubes.cube())
+
+        self.assertEqual(b.minimum.x, -1)
+        self.assertEqual(b.minimum.y, -1)
+        self.assertEqual(b.minimum.z, -1)
+        self.assertEqual(b.maximum.x, 1)
+        self.assertEqual(b.maximum.y, 1)
+        self.assertEqual(b.maximum.z, 1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

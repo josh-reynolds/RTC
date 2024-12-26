@@ -5,7 +5,7 @@ import unittest
 import materials
 import shapes
 from rays import ray
-from tuples import point, vector
+import tuples
 from intersections import intersections, intersection
 from utils import EPSILON
 
@@ -31,11 +31,15 @@ class Cube(shapes.Shape):
         maxc = max(abs(pt.x), abs(pt.y), abs(pt.z))
 
         if maxc == abs(pt.x):
-            return vector(pt.x, 0, 0)
+            return tuples.vector(pt.x, 0, 0)
         elif maxc == abs(pt.y):
-            return vector(0, pt.y, 0)
+            return tuples.vector(0, pt.y, 0)
 
-        return vector(0, 0, pt.z)
+        return tuples.vector(0, 0, pt.z)
+
+    def bounds(self):
+        return (tuples.point(-1, -1, -1),
+                tuples.point(1, 1, 1))
 
 def cube():
     return Cube()
@@ -65,43 +69,43 @@ class CubeTestCase(unittest.TestCase):
     def test_a_ray_intersects_a_cube(self):
         c = cube()
 
-        r = ray(point(5, 0.5, 0), vector(-1, 0, 0))
+        r = ray(tuples.point(5, 0.5, 0), tuples.vector(-1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(-5, 0.5, 0), vector(1, 0, 0))
+        r = ray(tuples.point(-5, 0.5, 0), tuples.vector(1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0.5, 5, 0), vector(0, -1, 0))
+        r = ray(tuples.point(0.5, 5, 0), tuples.vector(0, -1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0.5, -5, 0), vector(0, 1, 0))
+        r = ray(tuples.point(0.5, -5, 0), tuples.vector(0, 1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0.5, 0, 5), vector(0, 0, -1))
+        r = ray(tuples.point(0.5, 0, 5), tuples.vector(0, 0, -1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0.5, 0, -5), vector(0, 0, 1))
+        r = ray(tuples.point(0.5, 0, -5), tuples.vector(0, 0, 1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(point(0, 0.5, 0), vector(0, 0, 1))
+        r = ray(tuples.point(0, 0.5, 0), tuples.vector(0, 0, 1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, -1)
@@ -110,64 +114,64 @@ class CubeTestCase(unittest.TestCase):
     def test_a_ray_misses_a_cube(self):
         c = cube()
 
-        r = ray(point(-2, 0, 0), vector(0.2673, 0.5345, 0.8018))
+        r = ray(tuples.point(-2, 0, 0), tuples.vector(0.2673, 0.5345, 0.8018))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, -2, 0), vector(0.8018, 0.2673, 0.5345))
+        r = ray(tuples.point(0, -2, 0), tuples.vector(0.8018, 0.2673, 0.5345))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 0, -2), vector(0.5345, 0.8018, 0.2673))
+        r = ray(tuples.point(0, 0, -2), tuples.vector(0.5345, 0.8018, 0.2673))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(2, 0, 2), vector(0, 0, -1))
+        r = ray(tuples.point(2, 0, 2), tuples.vector(0, 0, -1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(0, 2, 2), vector(0, -1, 0))
+        r = ray(tuples.point(0, 2, 2), tuples.vector(0, -1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(point(2, 2, 0), vector(-1, 0, 0))
+        r = ray(tuples.point(2, 2, 0), tuples.vector(-1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
     def test_normal_on_surface_of_a_cube(self):
         c = cube()
 
-        p = point(1, 0.5, -0.8)
+        p = tuples.point(1, 0.5, -0.8)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(1, 0, 0))
+        self.assertEqual(normal, tuples.vector(1, 0, 0))
 
-        p = point(-1, -0.2, 0.9)
+        p = tuples.point(-1, -0.2, 0.9)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(-1, 0, 0))
+        self.assertEqual(normal, tuples.vector(-1, 0, 0))
 
-        p = point(-0.4, 1, -0.1)
+        p = tuples.point(-0.4, 1, -0.1)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(0, 1, 0))
+        self.assertEqual(normal, tuples.vector(0, 1, 0))
 
-        p = point(0.3, -1, -0.7)
+        p = tuples.point(0.3, -1, -0.7)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(0, -1, 0))
+        self.assertEqual(normal, tuples.vector(0, -1, 0))
 
-        p = point(-0.6, 0.3, 1)
+        p = tuples.point(-0.6, 0.3, 1)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(0, 0, 1))
+        self.assertEqual(normal, tuples.vector(0, 0, 1))
 
-        p = point(0.4, 0.4, -1)
+        p = tuples.point(0.4, 0.4, -1)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(0, 0, -1))
+        self.assertEqual(normal, tuples.vector(0, 0, -1))
 
-        p = point(1, 1, 1)
+        p = tuples.point(1, 1, 1)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(1, 0, 0))
+        self.assertEqual(normal, tuples.vector(1, 0, 0))
 
-        p = point(-1, -1, -1)
+        p = tuples.point(-1, -1, -1)
         normal = c.local_normal_at(p)
-        self.assertEqual(normal,vector(-1, 0, 0))
+        self.assertEqual(normal, tuples.vector(-1, 0, 0))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
