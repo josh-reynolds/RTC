@@ -97,6 +97,19 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.y, math.inf)
         self.assertEqual(b.maximum.z, math.inf)
 
+    def test_bounds_calculated_from_a_constrained_cone(self):
+        c = cones.cone()
+        c.minimum = -1
+        c.maximum = 2
+        b = bounds(c)
+
+        self.assertEqual(b.minimum.x, -2)
+        self.assertEqual(b.minimum.y, -1)
+        self.assertEqual(b.minimum.z, -2)
+        self.assertEqual(b.maximum.x, 2)
+        self.assertEqual(b.maximum.y, 2)
+        self.assertEqual(b.maximum.z, 2)
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
