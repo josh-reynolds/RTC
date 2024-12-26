@@ -36,6 +36,10 @@ class Sphere(shapes.Shape):
     def local_normal_at(self, pt):
         return pt - tuples.point(0, 0, 0)
 
+    def bounds(self):
+        return (tuples.point(-1, -1, -1),
+                tuples.point(1, 1, 1))
+
 def sphere():
     return Sphere()
 
