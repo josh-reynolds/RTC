@@ -123,7 +123,16 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.y, 1)
         self.assertEqual(b.maximum.z, 1)
 
+    def test_bounds_from_an_empty_group(self):
+        g = groups.group()
+        b = bounds (g)
 
+        self.assertEqual(b.minimum.x, 0)
+        self.assertEqual(b.minimum.y, 0)
+        self.assertEqual(b.minimum.z, 0)
+        self.assertEqual(b.maximum.x, 0)
+        self.assertEqual(b.maximum.y, 0)
+        self.assertEqual(b.maximum.z, 0)
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

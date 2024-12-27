@@ -35,7 +35,11 @@ class Group(shapes.Shape):
         return xs
 
     def bounds(self):
-        return self.contents[0].bounds()
+        if self.contents:
+            return self.contents[0].bounds()
+        else:
+            return (tuples.point(0, 0, 0),        # make this exception instead?
+                    tuples.point(0, 0, 0))
 
 def group():
     return Group()
