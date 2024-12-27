@@ -36,7 +36,10 @@ class Group(shapes.Shape):
 
     def bounds(self):
         if self.contents:
-            return self.contents[0].bounds()
+            minimum,maximum = self.contents[0].bounds()
+            minimum = self.contents[0].transform * minimum
+            maximum = self.contents[0].transform * maximum
+            return (minimum, maximum)
         else:
             return (tuples.point(0, 0, 0),        # make this exception instead?
                     tuples.point(0, 0, 0))

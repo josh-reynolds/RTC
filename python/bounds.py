@@ -11,6 +11,7 @@ import planes
 import cylinders
 import cones
 import groups
+import transformations
 import utils
 
 class Bounds(shapes.Shape):
@@ -24,6 +25,9 @@ class Bounds(shapes.Shape):
 
     def local_normal_at(self, pt):
         pass
+
+    def __repr__(self):
+        return "Bounds({}, {})".format(self.minimum, self.maximum)
 
 def bounds(shape):
     minimum, maximum = shape.bounds()
@@ -133,6 +137,20 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 0)
         self.assertEqual(b.maximum.y, 0)
         self.assertEqual(b.maximum.z, 0)
+
+    def test_bounds_with_group_containing_transformed_shape(self):
+        s = spheres.sphere()
+        s.set_transform(transformations.scaling(2, 2, 2))
+        g = groups.group()
+        g.add_child(s)
+        b = bounds(g)
+
+        self.assertEqual(b.minimum.x, -2)
+        self.assertEqual(b.minimum.y, -2)
+        self.assertEqual(b.minimum.z, -2)
+        self.assertEqual(b.maximum.x, 2)
+        self.assertEqual(b.maximum.y, 2)
+        self.assertEqual(b.maximum.z, 2)
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
