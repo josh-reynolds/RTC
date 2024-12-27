@@ -35,14 +35,25 @@ class Group(shapes.Shape):
         return xs
 
     def bounds(self):
+        minimum = tuples.point(0, 0, 0)
+        maximum = tuples.point(0, 0, 0)
+
         if self.contents:
-            minimum,maximum = self.contents[0].bounds()
-            minimum = self.contents[0].transform * minimum
-            maximum = self.contents[0].transform * maximum
-            return (minimum, maximum)
-        else:
-            return (tuples.point(0, 0, 0),        # make this exception instead?
-                    tuples.point(0, 0, 0))
+            for shape in self.contents:
+                newmin,newmax = shape.bounds()
+
+                newmin = shape.transform * newmin
+                newmax = shape.transform * newmax
+
+                minimum.x = min(minimum.x, newmin.x)
+                minimum.y = min(minimum.y, newmin.y)
+                minimum.z = min(minimum.z, newmin.z)
+
+                maximum.x = max(maximum.x, newmax.x)
+                maximum.y = max(maximum.y, newmax.y)
+                maximum.z = max(maximum.z, newmax.z)
+
+        return (minimum, maximum)
 
 def group():
     return Group()
