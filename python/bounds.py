@@ -10,6 +10,7 @@ import cubes
 import planes
 import cylinders
 import cones
+import groups
 import utils
 
 class Bounds(shapes.Shape):
@@ -109,6 +110,20 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 2)
         self.assertEqual(b.maximum.y, 2)
         self.assertEqual(b.maximum.z, 2)
+
+    def test_bounds_from_a_one_item_group(self):
+        g = groups.group()
+        g.add_child(spheres.sphere())
+        b = bounds (g)
+
+        self.assertEqual(b.minimum.x, -1)
+        self.assertEqual(b.minimum.y, -1)
+        self.assertEqual(b.minimum.z, -1)
+        self.assertEqual(b.maximum.x, 1)
+        self.assertEqual(b.maximum.y, 1)
+        self.assertEqual(b.maximum.z, 1)
+
+
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':

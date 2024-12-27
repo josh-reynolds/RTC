@@ -34,6 +34,9 @@ class Group(shapes.Shape):
         xs.sort(key=lambda x: x.t)
         return xs
 
+    def bounds(self):
+        return self.contents[0].bounds()
+
 def group():
     return Group()
 
