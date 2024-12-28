@@ -254,6 +254,31 @@ class BoundsTestCase(unittest.TestCase):
         xs = b.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
+    def test_a_ray_intersects_a_transformed_bounds(self):
+        g = groups.group()
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(3, 3, 3))
+        g.add_child(s)
+        b = bounds(g)
+
+        r = rays.ray(tuples.point(5, 3, 3), tuples.vector(-1, 0, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 1)
+        self.assertEqual(xs[1].t, 3)
+        
+        r = rays.ray(tuples.point(3, 5, 3), tuples.vector(0, -1, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 1)
+        self.assertEqual(xs[1].t, 3)
+        
+        r = rays.ray(tuples.point(5, 3.5, 3), tuples.vector(-1, 0, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 1)
+        self.assertEqual(xs[1].t, 3)
+        
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
