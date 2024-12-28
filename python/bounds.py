@@ -5,6 +5,8 @@ import unittest
 import materials
 import shapes
 import tuples
+import rays
+import intersections
 import spheres
 import cubes
 import planes
@@ -21,7 +23,18 @@ class Bounds(shapes.Shape):
         self.maximum = maximum
 
     def local_intersect(self, r):
-        pass
+        xtmin, xtmax = check_axis(r.origin.x, r.direction.x, self.minimum.x, self.maximum.x)
+        ytmin, ytmax = check_axis(r.origin.y, r.direction.y, self.minimum.y, self.maximum.y)
+        ztmin, ztmax = check_axis(r.origin.z, r.direction.z, self.minimum.z, self.maximum.z)
+
+        tmin = max(xtmin, ytmin, ztmin)
+        tmax = min(xtmax, ytmax, ztmax)
+
+        if tmin > tmax:
+            return []
+
+        return intersections.intersections(intersections.intersection(tmin, self),
+                                           intersections.intersection(tmax, self))
 
     def local_normal_at(self, pt):
         pass
@@ -32,6 +45,22 @@ class Bounds(shapes.Shape):
 def bounds(shape):
     minimum, maximum = shape.bounds()
     return Bounds(minimum, maximum)
+
+def check_axis(origin, direction, minimum, maximum):
+    tmin_numerator = (minimum - origin)
+    tmax_numerator = (maximum - origin)
+
+    if abs(direction) >= utils.EPSILON:
+        tmin = tmin_numerator / direction
+        tmax = tmax_numerator / direction
+    else:
+        tmin = tmin_numerator * math.inf
+        tmax = tmax_numerator * math.inf
+
+    if tmin > tmax:
+        tmin, tmax = tmax, tmin
+
+    return (tmin, tmax)
 
 class BoundsTestCase(unittest.TestCase):
     def test_bounds_is_a_shape(self):
@@ -182,7 +211,30 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 4)
         self.assertEqual(b.maximum.y, 4)
         self.assertEqual(b.maximum.z, 4)
+
+    def test_a_ray_intersects_a_bounds(self):
+        g = groups.group()
+        s = spheres.sphere()
+        g.add_child(s)
+        b = bounds(g)
+
+        r = rays.ray(tuples.point(3, 0, 0), tuples.vector(-1, 0, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 2)
+        self.assertEqual(xs[1].t, 4)
         
+        r = rays.ray(tuples.point(0, 3, 0), tuples.vector(0, -1, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 2)
+        self.assertEqual(xs[1].t, 4)
+        
+        r = rays.ray(tuples.point(5, 0.5, 0), tuples.vector(-1, 0, 0))
+        xs = b.local_intersect(r)
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 4)
+        self.assertEqual(xs[1].t, 6)
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()
