@@ -168,6 +168,20 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(b.maximum.x, 2)
         self.assertEqual(b.maximum.y, 1)
         self.assertEqual(b.maximum.z, 1)
+
+    def test_bounds_with_translated_shape(self):
+        g = groups.group()
+        s = spheres.sphere()
+        s.set_transform(transformations.translation(3, 3, 3))
+        g.add_child(s)
+        b = bounds(g)
+
+        self.assertEqual(b.minimum.x, 2)
+        self.assertEqual(b.minimum.y, 2)
+        self.assertEqual(b.minimum.z, 2)
+        self.assertEqual(b.maximum.x, 4)
+        self.assertEqual(b.maximum.y, 4)
+        self.assertEqual(b.maximum.z, 4)
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
