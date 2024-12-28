@@ -88,6 +88,10 @@ class Tuple():
                      str(self.z) + ", " +
                      str(self.w) + ")")
 
+    def __repr__(self):
+        return "Tuple({},{},{},{})".format(self.x, self.y, self.z, self.w)
+
+
 def point(x, y, z):
     return Tuple(x, y, z, 1)
 

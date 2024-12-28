@@ -40,6 +40,9 @@ class Sphere(shapes.Shape):
         return (tuples.point(-1, -1, -1),
                 tuples.point(1, 1, 1))
 
+    def __repr__(self):
+        return "Sphere()"
+
 def sphere():
     return Sphere()
 
