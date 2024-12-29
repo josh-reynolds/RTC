@@ -14,6 +14,7 @@ class Group(shapes.Shape):
     def __init__(self):
         shapes.Shape.__init__(self)
         self.contents = []
+        self.skip_bounds_check = False
 
     def __len__(self):
         return len(self.contents)
@@ -31,7 +32,7 @@ class Group(shapes.Shape):
     def local_intersect(self, r):
         xs = []
         b = bounds.bounds(self)
-        if b.intersect(r):
+        if b.intersect(r) or self.skip_bounds_check:
             for item in self.contents:
                 xs += item.intersect(r)
             xs.sort(key=lambda x: x.t)

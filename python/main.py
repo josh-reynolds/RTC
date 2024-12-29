@@ -74,6 +74,7 @@ wood.material.specular = 0.3
 wood.material.shininess = 10
 
 pencil = group()
+#pencil.skip_bounds_check = True
 pencil.add_child(eraser)
 pencil.add_child(body)
 pencil.add_child(ferrule)
@@ -93,7 +94,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/bounded_pencil.ppm")
+image_to_file(image, "./output/bounded_pencil_3.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
