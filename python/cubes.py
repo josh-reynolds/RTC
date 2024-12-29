@@ -4,10 +4,10 @@ import math
 import unittest
 import materials
 import shapes
-from rays import ray
+import rays
 import tuples
-from intersections import intersections, intersection
-from utils import EPSILON
+import intersections
+import utils
 
 class Cube(shapes.Shape):
     def __init__(self):
@@ -24,8 +24,8 @@ class Cube(shapes.Shape):
         if tmin > tmax:
             return []
 
-        return intersections(intersection(tmin, self),
-                             intersection(tmax, self))
+        return intersections.intersections(intersections.intersection(tmin, self),
+                                           intersections.intersection(tmax, self))
 
     def local_normal_at(self, pt):
         maxc = max(abs(pt.x), abs(pt.y), abs(pt.z))
@@ -48,7 +48,7 @@ def check_axis(origin, direction):
     tmin_numerator = (-1 - origin)
     tmax_numerator = (1 - origin)
 
-    if abs(direction) >= EPSILON:
+    if abs(direction) >= utils.EPSILON:
         tmin = tmin_numerator / direction
         tmax = tmax_numerator / direction
     else:
@@ -69,43 +69,43 @@ class CubeTestCase(unittest.TestCase):
     def test_a_ray_intersects_a_cube(self):
         c = cube()
 
-        r = ray(tuples.point(5, 0.5, 0), tuples.vector(-1, 0, 0))
+        r = rays.ray(tuples.point(5, 0.5, 0), tuples.vector(-1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(-5, 0.5, 0), tuples.vector(1, 0, 0))
+        r = rays.ray(tuples.point(-5, 0.5, 0), tuples.vector(1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(0.5, 5, 0), tuples.vector(0, -1, 0))
+        r = rays.ray(tuples.point(0.5, 5, 0), tuples.vector(0, -1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(0.5, -5, 0), tuples.vector(0, 1, 0))
+        r = rays.ray(tuples.point(0.5, -5, 0), tuples.vector(0, 1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(0.5, 0, 5), tuples.vector(0, 0, -1))
+        r = rays.ray(tuples.point(0.5, 0, 5), tuples.vector(0, 0, -1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(0.5, 0, -5), tuples.vector(0, 0, 1))
+        r = rays.ray(tuples.point(0.5, 0, -5), tuples.vector(0, 0, 1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 4)
         self.assertEqual(xs[1].t, 6)
 
-        r = ray(tuples.point(0, 0.5, 0), tuples.vector(0, 0, 1))
+        r = rays.ray(tuples.point(0, 0.5, 0), tuples.vector(0, 0, 1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, -1)
@@ -114,27 +114,27 @@ class CubeTestCase(unittest.TestCase):
     def test_a_ray_misses_a_cube(self):
         c = cube()
 
-        r = ray(tuples.point(-2, 0, 0), tuples.vector(0.2673, 0.5345, 0.8018))
+        r = rays.ray(tuples.point(-2, 0, 0), tuples.vector(0.2673, 0.5345, 0.8018))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(tuples.point(0, -2, 0), tuples.vector(0.8018, 0.2673, 0.5345))
+        r = rays.ray(tuples.point(0, -2, 0), tuples.vector(0.8018, 0.2673, 0.5345))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(tuples.point(0, 0, -2), tuples.vector(0.5345, 0.8018, 0.2673))
+        r = rays.ray(tuples.point(0, 0, -2), tuples.vector(0.5345, 0.8018, 0.2673))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(tuples.point(2, 0, 2), tuples.vector(0, 0, -1))
+        r = rays.ray(tuples.point(2, 0, 2), tuples.vector(0, 0, -1))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(tuples.point(0, 2, 2), tuples.vector(0, -1, 0))
+        r = rays.ray(tuples.point(0, 2, 2), tuples.vector(0, -1, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 
-        r = ray(tuples.point(2, 2, 0), tuples.vector(-1, 0, 0))
+        r = rays.ray(tuples.point(2, 2, 0), tuples.vector(-1, 0, 0))
         xs = c.local_intersect(r)
         self.assertEqual(len(xs), 0)
 

@@ -8,6 +8,7 @@ import rays
 import tuples
 import spheres
 import transformations
+import bounds
 
 class Group(shapes.Shape):
     def __init__(self):
@@ -29,9 +30,11 @@ class Group(shapes.Shape):
 
     def local_intersect(self, r):
         xs = []
-        for item in self.contents:
-            xs += item.intersect(r)
-        xs.sort(key=lambda x: x.t)
+        b = bounds.bounds(self)
+        if b.intersect(r):
+            for item in self.contents:
+                xs += item.intersect(r)
+            xs.sort(key=lambda x: x.t)
         return xs
 
     def bounds(self):
