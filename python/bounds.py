@@ -278,6 +278,20 @@ class BoundsTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 2)
         self.assertEqual(xs[0].t, 1)
         self.assertEqual(xs[1].t, 3)
+
+    def test_bounds_with_rotated_cube(self):
+        g = groups.group()
+        c = cubes.cube()
+        c.set_transform(transformations.rotation_y(math.pi/4))
+        g.add_child(c)
+        b = bounds(g)
+
+        self.assertTrue(utils.flequal(b.minimum.x, -math.sqrt(2)))
+        self.assertTrue(utils.flequal(b.minimum.y, -1))
+        self.assertTrue(utils.flequal(b.minimum.z, -math.sqrt(2)))
+        self.assertTrue(utils.flequal(b.maximum.x, math.sqrt(2)))
+        self.assertTrue(utils.flequal(b.maximum.y, 1))
+        self.assertTrue(utils.flequal(b.maximum.z, math.sqrt(2)))
         
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
