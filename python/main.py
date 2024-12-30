@@ -20,6 +20,38 @@ from cylinders import cylinder
 from cones import cone
 from groups import group
 
+def hexagon_corner():
+    corner = sphere()
+    corner.set_transform(translation(0, 0, -1) * 
+                         scaling(0.25, 0.25, 0.25))
+    return corner
+
+def hexagon_edge():
+    edge = cylinder()
+    edge.minimum = 0
+    edge.maximum = 1
+    edge.set_transform(translation(0, 0, -1) *
+                       rotation_y(-math.pi/6) * 
+                       rotation_z(-math.pi/2) * 
+                       scaling(0.25, 1, 0.25))
+    return edge
+
+def hexagon_side():
+    side = group()
+    side.skip_bounds_check = True
+    side.add_child(hexagon_corner())
+    side.add_child(hexagon_edge())
+    return side
+
+def hexagon():
+    hx = group()
+    hx.skip_bounds_check = True
+    for n in range(6):
+        side = hexagon_side()
+        side.set_transform(rotation_y(n * math.pi/3))
+        hx.add_child(side)
+    return hx
+
 start_time = datetime.now()
 
 floor = plane()
@@ -29,63 +61,14 @@ wall = plane()
 wall.transform = rotation_x(math.pi/2) * translation(0, 15, 0)
 wall.material.color = color(0.9, 0.8, 0.7)
 
-eraser = sphere()
-eraser.transform = translation(1.5, 1, 0) * scaling(0.5, 0.5, 0.5)
-eraser.material.color = color(0.8, 0.24, 0.51)
-eraser.material.diffuse = 1
-eraser.material.specular = 0.1
-eraser.material.shininess = 10
-
-body = cylinder()
-body.minimum = -2
-body.maximum = 2
-body.closed = True
-body.transform = translation(0, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
-body.material.color = color(0.73, 0.64, 0.08)
-body.material.diffuse = 1
-body.material.specular = 0.7
-body.material.shininess = 100
-
-ferrule = cylinder()
-ferrule.minimum = 0
-ferrule.maximum = 1
-ferrule.closed = True
-ferrule.transform = translation(1.5, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 0.5, 0.5)
-ferrule.material.color = color(0.06, 0.2, 0.05)
-ferrule.material.diffuse = 1
-ferrule.material.specular = 1
-ferrule.material.shininess = 300
-
-lead = cone()
-lead.minimum = -0.5
-lead.maximum = 0.0
-lead.transform = translation(-2, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 1, 0.5)
-lead.material.color = color (0.35, 0.35, 0.35)
-lead.material.diffuse = 0.7
-lead.material.specular = 0.3
-
-wood = cone()
-wood.minimum = -1.0
-wood.maximum = -0.5
-wood.transform = translation(-2, 1, 0) * rotation_z(math.pi/2) * scaling(0.5, 1, 0.5)
-wood.material.color = color(0.75, 0.54, 0.37)
-wood.material.diffuse = 0.7
-wood.material.specular = 0.3
-wood.material.shininess = 10
-
-pencil = group()
-#pencil.skip_bounds_check = True
-pencil.add_child(eraser)
-pencil.add_child(body)
-pencil.add_child(ferrule)
-pencil.add_child(lead)
-pencil.add_child(wood)
-pencil.set_transform(rotation_z(math.pi/5))
+hx = hexagon()
+hx.skip_bounds_check = True
+hx.set_transform(translation(0, 1, 0) * rotation_x(math.pi/3))
 
 w = world()
 w.objects.append(floor)
 w.objects.append(wall)
-w.objects.append(pencil)
+w.objects.append(hx)
 w.light = point_light(point(-10, 10, -10), WHITE)
 
 cam = camera(300, 150, math.pi/3)
@@ -94,8 +77,10 @@ cam.transform = view_transform(point(0, 1.5, -5),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/bounded_pencil_3.ppm")
+image_to_file(image, "./output/hexagon_group.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
 print('Render time: {}'.format(end_time - start_time))
+
+
