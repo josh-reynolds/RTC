@@ -38,14 +38,14 @@ def hexagon_edge():
 
 def hexagon_side():
     side = group()
-    side.skip_bounds_check = True
+    #side.skip_bounds_check = True
     side.add_child(hexagon_corner())
     side.add_child(hexagon_edge())
     return side
 
 def hexagon():
     hx = group()
-    hx.skip_bounds_check = True
+    #hx.skip_bounds_check = True
     for n in range(6):
         side = hexagon_side()
         side.set_transform(rotation_y(n * math.pi/3))
@@ -62,7 +62,7 @@ wall.transform = rotation_x(math.pi/2) * translation(0, 15, 0)
 wall.material.color = color(0.9, 0.8, 0.7)
 
 hx = hexagon()
-hx.skip_bounds_check = True
+#hx.skip_bounds_check = True
 hx.set_transform(translation(0, 1, 0) * rotation_x(math.pi/3))
 
 w = world()
@@ -77,7 +77,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/hexagon_group.ppm")
+image_to_file(image, "./output/hexagon_group_2.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
