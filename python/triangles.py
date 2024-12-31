@@ -19,7 +19,7 @@ class Triangle(shapes.Shape):
         pass
 
     def local_normal_at(self, pt):
-        pass
+        return self.normal
 
     #def bounds(self):
         #return (tuples.point(-1, -1, -1),
@@ -49,6 +49,19 @@ class TriangleTestCase(unittest.TestCase):
         self.assertEqual(t.e1, tuples.vector(-1, -1, 0))
         self.assertEqual(t.e2, tuples.vector(1, -1, 0))
         self.assertEqual(t.normal, tuples.vector(0, 0, -1))
+
+    def test_finding_the_normal_on_a_triangle(self):
+        t = triangle(tuples.point( 0, 1, 0),
+                     tuples.point(-1, 0, 0),
+                     tuples.point( 1, 0, 0))
+
+        n1 = t.local_normal_at(tuples.point(   0,  0.5, 0))
+        n2 = t.local_normal_at(tuples.point(-0.5, 0.75, 0))
+        n3 = t.local_normal_at(tuples.point( 0.5, 0.25, 0))
+
+        self.assertEqual(n1, t.normal)
+        self.assertEqual(n2, t.normal)
+        self.assertEqual(n3, t.normal)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
