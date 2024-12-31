@@ -40,27 +40,24 @@ class Group(shapes.Shape):
 
     def bounds(self):
         minimum = maximum = None
+        xs = []
+        ys = []
+        zs = []
 
         if self.contents:
             for shape in self.contents:
                 newmin,newmax = shape.bounds()
 
-                newmin = shape.transform * newmin
-                newmax = shape.transform * newmax
+                points = cube_points(newmin, newmax)
+                for p in points:
+                    newp = shape.transform * p
+                    xs.append(newp.x)
+                    ys.append(newp.y)
+                    zs.append(newp.z)
 
-                if minimum:
-                    minimum.x = min(minimum.x, newmin.x)
-                    minimum.y = min(minimum.y, newmin.y)
-                    minimum.z = min(minimum.z, newmin.z)
-                else:
-                    minimum = newmin
+            minimum = tuples.point(min(xs), min(ys), min(zs))
+            maximum = tuples.point(max(xs), max(ys), max(zs))
 
-                if maximum:
-                    maximum.x = max(maximum.x, newmax.x)
-                    maximum.y = max(maximum.y, newmax.y)
-                    maximum.z = max(maximum.z, newmax.z)
-                else:
-                    maximum = newmax
         else:
             minimum = tuples.point(0, 0, 0)
             maximum = tuples.point(0, 0, 0)
