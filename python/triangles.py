@@ -4,6 +4,9 @@ import unittest
 import materials
 import shapes
 import tuples
+import rays
+import utils
+import intersections
 
 class Triangle(shapes.Shape):
     def __init__(self, p1, p2, p3):
@@ -16,7 +19,12 @@ class Triangle(shapes.Shape):
         self.normal = (self.e2.cross(self.e1)).normalize()
 
     def local_intersect(self, r):
-        pass
+        dir_cross_e2 = r.direction.cross(self.e2)
+        determinant = self.e1.dot(dir_cross_e2)
+        if abs(determinant) < utils.EPSILON:
+            return []
+
+        return [intersections.intersection(1, self)]
 
     def local_normal_at(self, pt):
         return self.normal
@@ -62,6 +70,19 @@ class TriangleTestCase(unittest.TestCase):
         self.assertEqual(n1, t.normal)
         self.assertEqual(n2, t.normal)
         self.assertEqual(n3, t.normal)
+
+    def test_intersecting_ray_parallel_to_triangle(self):
+        t = triangle(tuples.point( 0, 1, 0),
+                     tuples.point(-1, 0, 0),
+                     tuples.point( 1, 0, 0))
+        r = rays.ray(tuples.point(0, -1, -2),
+                     tuples.vector(0, 1, 0))
+
+        xs = t.local_intersect(r)
+
+        self.assertEqual(len(xs), 0)
+
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
