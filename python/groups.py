@@ -67,6 +67,14 @@ class Group(shapes.Shape):
 
         return (minimum, maximum)
 
+def cube_points(minimum, maximum):
+    points = []
+    for x in (minimum.x, maximum.x):
+        for y in (minimum.y, maximum.y):
+            for z in (minimum.z, maximum.z):
+                points.append(tuples.point(x, y, z))
+    return points
+
 def group():
     return Group()
 
