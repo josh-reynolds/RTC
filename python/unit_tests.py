@@ -28,6 +28,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('spheres'))
     suite.addTests(loader.loadTestsFromName('stripes'))
     suite.addTests(loader.loadTestsFromName('transformations'))
+    suite.addTests(loader.loadTestsFromName('triangles'))
     suite.addTests(loader.loadTestsFromName('tuples'))
     suite.addTests(loader.loadTestsFromName('utils'))
     suite.addTests(loader.loadTestsFromName('worlds'))
