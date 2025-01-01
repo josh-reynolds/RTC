@@ -24,6 +24,13 @@ class Triangle(shapes.Shape):
         if abs(determinant) < utils.EPSILON:
             return []
 
+        f = 1.0 / determinant
+
+        p1_to_origin = r.origin - self.p1
+        u = f * p1_to_origin.dot(dir_cross_e2)
+        if u < 0 or u > 1:
+            return []
+
         return [intersections.intersection(1, self)]
 
     def local_normal_at(self, pt):
@@ -82,7 +89,16 @@ class TriangleTestCase(unittest.TestCase):
 
         self.assertEqual(len(xs), 0)
 
+    def test_a_ray_misses_p1_p3_edge(self):
+        t = triangle(tuples.point( 0, 1, 0),
+                     tuples.point(-1, 0, 0),
+                     tuples.point( 1, 0, 0))
+        r = rays.ray(tuples.point(1, 1, -2),
+                     tuples.vector(0, 0, 1))
 
+        xs = t.local_intersect(r)
+
+        self.assertEqual(len(xs), 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
