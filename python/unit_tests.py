@@ -18,6 +18,7 @@ def suite():
     suite.addTests(loader.loadTestsFromName('lights'))
     suite.addTests(loader.loadTestsFromName('materials'))
     suite.addTests(loader.loadTestsFromName('matrices'))
+    suite.addTests(loader.loadTestsFromName('obj_files'))
     suite.addTests(loader.loadTestsFromName('patterns'))
     suite.addTests(loader.loadTestsFromName('planes'))
     suite.addTests(loader.loadTestsFromName('radial_gradients'))
