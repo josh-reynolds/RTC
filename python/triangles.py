@@ -36,7 +36,8 @@ class Triangle(shapes.Shape):
         if v < 0 or (u + v) > 1:
             return []
 
-        return [intersections.intersection(1, self)]
+        t = f * self.e2.dot(origin_cross_e1)
+        return [intersections.intersection(t, self)]
 
     def local_normal_at(self, pt):
         return self.normal
@@ -126,6 +127,19 @@ class TriangleTestCase(unittest.TestCase):
         xs = t.local_intersect(r)
 
         self.assertEqual(len(xs), 0)
+
+    def test_a_ray_strikes_a_triangle(self):
+        t = triangle(tuples.point( 0, 1, 0),
+                     tuples.point(-1, 0, 0),
+                     tuples.point( 1, 0, 0))
+        r = rays.ray(tuples.point( 0, 0.5, -2),
+                     tuples.vector(0, 0, 1))
+
+        xs = t.local_intersect(r)
+
+        self.assertEqual(len(xs), 1)
+        self.assertEqual(xs[0].t, 2)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
