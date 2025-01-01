@@ -2,11 +2,14 @@
 
 import unittest
 import tuples
+import groups
+import triangles
 
 class ObjFileParser:
     def __init__(self):
         self.ignored = 0
         self.vertices = ['']   # vertex array needs to be 1-based, inserting dummy zero entry
+        self.default_group = groups.group()
 
 def parse_obj_file(file):
     parser = ObjFileParser()
@@ -16,6 +19,12 @@ def parse_obj_file(file):
             parser.vertices.append(tuples.point(float(tokens[1]), 
                                                 float(tokens[2]), 
                                                 float(tokens[3])))
+        elif line[0] == 'f':
+            tokens = line.split()
+            tri = triangles.triangle(parser.vertices[int(tokens[1])],
+                                     parser.vertices[int(tokens[2])],
+                                     parser.vertices[int(tokens[3])])
+            parser.default_group.add_child(tri)
         else:
             parser.ignored += 1
 
@@ -45,6 +54,28 @@ class ObjFileTestCase(unittest.TestCase):
         self.assertEqual(parser.vertices[2], tuples.point(-1, 0.5, 0))
         self.assertEqual(parser.vertices[3], tuples.point(1, 0, 0))
         self.assertEqual(parser.vertices[4], tuples.point(1, 1, 0))
+
+    def test_parsing_triangle_faces(self):
+        file = ["v -1 1 0\n",
+                "v -1 0 0\n",
+                "v 1 0 0\n",
+                "v 1 1 0\n",
+                "\n",
+                "f 1 2 3\n",
+                "f 1 3 4\n"]
+
+        parser = parse_obj_file(file)
+        g = parser.default_group
+        t1 = g.contents[0]
+        t2 = g.contents[1]
+
+        self.assertEqual(t1.p1, parser.vertices[1])
+        self.assertEqual(t1.p2, parser.vertices[2])
+        self.assertEqual(t1.p3, parser.vertices[3])
+        self.assertEqual(t2.p1, parser.vertices[1])
+        self.assertEqual(t2.p2, parser.vertices[3])
+        self.assertEqual(t2.p3, parser.vertices[4])
+        
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
