@@ -11,6 +11,9 @@ class ObjFileParser:
         self.vertices = ['']   # vertex array needs to be 1-based, inserting dummy zero entry
         self.default_group = groups.group()
 
+    def obj_to_group(self):
+        return self.default_group
+
 def parse_obj_file(file):
     parser = ObjFileParser()
     current_group = parser.default_group
@@ -146,6 +149,26 @@ class ObjFileTestCase(unittest.TestCase):
         self.assertEqual(t2.p1, parser.vertices[1])
         self.assertEqual(t2.p2, parser.vertices[3])
         self.assertEqual(t2.p3, parser.vertices[4])
+
+    def test_triangles_in_groups(self):
+        file = ["v -1 1 0",
+                "v -1 0 0",
+                "v 1 0 0",
+                "v 1 1 0",
+                "",
+                "g FirstGroup",
+                "f 1 2 3",
+                "g SecondGroup",
+                "f 1 3 4"]
+
+        parser = parse_obj_file(file)
+        g1 = parser.default_group.contents[0]
+        g2 = parser.default_group.contents[1]
+
+        g = parser.obj_to_group()
+
+        self.assertEqual(g.contents[0], g1)
+        self.assertEqual(g.contents[1], g2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
