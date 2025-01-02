@@ -42,9 +42,9 @@ class Triangle(shapes.Shape):
     def local_normal_at(self, pt):
         return self.normal
 
-    #def bounds(self):
-        #return (tuples.point(-1, -1, -1),
-                #tuples.point(1, 1, 1))
+    def bounds(self):
+        return (tuples.point(-1, -1, -1),     # dummy implementation for now
+                tuples.point(1, 1, 1))        # to keep interpreter happy
 
 def triangle(p1, p2, p3):
     return Triangle(p1, p2, p3)

@@ -20,27 +20,21 @@ from cylinders import cylinder
 from cones import cone
 from groups import group
 from triangles import triangle
+from obj_files import parse_obj_file
 
 start_time = datetime.now()
 
-floor = plane()
-floor.color = color(0.7, 0.4, 0.7)
+with open("./obj/cube.obj", "r") as file:
+    lines = file.readlines()
 
-wall = plane()
-wall.transform = rotation_x(math.pi/2) * translation(0, 15, 0)
-wall.material.color = color(0.9, 0.8, 0.7)
-
-t = triangle(point( 0, 1, 0),
-             point(-1, 0, 0),
-             point( 1, 0, 0))
-t.material.color = BLUE
-t.material.transparency = 0.5
-t.material.refractive_index = 1.3
+parser = parse_obj_file(lines)
+g = parser.obj_to_group()
+g.skip_bounds_check = True
+g.set_transform(rotation_y(math.pi/3))
 
 w = world()
-w.objects.append(floor)
-w.objects.append(wall)
-w.objects.append(t)
+w.objects.append(g)
+
 w.light = point_light(point(-10, 10, -10), WHITE)
 
 cam = camera(300, 150, math.pi/3)
@@ -49,7 +43,7 @@ cam.transform = view_transform(point(0, 1.5, -5),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/triangle.ppm")
+image_to_file(image, "./output/obj_file_sample.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))

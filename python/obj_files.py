@@ -18,7 +18,6 @@ def parse_obj_file(file):
     parser = ObjFileParser()
     current_group = parser.default_group
     for line in file:
-
         tokens = line.split()
         if tokens and tokens[0] == 'v':
             parser.vertices.append(tuples.point(float(tokens[1]), 
