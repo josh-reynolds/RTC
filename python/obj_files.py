@@ -13,7 +13,9 @@ class ObjFileParser:
 
 def parse_obj_file(file):
     parser = ObjFileParser()
+    current_group = parser.default_group
     for line in file:
+
         tokens = line.split()
         if tokens and tokens[0] == 'v':
             parser.vertices.append(tuples.point(float(tokens[1]), 
@@ -26,11 +28,15 @@ def parse_obj_file(file):
 
             if len(tokens) == 4:
                 tri = triangles.triangle(vertices[1], vertices[2], vertices[3])
-                parser.default_group.add_child(tri)
+                current_group.add_child(tri)
             else:
                 tris = fan_triangulate(vertices)
                 for tri in tris:
-                    parser.default_group.add_child(tri)
+                    current_group.add_child(tri)
+        elif tokens and tokens[0] == 'g':
+            new_group = groups.group()     # assumption: groups are contiguous blocks in OBJ file
+            current_group = new_group      # also assuming grouping is only one level deep
+            parser.default_group.add_child(current_group)
         else:
             parser.ignored += 1
 
@@ -115,6 +121,31 @@ class ObjFileTestCase(unittest.TestCase):
         self.assertEqual(t3.p1, parser.vertices[1])
         self.assertEqual(t3.p2, parser.vertices[4])
         self.assertEqual(t3.p3, parser.vertices[5])
+
+    def test_triangles_in_groups(self):
+        file = ["v -1 1 0",
+                "v -1 0 0",
+                "v 1 0 0",
+                "v 1 1 0",
+                "",
+                "g FirstGroup",
+                "f 1 2 3",
+                "g SecondGroup",
+                "f 1 3 4"]
+
+        parser = parse_obj_file(file)
+        g = parser.default_group
+        g1 = g.contents[0]
+        g2 = g.contents[1]
+        t1 = g1.contents[0]
+        t2 = g2.contents[0]
+
+        self.assertEqual(t1.p1, parser.vertices[1])
+        self.assertEqual(t1.p2, parser.vertices[2])
+        self.assertEqual(t1.p3, parser.vertices[3])
+        self.assertEqual(t2.p1, parser.vertices[1])
+        self.assertEqual(t2.p2, parser.vertices[3])
+        self.assertEqual(t2.p3, parser.vertices[4])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
