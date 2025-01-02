@@ -43,8 +43,12 @@ class Triangle(shapes.Shape):
         return self.normal
 
     def bounds(self):
-        return (tuples.point(-1, -1, -1),     # dummy implementation for now
-                tuples.point(1, 1, 1))        # to keep interpreter happy
+        xs = [self.p1.x, self.p2.x, self.p3.x]
+        ys = [self.p1.y, self.p2.y, self.p3.y]
+        zs = [self.p1.z, self.p2.z, self.p3.z]
+
+        return (tuples.point(min(xs), min(ys), min(zs)),
+                tuples.point(max(xs), max(ys), max(zs)))
 
 def triangle(p1, p2, p3):
     return Triangle(p1, p2, p3)
@@ -140,6 +144,19 @@ class TriangleTestCase(unittest.TestCase):
         self.assertEqual(len(xs), 1)
         self.assertEqual(xs[0].t, 2)
 
+    def test_triangle_bounds(self):
+        t = triangle(tuples.point( 0, 1, 0),
+                     tuples.point(-1, 0, 0),
+                     tuples.point( 1, 0, 0))
+
+        b = t.bounds()
+
+        self.assertEqual(b[0].x, -1)
+        self.assertEqual(b[0].y, 0)
+        self.assertEqual(b[0].z, 0)
+        self.assertEqual(b[1].x, 1)
+        self.assertEqual(b[1].y, 1)
+        self.assertEqual(b[1].z, 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
