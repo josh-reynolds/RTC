@@ -37,7 +37,10 @@ class Triangle(shapes.Shape):
             return []
 
         t = f * self.e2.dot(origin_cross_e1)
-        return [intersections.intersection(t, self)]
+        return [self.construct_intersection(t, u, v)]
+
+    def construct_intersection(self, t, u, v):
+        return intersections.intersection(t, self)
 
     def local_normal_at(self, pt):
         return self.normal

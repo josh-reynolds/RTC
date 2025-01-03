@@ -16,27 +16,8 @@ class SmoothTriangle(triangles.Triangle):
         self.n2 = n2
         self.n3 = n3
 
-    # duplication from parent class method - needs refactoring
-    def local_intersect(self, r):
-        dir_cross_e2 = r.direction.cross(self.e2)
-        determinant = self.e1.dot(dir_cross_e2)
-        if abs(determinant) < utils.EPSILON:
-            return []
-
-        f = 1.0 / determinant
-
-        p1_to_origin = r.origin - self.p1
-        u = f * p1_to_origin.dot(dir_cross_e2)
-        if u < 0 or u > 1:
-            return []
-
-        origin_cross_e1 = p1_to_origin.cross(self.e1)
-        v = f * r.direction.dot(origin_cross_e1)
-        if v < 0 or (u + v) > 1:
-            return []
-
-        t = f * self.e2.dot(origin_cross_e1)
-        return [intersections.intersection_with_uv(t, self, u, v)]
+    def construct_intersection(self, t, u, v):
+        return intersections.intersection_with_uv(t, self, u, v)
 
     #def local_normal_at(self, pt):
         #return self.normal
