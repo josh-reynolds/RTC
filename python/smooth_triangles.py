@@ -74,6 +74,15 @@ class SmoothTriangleTestCase(unittest.TestCase):
 
         self.assertEqual(n, tuples.vector(-0.5547, 0.83205, 0))
 
+    def test_preparing_the_normal_on_a_smooth_triangle(self):
+        i = intersections.intersection_with_uv(1, self.tri, 0.45, 0.25)
+        r = rays.ray(tuples.point(-0.2, 0.3, -2),
+                     tuples.vector(0, 0, 1))
+        xs = intersections.intersections(i)
+        comps = intersections.prepare_computations(i, r, xs)
+
+        self.assertEqual(comps.normalv, tuples.vector(-0.5547, 0.83205, 0))
+
     #def test_finding_the_normal_on_a_triangle(self):
         #t = triangle(tuples.point( 0, 1, 0),
                      #tuples.point(-1, 0, 0),
