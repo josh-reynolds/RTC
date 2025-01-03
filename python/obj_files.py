@@ -9,6 +9,7 @@ class ObjFileParser:
     def __init__(self):
         self.ignored = 0
         self.vertices = ['']   # vertex array needs to be 1-based, inserting dummy zero entry
+        self.normals = ['']    # same here, needs dummy entry
         self.default_group = groups.group()
 
     def obj_to_group(self):
@@ -22,6 +23,10 @@ def parse_obj_file(file):
         if tokens and tokens[0] == 'v':
             parser.vertices.append(tuples.point(float(tokens[1]), 
                                                 float(tokens[2]), 
+                                                float(tokens[3])))
+        elif tokens and tokens[0] == 'vn':
+            parser.normals.append(tuples.vector(float(tokens[1]),
+                                                float(tokens[2]),
                                                 float(tokens[3])))
         elif tokens and tokens[0] == 'f' and len(tokens) >= 4:
             vertices = ['']    # need dummy entry here too
@@ -168,6 +173,17 @@ class ObjFileTestCase(unittest.TestCase):
 
         self.assertEqual(g.contents[0], g1)
         self.assertEqual(g.contents[1], g2)
+
+    def test_vertex_normal_records(self):
+        file = ["vn 0 0 1",
+                "vn 0.707 0 -0.707",
+                "vn 1 2 3"]
+
+        parser = parse_obj_file(file)
+
+        self.assertEqual(parser.normals[1], tuples.vector(0, 0, 1))
+        self.assertEqual(parser.normals[2], tuples.vector(0.707, 0, -0.707))
+        self.assertEqual(parser.normals[3], tuples.vector(1, 2, 3))
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
