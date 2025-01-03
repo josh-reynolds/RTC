@@ -19,8 +19,8 @@ class SmoothTriangle(triangles.Triangle):
     def construct_intersection(self, t, u, v):
         return intersections.intersection_with_uv(t, self, u, v)
 
-    #def local_normal_at(self, pt):
-        #return self.normal
+    def local_normal_at(self, pt, i):
+        return self.normal
 
     #def bounds(self):
         #xs = [self.p1.x, self.p2.x, self.p3.x]
@@ -65,6 +65,11 @@ class SmoothTriangleTestCase(unittest.TestCase):
 
         self.assertTrue(utils.flequal(xs[0].u, 0.45))
         self.assertTrue(utils.flequal(xs[0].v, 0.25))
+
+    def test_a_smooth_triangle_uses_u_v_to_interpolate_the_normal(self):
+        i = intersections.intersection_with_uv(1, self.tri, 0.45, 0.25)
+
+        n = self.tri.normal_at(tuples.point(0, 0, 0), i)
 
     #def test_finding_the_normal_on_a_triangle(self):
         #t = triangle(tuples.point( 0, 1, 0),

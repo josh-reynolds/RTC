@@ -60,7 +60,7 @@ class Cylinder(shapes.Shape):
         if check_cap(r, t):
             xs.append(intersections.intersection(t, self))
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         dist = pt.x ** 2 + pt.z ** 2
 
         if dist < 1 and pt.y >= self.maximum - utils.EPSILON:
@@ -127,17 +127,18 @@ class CylinderTestCase(unittest.TestCase):
 
     def test_normal_vector_on_a_cylinder(self):
         c = cylinder()
+        i = intersections.intersection(1, c)
 
-        n = c.local_normal_at(tuples.point(1, 0, 0))
+        n = c.local_normal_at(tuples.point(1, 0, 0), i)
         self.assertEqual(n, tuples.vector(1, 0, 0))
 
-        n = c.local_normal_at(tuples.point(0, 5, -1))
+        n = c.local_normal_at(tuples.point(0, 5, -1), i)
         self.assertEqual(n, tuples.vector(0, 0, -1))
 
-        n = c.local_normal_at(tuples.point(0, -2, 1))
+        n = c.local_normal_at(tuples.point(0, -2, 1), i)
         self.assertEqual(n, tuples.vector(0, 0, 1))
 
-        n = c.local_normal_at(tuples.point(-1, 1, 0))
+        n = c.local_normal_at(tuples.point(-1, 1, 0), i)
         self.assertEqual(n, tuples.vector(-1, 0, 0))
 
     def test_default_min_max_for_a_cylinder(self):
@@ -211,23 +212,24 @@ class CylinderTestCase(unittest.TestCase):
         c.minimum = 1
         c.maximum = 2
         c.closed = True
+        i = intersections.intersection(1, c)
 
-        n = c.local_normal_at(tuples.point(0, 1, 0))
+        n = c.local_normal_at(tuples.point(0, 1, 0), i)
         self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(tuples.point(0.5, 1, 0))
+        n = c.local_normal_at(tuples.point(0.5, 1, 0), i)
         self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(tuples.point(0, 1, 0.5))
+        n = c.local_normal_at(tuples.point(0, 1, 0.5), i)
         self.assertEqual(n, tuples.vector(0, -1, 0))
 
-        n = c.local_normal_at(tuples.point(0, 2, 0))
+        n = c.local_normal_at(tuples.point(0, 2, 0), i)
         self.assertEqual(n, tuples.vector(0, 1, 0))
 
-        n = c.local_normal_at(tuples.point(0.5, 2, 0))
+        n = c.local_normal_at(tuples.point(0.5, 2, 0), i)
         self.assertEqual(n, tuples.vector(0, 1, 0))
 
-        n = c.local_normal_at(tuples.point(0, 2, 0.5))
+        n = c.local_normal_at(tuples.point(0, 2, 0.5), i)
         self.assertEqual(n, tuples.vector(0, 1, 0))
 
 # ---------------------------------------------------------------------------

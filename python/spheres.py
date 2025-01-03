@@ -33,7 +33,7 @@ class Sphere(shapes.Shape):
 
         return result
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         return pt - tuples.point(0, 0, 0)
 
     def bounds(self):
@@ -150,38 +150,44 @@ class SphereTestCase(unittest.TestCase):
 
     def test_normal_on_a_sphere_at_point_on_x_axis(self):
         s = sphere()
-        n = s.normal_at(tuples.point(1, 0, 0))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(1, 0, 0), i)
 
         self.assertEqual(n, tuples.vector(1, 0, 0))
 
     def test_normal_on_a_sphere_at_point_on_y_axis(self):
         s = sphere()
-        n = s.normal_at(tuples.point(0, 1, 0))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(0, 1, 0), i)
 
         self.assertEqual(n, tuples.vector(0, 1, 0))
 
     def test_normal_on_a_sphere_at_point_on_z_axis(self):
         s = sphere()
-        n = s.normal_at(tuples.point(0, 0, 1))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(0, 0, 1), i)
 
         self.assertEqual(n, tuples.vector(0, 0, 1))
 
     def test_normal_on_a_sphere_at_nonaxial_point(self):
         s = sphere()
-        n = s.normal_at(tuples.point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3), i)
 
         self.assertEqual(n, tuples.vector(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
 
     def test_normal_is_normalized_vector(self):
         s = sphere()
-        n = s.normal_at(tuples.point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(math.sqrt(3)/3, math.sqrt(3)/3, math.sqrt(3)/3), i)
 
         self.assertEqual(n, n.normalize())
 
     def test_computing_normal_on_translated_sphere(self):
         s = sphere()
         s.set_transform(transformations.translation(0, 1, 0))
-        n = s.normal_at(tuples.point(0, 1.70711, -0.70711))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(0, 1.70711, -0.70711), i)
 
         self.assertEqual(n, tuples.vector(0, 0.70711, -0.70711))
 
@@ -189,7 +195,8 @@ class SphereTestCase(unittest.TestCase):
         s = sphere()
         m = transformations.scaling(1, 0.5, 1) * transformations.rotation_z(math.pi/5)
         s.set_transform(m)
-        n = s.normal_at(tuples.point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+        i = intersections.intersection(1, s)
+        n = s.normal_at(tuples.point(0, math.sqrt(2)/2, -math.sqrt(2)/2), i)
 
         self.assertEqual(n, tuples.vector(0, 0.97014, -0.24254))
 

@@ -42,7 +42,7 @@ class Triangle(shapes.Shape):
     def construct_intersection(self, t, u, v):
         return intersections.intersection(t, self)
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         return self.normal
 
     def bounds(self):
@@ -82,10 +82,11 @@ class TriangleTestCase(unittest.TestCase):
         t = triangle(tuples.point( 0, 1, 0),
                      tuples.point(-1, 0, 0),
                      tuples.point( 1, 0, 0))
+        i = intersections.intersection(1, t)
 
-        n1 = t.local_normal_at(tuples.point(   0,  0.5, 0))
-        n2 = t.local_normal_at(tuples.point(-0.5, 0.75, 0))
-        n3 = t.local_normal_at(tuples.point( 0.5, 0.25, 0))
+        n1 = t.local_normal_at(tuples.point(   0,  0.5, 0), i)
+        n2 = t.local_normal_at(tuples.point(-0.5, 0.75, 0), i)
+        n3 = t.local_normal_at(tuples.point( 0.5, 0.25, 0), i)
 
         self.assertEqual(n1, t.normal)
         self.assertEqual(n2, t.normal)

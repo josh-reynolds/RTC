@@ -60,7 +60,7 @@ class Computation:
         self.object = intersect.object
         self.point = ray.position(self.t)
         self.eyev = -ray.direction
-        self.normalv = self.object.normal_at(self.point)
+        self.normalv = self.object.normal_at(self.point, intersect)
 
         if self.normalv.dot(self.eyev) < 0:
             self.inside = True

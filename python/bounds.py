@@ -36,7 +36,7 @@ class Bounds(shapes.Shape):
         return intersections.intersections(intersections.intersection(tmin, self),
                                            intersections.intersection(tmax, self))
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         pass
 
     def __repr__(self):

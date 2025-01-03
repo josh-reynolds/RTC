@@ -21,7 +21,7 @@ class Plane(shapes.Shape):
 
         return result
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         return tuples.vector(0, 1, 0)
     
     def bounds(self):
@@ -34,9 +34,10 @@ def plane():
 class PlaneTestCase(unittest.TestCase):
     def test_normal_of_a_plane_is_constant_everywere(self):
         p = plane()
-        n1 = p.local_normal_at(tuples.point(0, 0, 0))
-        n2 = p.local_normal_at(tuples.point(10, 0, -10))
-        n3 = p.local_normal_at(tuples.point(-5, 0, 150))
+        i = intersections.intersection(1, p)
+        n1 = p.local_normal_at(tuples.point(0, 0, 0), i)
+        n2 = p.local_normal_at(tuples.point(10, 0, -10), i)
+        n3 = p.local_normal_at(tuples.point(-5, 0, 150), i)
 
         self.assertEqual(n1, tuples.vector(0, 1, 0))
         self.assertEqual(n2, tuples.vector(0, 1, 0))

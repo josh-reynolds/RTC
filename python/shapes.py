@@ -30,12 +30,12 @@ class Shape:                                          # 'abstract' base class
     def set_transform(self, t):
         self.transform = t
 
-    def normal_at(self, pt):
+    def normal_at(self, pt, i):                       # i is only used by select subclasses for uv data
         local_point = self.world_to_object(pt)
-        local_normal = self.local_normal_at(local_point)
+        local_normal = self.local_normal_at(local_point, i)
         return self.normal_to_world(local_normal)
 
-    def local_normal_at(self, pt):                    # override in child classes
+    def local_normal_at(self, pt, i):                    # override in child classes
         return tuples.vector(pt.x, pt.y, pt.z)        # this implementation for test purposes only
 
     def world_to_object(self, pt):
@@ -114,8 +114,9 @@ class ShapeTestCase(unittest.TestCase):
     def test_computing_normal_on_translated_shape(self):
         s = test_shape()
         s.set_transform(transformations.translation(0, 1, 0))
+        i = intersections.intersection(1, s)
 
-        n = s.normal_at(tuples.point(0, 1.70711, -0.70711))
+        n = s.normal_at(tuples.point(0, 1.70711, -0.70711), i)
 
         self.assertEqual(n, tuples.vector(0, 0.70711, -0.70711))
 
@@ -123,8 +124,9 @@ class ShapeTestCase(unittest.TestCase):
         s = test_shape()
         m = transformations.scaling(1, 0.5, 1) * transformations.rotation_z(math.pi/5)
         s.set_transform(m)
+        i = intersections.intersection(1, s)
 
-        n = s.normal_at(tuples.point(0, math.sqrt(2)/2, -math.sqrt(2)/2))
+        n = s.normal_at(tuples.point(0, math.sqrt(2)/2, -math.sqrt(2)/2), i)
 
         self.assertEqual(n, tuples.vector(0, 0.97014, -0.24254))
 
@@ -177,7 +179,9 @@ class ShapeTestCase(unittest.TestCase):
         s.set_transform(transformations.translation(5, 0, 0))
         g2.add_child(s)
 
-        n = s.normal_at(tuples.point(1.7321, 1.1547, -5.5774))
+        i = intersections.intersection(1, s)
+
+        n = s.normal_at(tuples.point(1.7321, 1.1547, -5.5774), i)
 
         self.assertEqual(n, tuples.vector(0.28570, 0.42854, -0.85716))
 

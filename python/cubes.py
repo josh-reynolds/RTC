@@ -27,7 +27,7 @@ class Cube(shapes.Shape):
         return intersections.intersections(intersections.intersection(tmin, self),
                                            intersections.intersection(tmax, self))
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         maxc = max(abs(pt.x), abs(pt.y), abs(pt.z))
 
         if maxc == abs(pt.x):
@@ -140,37 +140,38 @@ class CubeTestCase(unittest.TestCase):
 
     def test_normal_on_surface_of_a_cube(self):
         c = cube()
+        i = intersections.intersection(1, c)
 
         p = tuples.point(1, 0.5, -0.8)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(1, 0, 0))
 
         p = tuples.point(-1, -0.2, 0.9)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(-1, 0, 0))
 
         p = tuples.point(-0.4, 1, -0.1)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(0, 1, 0))
 
         p = tuples.point(0.3, -1, -0.7)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(0, -1, 0))
 
         p = tuples.point(-0.6, 0.3, 1)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(0, 0, 1))
 
         p = tuples.point(0.4, 0.4, -1)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(0, 0, -1))
 
         p = tuples.point(1, 1, 1)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(1, 0, 0))
 
         p = tuples.point(-1, -1, -1)
-        normal = c.local_normal_at(p)
+        normal = c.local_normal_at(p, i)
         self.assertEqual(normal, tuples.vector(-1, 0, 0))
 
 # ---------------------------------------------------------------------------

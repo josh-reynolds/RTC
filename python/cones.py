@@ -71,7 +71,7 @@ class Cone(shapes.Shape):
         if check_cap(r, t, abs(self.maximum)):
             xs.append(intersections.intersection(t, self))
 
-    def local_normal_at(self, pt):
+    def local_normal_at(self, pt, i):
         dist = pt.x ** 2 + pt.z ** 2
 
         if dist < 1 and pt.y >= self.maximum - utils.EPSILON:
@@ -165,14 +165,15 @@ class ConeTestCase(unittest.TestCase):
 
     def test_normal_vector_on_a_cone(self):
         c = cone()
+        i = intersections.intersection(1, c)
 
-        n = c.local_normal_at(tuples.point(0, 0, 0))
+        n = c.local_normal_at(tuples.point(0, 0, 0), i)
         self.assertEqual(n, tuples.vector(0, 0, 0))
 
-        n = c.local_normal_at(tuples.point(1, 1, 1))
+        n = c.local_normal_at(tuples.point(1, 1, 1), i)
         self.assertEqual(n, tuples.vector(1, -math.sqrt(2), 1))
 
-        n = c.local_normal_at(tuples.point(-1, -1, 0))
+        n = c.local_normal_at(tuples.point(-1, -1, 0), i)
         self.assertEqual(n, tuples.vector(-1, 1, 0))
 
 # ---------------------------------------------------------------------------
