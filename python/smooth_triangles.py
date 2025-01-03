@@ -5,9 +5,9 @@ import materials
 import triangles
 import shapes
 import tuples
-#import rays
-#import utils
-#import intersections
+import rays
+import utils
+import intersections
 
 class SmoothTriangle(triangles.Triangle):
     def __init__(self, p1, p2, p3, n1, n2, n3):
@@ -16,26 +16,27 @@ class SmoothTriangle(triangles.Triangle):
         self.n2 = n2
         self.n3 = n3
 
-    #def local_intersect(self, r):
-        #dir_cross_e2 = r.direction.cross(self.e2)
-        #determinant = self.e1.dot(dir_cross_e2)
-        #if abs(determinant) < utils.EPSILON:
-            #return []
-#
-        #f = 1.0 / determinant
-#
-        #p1_to_origin = r.origin - self.p1
-        #u = f * p1_to_origin.dot(dir_cross_e2)
-        #if u < 0 or u > 1:
-            #return []
-#
-        #origin_cross_e1 = p1_to_origin.cross(self.e1)
-        #v = f * r.direction.dot(origin_cross_e1)
-        #if v < 0 or (u + v) > 1:
-            #return []
-#
-        #t = f * self.e2.dot(origin_cross_e1)
-        #return [intersections.intersection(t, self)]
+    # duplication from parent class method - needs refactoring
+    def local_intersect(self, r):
+        dir_cross_e2 = r.direction.cross(self.e2)
+        determinant = self.e1.dot(dir_cross_e2)
+        if abs(determinant) < utils.EPSILON:
+            return []
+
+        f = 1.0 / determinant
+
+        p1_to_origin = r.origin - self.p1
+        u = f * p1_to_origin.dot(dir_cross_e2)
+        if u < 0 or u > 1:
+            return []
+
+        origin_cross_e1 = p1_to_origin.cross(self.e1)
+        v = f * r.direction.dot(origin_cross_e1)
+        if v < 0 or (u + v) > 1:
+            return []
+
+        t = f * self.e2.dot(origin_cross_e1)
+        return [intersections.intersection_with_uv(t, self, u, v)]
 
     #def local_normal_at(self, pt):
         #return self.normal
@@ -75,6 +76,14 @@ class SmoothTriangleTestCase(unittest.TestCase):
         self.assertEqual(self.tri.n1, tuples.vector( 0, 1, 0))
         self.assertEqual(self.tri.n2, tuples.vector(-1, 0, 0))
         self.assertEqual(self.tri.n3, tuples.vector( 1, 0, 0))
+
+    def test_an_intersection_with_a_smooth_triangle_stores_u_v(self):
+        r = rays.ray(tuples.point(-0.2, 0.3, -2),
+                     tuples.vector(0, 0, 1))
+        xs = self.tri.local_intersect(r)
+
+        self.assertTrue(utils.flequal(xs[0].u, 0.45))
+        self.assertTrue(utils.flequal(xs[0].v, 0.25))
 
     #def test_finding_the_normal_on_a_triangle(self):
         #t = triangle(tuples.point( 0, 1, 0),
