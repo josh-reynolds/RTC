@@ -8,6 +8,7 @@ import tuples
 import transformations
 import utils
 import planes
+import triangles
 
 class Intersection:
     def __init__(self, t, obj):
@@ -19,6 +20,12 @@ class Intersection:
 
 def intersection(t, obj):
     return Intersection(t, obj)
+
+def intersection_with_uv(t, obj, u, v):
+    i = Intersection(t, obj)
+    i.u = u
+    i.v = v
+    return i
 
 def intersections(*args):
     result = []
@@ -295,6 +302,16 @@ class IntersectionTestCase(unittest.TestCase):
         reflectance = schlick(comps)
 
         self.assertTrue(utils.flequal(reflectance, 0.48874))
+
+    def test_an_intersection_can_encapsulate_u_and_v(self):
+        s = triangles.triangle(tuples.point( 0, 1, 0),
+                               tuples.point(-1, 0, 0),
+                               tuples.point( 1, 0, 0))
+
+        i = intersection_with_uv(3.5, s, 0.2, 0.4)
+
+        self.assertEqual(i.u, 0.2)
+        self.assertEqual(i.v, 0.4)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
