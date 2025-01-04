@@ -32,6 +32,8 @@ def csg(op, shape1, shape2):
 def intersection_allowed(op, lhit, inl, inr):
     if op == "union":
         return (lhit and not inr) or (not lhit and not inl)
+    elif op == "intersect":
+        return (lhit and inr) or (not lhit and inl)
     return False
 
 class CSGTestCase(unittest.TestCase):
@@ -75,6 +77,31 @@ class CSGTestCase(unittest.TestCase):
 
         result = intersection_allowed("union", False, False, False)
         self.assertEqual(result, True)
+
+    def test_evaluating_rule_for_intersect_operation(self):
+        result = intersection_allowed("intersect", True, True, True)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("intersect", True, True, False)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("intersect", True, False, True)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("intersect", True, False, False)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("intersect", False, True, True)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("intersect", False, True, False)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("intersect", False, False, True)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("intersect", False, False, False)
+        self.assertEqual(result, False)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
