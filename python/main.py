@@ -24,25 +24,27 @@ from obj_files import parse_obj_file
 
 start_time = datetime.now()
 
-with open("./obj/cube.obj", "r") as file:
+with open("./obj/gourd.obj", "r") as file:
     lines = file.readlines()
 
 parser = parse_obj_file(lines)
 g = parser.obj_to_group()
-g.set_transform(rotation_y(math.pi/3) * translation(-0.3,0.3,0))
+g.set_transform(rotation_y(math.pi/3) * 
+                rotation_z(-math.pi/3) *
+                translation(-0.3,0,0))
 
 w = world()
 w.objects.append(g)
 
 w.light = point_light(point(-10, 10, -10), WHITE)
 
-cam = camera(300, 150, math.pi/3)
+cam = camera(100, 50, math.pi/3)
 cam.transform = view_transform(point(0, 1.5, -5),
                                point(0, 1, 0),
                                vector(0, 1, 0))
 
 image = cam.render(w)
-image_to_file(image, "./output/obj_file_sample_4.ppm")
+image_to_file(image, "./output/obj_file_sample_5.ppm")
 
 end_time = datetime.now()
 print("Image size: {} x {}".format(cam.hsize, cam.vsize))
