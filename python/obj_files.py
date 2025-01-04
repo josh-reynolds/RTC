@@ -4,6 +4,7 @@ import unittest
 import tuples
 import groups
 import triangles
+import smooth_triangles
 
 class ObjFileParser:
     def __init__(self):
@@ -30,14 +31,26 @@ def parse_obj_file(file):
                                                 float(tokens[3])))
         elif tokens and tokens[0] == 'f' and len(tokens) >= 4:
             vertices = ['']    # need dummy entry here too
-            for token in tokens[1:]:
-                vertices.append(parser.vertices[int(token)])
-
+            normals  = ['']    # and here...
+            if '/' in line:
+                for token in tokens[1:]:
+                    values = token.split('/')
+                    vertices.append(parser.vertices[int(values[0])])
+                    # by design, parser ignores texture data (values[1]), even if present
+                    normals.append(parser.normals[int(values[2])])
+            else:
+                for token in tokens[1:]:
+                    vertices.append(parser.vertices[int(token)])
+    
             if len(tokens) == 4:
-                tri = triangles.triangle(vertices[1], vertices[2], vertices[3])
+                if len(normals) > 1:
+                    tri = smooth_triangles.smooth_triangle(vertices[1], vertices[2], vertices[3],
+                                                           normals[1], normals[2], normals[3])
+                else:
+                    tri = triangles.triangle(vertices[1], vertices[2], vertices[3])
                 current_group.add_child(tri)
             else:
-                tris = fan_triangulate(vertices)
+                tris = fan_triangulate(vertices, normals)
                 for tri in tris:
                     current_group.add_child(tri)
         elif tokens and tokens[0] == 'g':
@@ -49,11 +62,15 @@ def parse_obj_file(file):
 
     return parser
 
-def fan_triangulate(vertices):
+def fan_triangulate(vertices, normals):
     tris = []
 
     for i in range(2, len(vertices)-1):
-        tri = triangles.triangle(vertices[1], vertices[i], vertices[i+1])
+        if len(normals) > 1:
+            tri = smooth_triangles.smooth_triangle(vertices[1], vertices[i], vertices[i+1],
+                                                   normals[1], normals[i], normals[i+1])
+        else:
+            tri = triangles.triangle(vertices[1], vertices[i], vertices[i+1])
         tris.append(tri)
 
     return tris
@@ -184,6 +201,32 @@ class ObjFileTestCase(unittest.TestCase):
         self.assertEqual(parser.normals[1], tuples.vector(0, 0, 1))
         self.assertEqual(parser.normals[2], tuples.vector(0.707, 0, -0.707))
         self.assertEqual(parser.normals[3], tuples.vector(1, 2, 3))
+
+    def test_faces_with_normals(self):
+        file = ["v 0 1 0",
+                "v -1 0 0",
+                "v 1 0 0",
+                "",
+                "vn -1 0 0",
+                "vn 1 0 0",
+                "vn 0 1 0",
+                "",
+                "f 1//3 2//1 3//2",
+                "f 1/0/3 2/102/1 3/14/2"]
+
+        parser = parse_obj_file(file)
+        g = parser.default_group
+        t1 = g.contents[0]
+        t2 = g.contents[1]
+
+        self.assertEqual(t1.p1, parser.vertices[1])
+        self.assertEqual(t1.p2, parser.vertices[2])
+        self.assertEqual(t1.p3, parser.vertices[3])
+        self.assertEqual(t1.n1, parser.normals[3])
+        self.assertEqual(t1.n2, parser.normals[1])
+        self.assertEqual(t1.n3, parser.normals[2])
+        self.assertEqual(t2, t1)
+
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
