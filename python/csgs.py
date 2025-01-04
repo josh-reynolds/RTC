@@ -34,6 +34,8 @@ def intersection_allowed(op, lhit, inl, inr):
         return (lhit and not inr) or (not lhit and not inl)
     elif op == "intersect":
         return (lhit and inr) or (not lhit and inl)
+    elif op == "difference":
+        return (lhit and not inr) or (not lhit and inl)
     return False
 
 class CSGTestCase(unittest.TestCase):
@@ -101,6 +103,31 @@ class CSGTestCase(unittest.TestCase):
         self.assertEqual(result, False)
 
         result = intersection_allowed("intersect", False, False, False)
+        self.assertEqual(result, False)
+
+    def test_evaluating_rule_for_difference_operation(self):
+        result = intersection_allowed("difference", True, True, True)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("difference", True, True, False)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("difference", True, False, True)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("difference", True, False, False)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("difference", False, True, True)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("difference", False, True, False)
+        self.assertEqual(result, True)
+
+        result = intersection_allowed("difference", False, False, True)
+        self.assertEqual(result, False)
+
+        result = intersection_allowed("difference", False, False, False)
         self.assertEqual(result, False)
 
 # ---------------------------------------------------------------------------
