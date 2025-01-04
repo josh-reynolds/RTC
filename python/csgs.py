@@ -29,6 +29,9 @@ class CSG(shapes.Shape):
 def csg(op, shape1, shape2):
     return CSG(op, shape1, shape2)
 
+def intersection_allowed(op, lhit, inl, inr):
+    return False
+
 class CSGTestCase(unittest.TestCase):
     def test_a_csg_is_a_shape(self):
         c = csg("union", spheres.sphere(), spheres.sphere())
@@ -45,6 +48,10 @@ class CSGTestCase(unittest.TestCase):
         self.assertEqual(c.right, s2)
         self.assertEqual(s1.parent, c)
         self.assertEqual(s2.parent, c)
+
+    def test_evaluating_rule_for_union_operation(self):
+        result = intersection_allowed("union", True, True, True)
+        self.assertEqual(result, False)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
