@@ -20,6 +20,9 @@ class Shape:                                          # 'abstract' base class
         else:
             return False
 
+    def __contains__(self, other):
+        return self == other
+
     def intersect(self, r):
         local_ray = r.transform(self.transform.inverse())
         return self.local_intersect(local_ray)

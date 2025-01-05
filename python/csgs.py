@@ -18,6 +18,10 @@ class CSG(shapes.Shape):
         shape2.parent = self
         self.right = shape2
 
+    def __contains__(self, other):
+        return (other in self.left or
+                other in self.right)
+
     def local_intersect(self, r):
         pass
 
@@ -33,8 +37,7 @@ class CSG(shapes.Shape):
         result = []
 
         for i in xs:
-            lhit = True     # dummy value until we implement Shape.includes()
-            #lhit = csg.left includes i.object
+            lhit = i.object in self.left
 
             if intersection_allowed(self.operation, lhit, inl, inr):
                 result.append(i)
@@ -165,7 +168,7 @@ class CSGTestCase(unittest.TestCase):
         self.assertEqual(result[0], xs[0])
         self.assertEqual(result[1], xs[3])
 
-        c = csg("intersection", s1, s2)
+        c = csg("intersect", s1, s2)
         result = c.filter_intersections(xs)
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0], xs[1])

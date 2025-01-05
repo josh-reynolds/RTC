@@ -20,11 +20,8 @@ class Group(shapes.Shape):
         return len(self.contents)
 
     def __contains__(self, item):
-        for current_item in self.contents:
-            if item == current_item:
-                return True
-        return False
-    
+        return item in self.contents
+
     def add_child(self, child):
         self.contents.append(child)
         child.parent = self
