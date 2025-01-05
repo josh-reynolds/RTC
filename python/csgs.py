@@ -5,6 +5,7 @@ import materials
 import shapes
 import spheres
 import cubes
+import intersections
 
 class CSG(shapes.Shape):
     def __init__(self, op, shape1, shape2):
@@ -25,6 +26,25 @@ class CSG(shapes.Shape):
 
     def bounds(self):
         pass
+
+    def filter_intersections(self, xs):
+        inl = False
+        inr = False
+        result = []
+
+        for i in xs:
+            lhit = True     # dummy value until we implement Shape.includes()
+            #lhit = csg.left includes i.object
+
+            if intersection_allowed(self.operation, lhit, inl, inr):
+                result.append(i)
+
+            if lhit:
+                inl = not inl
+            else:
+                inr = not inr
+
+        return result
 
 def csg(op, shape1, shape2):
     return CSG(op, shape1, shape2)
@@ -129,6 +149,33 @@ class CSGTestCase(unittest.TestCase):
 
         result = intersection_allowed("difference", False, False, False)
         self.assertEqual(result, False)
+
+    def test_filtering_a_set_of_intersections(self):
+        s1 = spheres.sphere()
+        s2 = cubes.cube()
+
+        xs = intersections.intersections(intersections.intersection(1, s1),
+                                         intersections.intersection(2, s2),
+                                         intersections.intersection(3, s1),
+                                         intersections.intersection(4, s2))
+
+        c = csg("union", s1, s2)
+        result = c.filter_intersections(xs)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0], xs[0])
+        self.assertEqual(result[1], xs[3])
+
+        c = csg("intersection", s1, s2)
+        result = c.filter_intersections(xs)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0], xs[1])
+        self.assertEqual(result[1], xs[2])
+
+        c = csg("difference", s1, s2)
+        result = c.filter_intersections(xs)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0], xs[0])
+        self.assertEqual(result[1], xs[1])
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
