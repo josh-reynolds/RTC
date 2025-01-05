@@ -6,6 +6,8 @@ import shapes
 import spheres
 import cubes
 import intersections
+import rays
+import tuples
 
 class CSG(shapes.Shape):
     def __init__(self, op, shape1, shape2):
@@ -23,7 +25,11 @@ class CSG(shapes.Shape):
                 other in self.right)
 
     def local_intersect(self, r):
-        pass
+        leftxs = self.left.intersect(r)
+        rightxs = self.right.intersect(r)
+        xs = leftxs + rightxs
+        xs.sort(key=lambda x: x.t)
+        return self.filter_intersections(xs)
 
     def local_normal_at(self, pt, i):
         pass
@@ -179,6 +185,13 @@ class CSGTestCase(unittest.TestCase):
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0], xs[0])
         self.assertEqual(result[1], xs[1])
+
+    def test_ray_misses_a_csg(self):
+        c = csg("union", spheres.sphere(), cubes.cube())
+        r = rays.ray(tuples.point(0, 2, -5), tuples.vector(0, 0, 1))
+        xs = c.local_intersect(r)
+
+        self.assertEqual(len(xs), 0)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
