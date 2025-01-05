@@ -8,6 +8,7 @@ import cubes
 import intersections
 import rays
 import tuples
+import transformations
 
 class CSG(shapes.Shape):
     def __init__(self, op, shape1, shape2):
@@ -192,6 +193,20 @@ class CSGTestCase(unittest.TestCase):
         xs = c.local_intersect(r)
 
         self.assertEqual(len(xs), 0)
+
+    def test_ray_hits_a_csg(self):
+        s1 = spheres.sphere()
+        s2 = spheres.sphere()
+        s2.set_transform(transformations.translation(0, 0, 0.5))
+        c = csg("union", s1, s2)
+        r = rays.ray(tuples.point(0, 0, -5), tuples.vector(0, 0, 1))
+        xs = c.local_intersect(r)
+
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0].t, 4)
+        self.assertEqual(xs[0].object, s1)
+        self.assertEqual(xs[1].t, 6.5)
+        self.assertEqual(xs[1].object, s2)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
