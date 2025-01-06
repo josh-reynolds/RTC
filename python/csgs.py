@@ -9,6 +9,7 @@ import intersections
 import rays
 import tuples
 import transformations
+import groups
 
 class CSG(shapes.Shape):
     def __init__(self, op, shape1, shape2):
@@ -36,7 +37,25 @@ class CSG(shapes.Shape):
         pass
 
     def bounds(self):
-        pass
+        minimum = maximum = None
+        xs = []
+        ys = []
+        zs = []
+
+        for shape in (self.left, self.right):
+            newmin,newmax = shape.bounds()
+
+            points = groups.cube_points(newmin, newmax)
+            for p in points:
+                newp = shape.transform * p
+                xs.append(newp.x)
+                ys.append(newp.y)
+                zs.append(newp.z)
+
+        minimum = tuples.point(min(xs), min(ys), min(zs))
+        maximum = tuples.point(max(xs), max(ys), max(zs))
+
+        return (minimum, maximum)
 
     def filter_intersections(self, xs):
         inl = False
@@ -207,6 +226,22 @@ class CSGTestCase(unittest.TestCase):
         self.assertEqual(xs[0].object, s1)
         self.assertEqual(xs[1].t, 6.5)
         self.assertEqual(xs[1].object, s2)
+
+    def test_calculating_bounds_on_a_csg(self):
+        s1 = spheres.sphere()
+        s1.set_transform(transformations.translation(0, -1, 0))
+        s2 = spheres.sphere()
+        s2.set_transform(transformations.translation(1, 0, 0))
+        c = csg("union", s1, s2)
+
+        b = c.bounds()
+
+        self.assertEqual(b[0].x, -1)
+        self.assertEqual(b[0].y, -2)
+        self.assertEqual(b[0].z, -1)
+        self.assertEqual(b[1].x, 2)
+        self.assertEqual(b[1].y, 1)
+        self.assertEqual(b[1].z, 1)
 
 # ---------------------------------------------------------------------------
 if __name__ == '__main__':
