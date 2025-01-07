@@ -9,14 +9,19 @@ restarted from scratch in Python (under /python obviously), and was able to comp
 comparisons and some thoughts for future improvements follow.
 
 **Rust version**
+
 Start date: 3/12/2024
+
 Completed Chapter 13: 9/16/2024 (188 days)
 
 Pencil render (600 x 300) - 5m 4s
 
 **Python version**
+
 Start date: 11/10/2024
+
 Completed Chapter 13: 12/22/2024 (42 days)
+
 Completed Chapter 16: 1/4/2025 (55 days)
 
 Pencil render (600 x 300) - 18m 54s
@@ -29,20 +34,20 @@ the latter measurement is slightly skewed by familiarity with the project, and d
 * write user documentation
 * general refactoring and deduplication
 * performance optimizations
-* * investigate NumPy
-* * profiling
-* * multi-threaded rendering
+    * investigate NumPy
+    * profiling
+    * multi-threaded rendering
 * stretch goal features from the text:
-* * perturbed patterns (p. 140)
-* * optional shadows (p. 165)
-* * optimized cube intersection algorithm (p. 176)
-* * shapes inheriting parent materials (p. 205)
-* * area lighting / soft shadows (p. 239)
-* * spotlights (p. 240)
-* * focal blur (p. 241)
-* * motion blur (p. 242)
-* * anti-aliasing (p. 243)
-* * texture maps (p. 244)
-* * normal perturbation (p. 245)
-* * torus primitive (p. 246)
-* * scene file interpreter (p. 249)
+    * perturbed patterns (p. 140)
+    * optional shadows (p. 165)
+    * optimized cube intersection algorithm (p. 176)
+    * shapes inheriting parent materials (p. 205)
+    * area lighting / soft shadows (p. 239)
+    * spotlights (p. 240)
+    * focal blur (p. 241)
+    * motion blur (p. 242)
+    * anti-aliasing (p. 243)
+    * texture maps (p. 244)
+    * normal perturbation (p. 245)
+    * torus primitive (p. 246)
+    * scene file interpreter (p. 249)
